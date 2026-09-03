@@ -22,7 +22,7 @@ graph TD
     end
 
     subgraph Persistencia["Capa de Persistencia y Datos"]
-        DB[(🗄️ PostgreSQL 15+)]
+        DB[(🗄️ PostgreSQL 16)]
         Liquibase["📦 Orquestación de Migraciones (Changelogs)"]
         Liquibase -.->|Aplica DDL/DML| DB
     end
@@ -45,6 +45,6 @@ graph TD
 * Contiene los controladores, validaciones de reglas de negocio y capa de acceso a datos (DAO/ORM/Query Builder).
 
 ### 3. Capa de Base de Datos y Persistencia
-* **Motor:** PostgreSQL (15+) garantizando propiedades ACID y alta consistencia de datos.
+* **Motor:** PostgreSQL 16 (LTS) garantizando propiedades ACID y alta consistencia de datos.
 * **Gestión de Cambios:** Despliegue de esquemas orquestado por Changelogs y versionamiento modular de scripts (`01_ddl`, `02_dml`, `03_dcl`, `04_tcl`).
 * **Seguridad y Reversibilidad:** Políticas de mínimo privilegio (DCL), segregación por esquemas y scripts de reversión simétrica (`05_rollbacks`).
