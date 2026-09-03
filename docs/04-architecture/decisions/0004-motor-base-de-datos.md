@@ -11,7 +11,7 @@ Se evaluaron dos paradigmas principales:
 2. **Bases de Datos Relacionales (PostgreSQL / MySQL):** Cumplimiento ACID garantizado, integridad referencial mediante llaves foráneas y soporte para operaciones complejas.
 
 ## Decisión
-Se decide adoptar **PostgreSQL (15+)** como el motor de base de datos principal del proyecto Drivique, organizado bajo una arquitectura modular de sub-lenguajes SQL (`01_ddl`, `02_dml`, `03_dcl`, `04_tcl`, `05_rollbacks`) y control de cambios mediante Changelogs (`Liquibase`).
+Se decide adoptar **PostgreSQL 16 (LTS)** como el motor de base de datos principal del proyecto Drivique, organizado bajo una arquitectura modular de sub-lenguajes SQL (`01_ddl`, `02_dml`, `03_dcl`, `04_tcl`, `05_rollbacks`) y control de cambios mediante Changelogs (`Liquibase`).
 
 ## Justificación
 1. **Consistencia Transaccional ACID:** Protección contra estados inconsistentes en reservas y pagos simultáneos.
