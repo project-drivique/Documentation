@@ -1,7 +1,7 @@
 # Configuración del Motor de Base de Datos
 
 ## Motor Utilizado
-* **Motor:** PostgreSQL 16 (LTS)
+* **Motor:** PostgreSQL 17 (LTS)
 * **Dialecto:** ANSI SQL / PL/pgSQL
 * **Herramienta de Control de Versiones:** Changelogs basados en YAML (formato Liquibase)
 
