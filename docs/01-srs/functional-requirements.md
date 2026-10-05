@@ -26,12 +26,13 @@
 - **Módulo 1: Landing Page (Página de Inicio Pública)** (RF1 - RF2)
 - **Módulo 2: Autenticación y Gestión de Cuenta** (RF3 - RF8)
 - **Módulo 3: Catálogo de Vehículos y Experiencia del Cliente** (RF9 - RF18)
-- **Módulo 4: Flujo Multipasos de Reservas** (RF19 - RF25)
-- **Módulo 5: Métodos de Pago (Pasarela Virtual Wompi y Efectivo en Sucursal)** (RF26 - RF27)
-- **Módulo 6: Contratos Digitales y Entrega con PIN** (RF28)
-- **Módulo 7: Perfil de Usuario y Seguridad** (RF29 - RF31)
-- **Módulo 8: Componentes Transversales del Cliente** (RF32 - RF33)
-- **Módulo 9: Panel Administrativo y Gestión Operativa de Sucursal** (RF34 - RF54)
+- **Módulo 4: Flujo Multipasos de Reservas (Wizard de Reserva)** (RF19 - RF25)
+- **Módulo 5: Pasarela de Pagos (Wompi Virtual y Efectivo en Sucursal)** (RF26 - RF27)
+- **Módulo 6: Contratos Digitales, Firma Electrónica y Entrega con PIN** (RF28)
+- **Módulo 7: Gestión de Mis Reservas y Perfil del Cliente** (RF29 - RF31)
+- **Módulo 8: Calificaciones y Reseñas de Vehículos con Fotografía** (RF32 - RF33)
+- **Módulo 9: Canales de Soporte al Cliente, Notificaciones y Asistente Virtual** (RF34 - RF35)
+- **Módulo 10: Panel Administrativo y Gestión Operativa de Sucursal** (RF36 - RF54)
 
 ---
 
