@@ -240,7 +240,7 @@
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF8.1** Permitir la libre navegación por el catálogo de vehículos (`/catalogo`) a usuarios no registrados (Visitantes).
 2. **RF8.2** Habilitar el uso de buscadores, filtros de categorías, precios y ubicaciones en modo lectura.
-3. **RF8.3** Permitir la visualización completa de los detalles de cualquier vehículo (`/vehiculo/:id`).
+3. **RF8.3** Permitir la visualización completa de los detalles de cualquier vehículo (`Modal Emergente -> VehicleDetailsModal.jsx`).
 4. **RF8.4** Interceptar el clic en el botón "Reservar ahora" desplegando modal de autenticación requerida.
 5. **RF8.5** Redirigir al flujo de login/registro guardando el vehículo seleccionado para retomar la reserva tras autenticarse.
 
@@ -250,7 +250,7 @@
 | :--- | :--- |
 | **Título del RF** | RF8 Acceso modo invitado sin registro |
 | **Tipo / Actor** | Visitante / Usuario no autenticado |
-| **Ruta / Componente (UI)** | Rutas `/catalogo`, `/vehiculo/:id` -> `CatalogPage.jsx`, `VehicleDetailPage.jsx`, `AuthRequiredModal.jsx` |
+| **Ruta / Componente (UI)** | Rutas `/catalogo`, `Modal Emergente -> VehicleDetailsModal.jsx` -> `CatalogPage.jsx`, `VehicleDetailsModal.jsx`, `AuthRequiredModal.jsx` |
 | **Descripción** | Otorga libertad de navegación pública para explorar la oferta de vehículos y servicios de Drivique sin exigir registro previo, postergando la solicitud de credenciales hasta el momento exacto en que se desea iniciar una reserva. |
 | **Entrada** | 1. Navegación libre por las rutas de catálogo y detalle.<br>2. Intento de interacción con acciones privilegiadas ("Reservar", "Guardar en favoritos"). |
 | **Salida** | 1. Visualización completa de información de flota en modo lectura.<br>2. Despliegue de modal instructivo invitando a iniciar sesión o registrarse. |
@@ -369,7 +369,7 @@
 ### RF13: Ver detalles de un vehículo
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF13.1** Renderizar vista detallada del vehículo (`/vehiculo/:id`).
+1. **RF13.1** Renderizar vista detallada del vehículo (`Modal Emergente -> VehicleDetailsModal.jsx`).
 2. **RF13.2** Mostrar galería multimedia interactiva con imágenes en alta resolución e inspección a 360° si está disponible.
 3. **RF13.3** Desplegar ficha técnica completa: motor, potencia, consumo de combustible, capacidad de maletero y características de seguridad.
 4. **RF13.4** Mostrar listado de equipamientos y servicios incluidos sin costo adicional.
@@ -382,7 +382,7 @@
 | :--- | :--- |
 | **Título del RF** | RF13 Ver detalles de un vehículo |
 | **Tipo / Actor** | Cliente / Visitante |
-| **Ruta / Componente (UI)** | Ruta `/vehiculo/:id` -> `VehicleDetailPage.jsx`, `ImageGallery.jsx`, `ReviewsSection.jsx` |
+| **Ruta / Componente (UI)** | Ruta `Modal Emergente -> VehicleDetailsModal.jsx` -> `VehicleDetailsModal.jsx`, `ImageGallery.jsx`, `ReviewsSection.jsx` |
 | **Descripción** | Proporciona una vista inmersiva y transparente con toda la información técnica, visual y reputacional de un vehículo específico. |
 | **Entrada** | 1. Identificador único del vehículo en la URL (`:id`). |
 | **Salida** | 1. Carga completa de la galería, especificaciones, términos de alquiler y reseñas verificadas. |
@@ -1404,12 +1404,12 @@
 | **RF5** | Inicio de sesión | Autenticación | Cliente | `/login` -> `LoginPage.jsx` |
 | **RF6** | Recuperar contraseña | Autenticación | Cliente | `/forgot-password`, `/reset-password` |
 | **RF7** | Inicio de sesión con rol | Autenticación | Super Admin / Encargado | Rúter Principal -> `RoleBasedGuard.jsx` |
-| **RF8** | Acceso modo invitado sin registro | Autenticación | Visitante | `/catalogo`, `/vehiculo/:id` |
+| **RF8** | Acceso modo invitado sin registro | Autenticación | Visitante | `/catalogo`, `Modal Emergente -> VehicleDetailsModal.jsx` |
 | **RF9** | Encabezado y buscador del catálogo | Catálogo | Cliente / Visitante | `/catalogo` -> `CatalogHeader.jsx` |
 | **RF10** | Filtros del catálogo | Catálogo | Cliente / Visitante | `CatalogSidebarFilters.jsx` |
 | **RF11** | Ordenar resultados del catálogo | Catálogo | Cliente / Visitante | `CatalogSortDropdown.jsx` |
 | **RF12** | Tarjetas de vehículos | Catálogo | Cliente / Visitante | `VehicleCard.jsx` |
-| **RF13** | Ver detalles de un vehículo | Catálogo | Cliente / Visitante | `/vehiculo/:id` -> `VehicleDetailPage.jsx` |
+| **RF13** | Ver detalles de un vehículo | Catálogo | Cliente / Visitante | `Modal Emergente -> VehicleDetailsModal.jsx` -> `VehicleDetailsModal.jsx` |
 | **RF14** | Menú de navegación principal catálogo | Catálogo | Cliente Autenticado | `CustomerNavbar.jsx` |
 | **RF15** | Sección menú Mis Reservas | Catálogo | Cliente Autenticado | `/mis-reservas` -> `MyReservationsPage.jsx` |
 | **RF16** | Sección menú Mis Favoritos | Catálogo | Cliente Autenticado | `/favoritos` -> `FavoritesPage.jsx` |
