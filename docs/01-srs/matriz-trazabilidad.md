@@ -20,7 +20,7 @@ Esta matriz vincula cada **Requerimiento Funcional (RF1 a RF54)** y **Requerimie
 | **RF10**| Filtros avanzados catálogo | CU-010: Filtrar Catálogo | `fleet.vehicles`, `fleet.categories` | `GET /api/v1/catalog/filter` | `catalog/components/CatalogFilters.jsx` |
 | **RF11**| Ordenamiento de resultados | CU-011: Ordenar Catálogo | `catalog.vehicles` | `GET /api/v1/catalog/sort` | `catalog/components/CatalogSort.jsx` |
 | **RF12**| Tarjetas informativas de vehículo| CU-012: Visualizar Ficha | `fleet.vehicles`, `core.currencies` | `GET /api/v1/vehicles/{id}` | `catalog/components/VehicleCard.jsx` |
-| **RF13**| Detalle técnico del vehículo | CU-013: Ver Detalle Vehículo| `fleet.vehicles`, `support.reviews` | `GET /api/v1/vehicles/{id}/details`| `catalog/VehicleDetailPage.jsx` |
+| **RF13**| Detalle técnico del vehículo | CU-013: Ver Detalle Vehículo| `fleet.vehicles`, `support.reviews` | `GET /api/v1/vehicles/{id}/details`| `catalog/components/VehicleDetailsModal.jsx` |
 | **RF14**| Menú de navegación cliente | CU-014: Navegar Menú | N/A | N/A | `components/Navbar.jsx` |
 | **RF15**| Sección Mis Reservas | CU-015: Consultar Reservas | `rental.reservations` | `GET /api/v1/reservations/my-reservations` | `reservations/MyReservationsPage.jsx` |
 | **RF16**| Sección Favoritos | CU-016: Gestionar Favoritos | `catalog.user_favorites` | `POST /api/v1/favorites/toggle` | `profile/FavoritesPage.jsx` |
