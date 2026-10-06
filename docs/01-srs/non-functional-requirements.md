@@ -77,7 +77,7 @@
 | **Requerimiento que lo utiliza o especializa** | RF1 a RF33 (Portal del Cliente, Catálogo, Proceso de Reserva, Notificaciones y Perfil de Usuario) |
 | **¿Crítico?** | Sí |
 | **Prioridad de desarrollo** | Alto |
-| **Documentos de visualización asociados** | Documento SRS – Módulo i18n / Archivos JSON de Traducción (`es.json`, `en.json`, `fr.json`, `pt.json`, `pt-BR.json`) |
+| **Documentos de visualización asociados** | Documento SRS – Módulo i18n / Archivos JSON de Traducción (Archivos de Recursos de Traducción i18n) |
 | **Entrada** | 1. Selección explícita del idioma preferido desde el menú desplegable en la barra de navegación superior (`es`, `en`, `fr`, `pt`, `pt-BR`).<br>2. Detección automática del encabezado `Accept-Language` del navegador o configuración regional del sistema operativo Android. |
 | **Salida** | 1. Re-renderizado instantáneo de la interfaz traduciendo el 100% de los elementos de texto (títulos, botones, formularios, modales, alertas y correos).<br>2. Formateo regional adecuado de valores numéricos, monedas (COP, USD, EUR) y fechas (DD/MM/AAAA vs MM/DD/AAAA). |
 | **Descripción** | El sistema debe contar con un motor de internacionalización nativo (`react-i18next` en Web y `i18n-framework` en Android) que garantice el soporte completo para 5 idiomas oficiales: Español (`es`), Inglés (`en`), Francés (`fr`), Portugués (`pt`) y Portugués de Brasil (`pt-BR`). La conmutación de idioma debe realizarse en memoria sin provocar la recarga de la página ni perder el estado actual del formulario de reserva. |
@@ -173,7 +173,7 @@
 | **¿Crítico?** | Sí |
 | **Prioridad de desarrollo** | Alto |
 | **Documentos de visualización asociados** | Documento SRS – Acuerdos de Nivel de Servicio (SLA) / Diagrama de Infraestructura Cloud |
-| **Entrada** | 1. Peticiones continuas de usuarios las 24 horas del día, los 7 días de la semana, los 365 días del año.<br>2. Monitoreo constante de salud del sistema mediante comprobaciones de estado (`/actuator/health`). |
+| **Entrada** | 1. Peticiones continuas de usuarios las 24 horas del día, los 7 días de la semana, los 365 días del año.<br>2. Monitoreo constante de salud del sistema mediante comprobaciones de estado (Servicio de Monitoreo de Salud de la API). |
 | **Salida** | 1. Operatividad ininterrumpida de los servicios core (Catálogo, Autenticación, Reservas y Pagos) con un Uptime garantizado del 99.9% anual.<br>2. Tiempo máximo de inactividad no planificada inferior a 8.76 horas por año. |
 | **Descripción** | La plataforma Drivique es una solución crítica de alquiler de vehículos en tiempo real, por lo que debe mantenerse disponible permanentemente. La infraestructura backend debe estar desplegada en contenedores orquestados con balanceadores de carga y réplicas secundarias de base de datos con conmutación por error (*Failover*) automática. Los trabajos de mantenimiento programado deben realizarse en franjas horarias de mínimo tráfico (entre las 02:00 AM y las 04:00 AM) y ser notificados con previa anticipación. |
 | **Manejo de situaciones anormales** | 1. Ante la caída imprevista del servidor principal de backend, el balanceador de carga redirige el tráfico en menos de 5 segundos hacia una instancia de respaldo activa.<br>2. Si la base de datos primaria se desconecta, la réplica de lectura asume el rol de primaria de forma automática sin pérdida de transacciones. |
