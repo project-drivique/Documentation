@@ -72,7 +72,7 @@
 ### RF2: Redirección tras inicio de sesión
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF2.1** Redirigir automáticamente al catálogo de vehículos (`/home`) tras la autenticación exitosa de un usuario con rol Cliente.
+1. **RF2.1** Redirigir automáticamente al catálogo de vehículos (Inicio del Cliente) tras la autenticación exitosa de un usuario con rol Cliente.
 2. **RF2.2** Bloquear la visualización de la Landing Page pública (`/`) cuando exista una sesión activa, redirigiendo al panel asignado al rol.
 3. **RF2.3** Ocultar los botones de "Iniciar sesión" y "Registrarse" en el menú superior para usuarios autenticados, desplegando en su lugar el nombre de usuario, avatar e ícono de notificaciones.
 4. **RF2.4** Permitir la libre navegación por el catálogo e iniciar procesos de reserva sin modales de bloqueo para el usuario autenticado.
@@ -110,7 +110,7 @@
 8. **RF3.8** Requerir la aceptación obligatoria de los Términos y Condiciones y Política de Privacidad mediante checkbox.
 9. **RF3.9** Deshabilitar el botón "Registrarse" mientras existan errores de validación o campos obligatorios vacíos.
 10. **RF3.10** Enviar petición de registro al servidor REST backend (`POST /api/v1/auth/register`).
-11. **RF3.11** Redirigir automáticamente a la pantalla de verificación 2FA (`/verify-2fa`) tras completar el envío inicial.
+11. **RF3.11** Redirigir automáticamente a la pantalla de verificación 2FA (Pantalla de Verificación 2FA) tras completar el envío inicial.
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
@@ -131,14 +131,14 @@
 ### RF4: Verificación de identidad con doble factor (2FA / Código de Correo)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF4.1** Renderizar la pantalla de verificación de código OTP de 6 dígitos (`/verify-2fa`).
+1. **RF4.1** Renderizar la pantalla de verificación de código OTP de 6 dígitos (Pantalla de Verificación 2FA).
 2. **RF4.2** Desplegar 6 casillas numéricas independientes con avance automático de foco al digitar cada número.
 3. **RF4.3** Mostrar el correo electrónico al cual fue enviado el código de confirmación.
 4. **RF4.4** Implementar contador regresivo de tiempo de validez del código (ej. 05:00 minutos).
 5. **RF4.5** Ofrecer botón "Reenviar código" que se habilita únicamente cuando el contador llega a cero.
 6. **RF4.6** Validar automáticamente el código al completar el último dígito en la sexta casilla.
 7. **RF4.7** Activar la cuenta de usuario en la base de datos tras la validación exitosa.
-8. **RF4.8** Redirigir al usuario autenticado al catálogo (`/home`) con el token JWT de sesión activo.
+8. **RF4.8** Redirigir al usuario autenticado al catálogo (Inicio del Cliente) con el token JWT de sesión activo.
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
@@ -161,12 +161,12 @@
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF5.1** Renderizar formulario de inicio de sesión (Formulario de Inicio de Sesión) con campos de correo electrónico y contraseña.
 2. **RF5.2** Ofrecer la función "Recordarme" para mantener la sesión activa en el navegador.
-3. **RF5.3** Incluir enlace "¿Olvidaste tu contraseña?" con redirección a la vista de recuperación (`/forgot-password`).
+3. **RF5.3** Incluir enlace "¿Olvidaste tu contraseña?" con redirección a la vista de recuperación (Pantalla de Recuperación de Contraseña).
 4. **RF5.4** Alternar la visibilidad del texto de la contraseña mediante ícono interactivo.
 5. **RF5.5** Enviar credenciales al backend (`POST /api/v1/auth/login`) cifradas en canal HTTPS.
 6. **RF5.6** Almacenar el token JWT recibido en el almacenamiento del cliente (`localStorage` / Cookie HTTP-Only).
 7. **RF5.7** Cargar el perfil de usuario en el estado global de la aplicación.
-8. **RF5.8** Redirigir al usuario al catálogo (`/home`) o al panel asignado según su rol.
+8. **RF5.8** Redirigir al usuario al catálogo (Inicio del Cliente) o al panel asignado según su rol.
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
@@ -187,10 +187,10 @@
 ### RF6: Recuperar contraseña
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF6.1** Renderizar la pantalla de solicitud de recuperación de contraseña (`/forgot-password`).
+1. **RF6.1** Renderizar la pantalla de solicitud de recuperación de contraseña (Pantalla de Recuperación de Contraseña).
 2. **RF6.2** Solicitar el correo electrónico asociado a la cuenta.
 3. **RF6.3** Enviar enlace con token de restablecimiento único al correo del usuario (`POST /api/v1/auth/forgot-password`).
-4. **RF6.4** Renderizar la pantalla de restablecimiento de contraseña (`/reset-password`) al acceder desde el enlace del correo.
+4. **RF6.4** Renderizar la pantalla de restablecimiento de contraseña (Pantalla de Restablecimiento de Contraseña) al acceder desde el enlace del correo.
 5. **RF6.5** Solicitar nueva contraseña y confirmación de la misma con validación de fortaleza.
 6. **RF6.6** Actualizar la contraseña en la base de datos y revocar tokens de restablecimiento utilizados.
 7. **RF6.7** Redirigir al usuario a la pantalla de login (Formulario de Inicio de Sesión) con mensaje de éxito.
@@ -1184,27 +1184,29 @@
 
 ---
 
-### RF43: Gestión de promociones y cupones
+### RF43: Gestión de promociones, cupones y ofertas destacadas
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF43.1** Renderizar el panel de marketing y promociones (Módulo de Ofertas y Promociones).
-2. **RF43.2** Permite crear cupones de descuento (porcentaje o monto fijo en COP).
-3. **RF43.3** Definir código de cupón, fecha de inicio, fecha de vencimiento, límite de usos totales, límite de usos por usuario y monto mínimo de reserva requerido.
-4. **RF43.4** Gestionar la sección de "Promociones destacadas" expuestas en la Landing Page y el catálogo.
+1. **RF43.1** Renderizar la consola de gestión de marketing, cupones y promociones (Módulo de Ofertas y Promociones).
+2. **RF43.2** Creación y parametrización de **Cupones de Descuento**: Permitir al Super Administrador y al Encargado de Sucursal definir cupones por porcentaje o por monto fijo en COP, estableciendo el código alfanumérico, fecha de inicio, fecha de expiración, límite de usos acumulados, límite de canjes por usuario y monto mínimo de reserva.
+3. **RF43.3** Creación y publicación de **Promociones Destacadas**: Gestionar campañas publicitarias visuales (banners dinámicos, tarjetas de oferta y viñetas promocionales) expuestas en la Landing Page principal y en las vitrinas del Catálogo de Vehículos.
+4. **RF43.4** Conversión de Cupones a Promociones Destacadas: Permitir al administrador o encargado de sucursal seleccionar cualquier cupón existente y promoverlo dinámicamente al estado de "Promoción Destacada", generando la tarjeta de anuncio pública en la interfaz comercial para que los clientes puedan visualizar e interactuar directamente con el beneficio sin necesidad de ingresar manualmente el código alfanumérico.
+5. **RF43.5** Control de ámbito territorial y sucursal: Permitir asociar la validez de los cupones y promociones destacadas a una sucursal física específica o habilitarlos para la operación nacional.
+6. **RF43.6** Auditoría y métricas de rendimiento: Registrar el conteo en tiempo real de canjes por cupón, importe acumulado descontado y rentabilidad de las promociones destacadas activas.
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF43 Gestión de promociones y cupones |
-| **Tipo / Actor** | Super Administrador |
-| **Componente / Interfaz (UI)** | Interfaz ManagePromotionsPage, CouponFormModal |
-| **Descripción** | Creación y administración de incentivos comerciales y cupones de descuento para fidelización de clientes. |
-| **Entrada** | 1. Reglas de cupón promocional (código, descuento, vigencia). |
-| **Salida** | 1. Cupón activo en el motor de cálculo de precios del checkout. |
-| **Acción** | 1. Transmitir a `POST /api/v1/admin/coupons`. |
-| **Manejo de Situaciones Anormales** | 1. No se permite crear dos cupones activos con el mismo código promocional. |
-| **Criterios de Aceptación** | 1. Los cupones caducan automáticamente al alcanzar la fecha fin o el límite de usos. |
+| **Título del RF** | RF43 Gestión de promociones, cupones y ofertas destacadas |
+| **Tipo / Actor** | Super Administrador / Encargado de Sucursal |
+| **Componente / Interfaz (UI)** | Interfaz ManagePromotionsPage, CouponFormModal, FeaturedPromoCard |
+| **Descripción** | Creación, segmentación y administración de incentivos comerciales (cupones alfanuméricos) y promociones destacadas, permitiendo la transformación directa de cupones a ofertas visuales de alto impacto en las vitrinas públicas de la plataforma. |
+| **Entrada** | 1. Parámetros de cupones (código, tipo de descuento, tope de uso, vigencia).<br>2. Acción de conversión "Destacar Cupón en Vitrina Principal".<br>3. Filtro por sucursal aplicable. |
+| **Salida** | 1. Registro del cupón en la base de datos.<br>2. Banner o tarjeta promocional visible en la Landing Page y Catálogo.<br>3. Aplicación automática o manual del descuento en la pasarela del checkout. |
+| **Acción** | 1. Transmitir reglas a la API REST de promociones (`POST/PUT /api/v1/promotions/coupons`).<br>2. Invocar endpoint de conversión a destacada (`PATCH /api/v1/promotions/coupons/{id}/feature`). |
+| **Manejo de Situaciones Anormales** | 1. Si se intenta activar una promoción destacada con fecha expirada, el sistema la rechaza e indica la inconsistencia.<br>2. Si dos cupones activos poseen el mismo código alfanumérico en una misma sucursal, el sistema bloquea el duplicado. |
+| **Criterios de Aceptación** | 1. Los cupones convertidos a "Promoción Destacada" se muestran de inmediato en la Landing Page y el Catálogo.<br>2. El Encargado de Sucursal solo puede crear o destacar cupones dentro del ámbito de su sucursal asignada.<br>3. Los cupones caducan automáticamente al agotar su cupo de usos o fecha límite. |
 
 ---
 
@@ -1234,7 +1236,7 @@
 ### RF45: Configuración de marca e identidad visual
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF45.1** Renderizar el panel de personalización de marca (`/admin/configuracion`).
+1. **RF45.1** Renderizar el panel de personalización de marca (Módulo de Configuración de Marca).
 2. **RF45.2** Permitir actualizar el logo corporativo de Drivique, favicon, paleta de colores primarios y secundarios del sistema visual.
 3. **RF45.3** Configurar datos de contacto globales, enlaces de redes sociales y texto de la propuesta de valor.
 
@@ -1257,7 +1259,7 @@
 ### RF46: Auditoría y registro de actividad
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF46.1** Renderizar la consola de auditoría de seguridad (`/admin/auditoria`).
+1. **RF46.1** Renderizar la consola de auditoría de seguridad (Consola de Auditoría).
 2. **RF46.2** Registrar de forma inmutable todas las operaciones críticas realizadas en el sistema (inicios de sesión, cambios de precio, cancelaciones de reserva, modificaciones de roles, pagos aprobados).
 3. **RF46.3** Grabar marca de tiempo exacto, dirección IP origen, usuario ejecutor, módulo afectado y detalle del cambio (valor anterior vs valor nuevo).
 
@@ -1280,7 +1282,7 @@
 ### RF47: Confirmación de pago en efectivo (sucursal)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF47.1** Renderizar el módulo de caja para el Encargado de Sucursal (`/encargado/caja`).
+1. **RF47.1** Renderizar el módulo de caja para el Encargado de Sucursal (Módulo de Caja de Sucursal).
 2. **RF47.2** Permitir al encargado buscar reservas en estado "Pendiente de Pago en Efectivo" por código de reserva o cédula del cliente.
 3. **RF47.3** Registrar la recepción del dinero en efectivo en la caja de la sucursal.
 4. **RF47.4** Cambiar el estado de la reserva a "PAGADA y CONFIRMADA", cancelando el temporizador de vencimiento dinámico y emitiendo el recibo de caja digital.
@@ -1304,7 +1306,7 @@
 ### RF48: Centro de notificaciones operativas de sucursal (`BranchNotificationCenterPage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF48.1** Renderizar la pantalla de notificaciones de la sucursal (`/encargado/notificaciones`).
+1. **RF48.1** Renderizar la pantalla de notificaciones de la sucursal (Centro de Notificaciones de Sucursal).
 2. **RF48.2** Mostrar alertas en tiempo real sobre nuevas reservas asignadas a la sede, devoluciones del día, vencimientos próximos de pagos en efectivo y reportes de averías.
 3. **RF48.3** Filtrar alertas por nivel de urgencia (*Alta*, *Media*, *Informativa*).
 
@@ -1327,7 +1329,7 @@
 ### RF49: Moderación y respuesta a reseñas de sucursal (`BranchReviewsPage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF49.1** Renderizar el panel de calificaciones y comentarios de la sucursal (`/encargado/resenas`).
+1. **RF49.1** Renderizar el panel de calificaciones y comentarios de la sucursal (Moderación de Reseñas de Sucursal).
 2. **RF49.2** Mostrar el listado de reseñas enviadas por los clientes que alquilaron vehículos en dicha sede, exhibiendo fotos adjuntas y puntuaciones.
 3. **RF49.3** Permitir al Encargado de Sucursal emitir una respuesta oficial inmutable que se publicará debajo de la reseña del cliente en el catálogo público.
 4. **RF49.4** Reportar al Super Administrador reseñas con lenguaje ofensivo para su moderación.
@@ -1351,7 +1353,7 @@
 ### RF50: Inspección y entrega del vehículo (`DeliveryManagementPage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF50.1** Renderizar el módulo de entrega de vehículos (`/encargado/entregas`).
+1. **RF50.1** Renderizar el módulo de entrega de vehículos (Protocolo de Inspección y Entrega).
 2. **RF50.2** Desplegar la lista de entregas programadas para el día actual.
 3. **RF50.3** Incluir formulario de acta de inspección inicial: nivel de combustible, kilometraje de salida, estado de llantas, kit de carretera y marcado visual de rayones previos en diagrama 3D/2D del auto.
 4. **RF50.4** Capturar fotografías en tiempo real del estado de entrega del vehículo.
@@ -1376,7 +1378,7 @@
 ### RF51: Perfil Público y Operativo de Sucursal (`BranchProfilePage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF51.1** Renderizar la pantalla de perfil operativo de la sucursal (`/encargado/perfil-sucursal`).
+1. **RF51.1** Renderizar la pantalla de perfil operativo de la sucursal (Perfil Operativo de Sucursal).
 2. **RF51.2** Permitir al encargado actualizar la información operativa de la sede: teléfonos de atención inmediata, fotos del local, instructivo de llegada y avisos a los clientes.
 3. **RF51.3** Consultar el mapa de cobertura y el resumen de flota asignada a la sede.
 
@@ -1423,7 +1425,7 @@
 ### RF53: Formulario de Inspección de Devolución (`ReturnInspectionPage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF53.1** Renderizar el módulo de recepción de vehículos (`/encargado/devoluciones`).
+1. **RF53.1** Renderizar el módulo de recepción de vehículos (Formulario de Inspección de Devolución).
 2. **RF53.2** Registrar el recibo del vehículo comprobando: fecha y hora de entrega real, kilometraje final, nivel de combustible de retorno y limpiezas.
 3. **RF53.3** Comparar el estado de devolución contra la inspección inicial (RF50) para detectar nuevos daños, rayones o faltantes.
 4. **RF53.4** Calcular automáticamente cargos adicionales en caso de excedente de kilometraje, falta de combustible, entregas tardías o daños.
@@ -1448,7 +1450,7 @@
 ### RF54: Gestión de Cupones Promocionales por Sucursal (`BranchCouponsPage`)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF54.1** Renderizar la pantalla de cupones específicos de la sucursal (`/encargado/cupones`).
+1. **RF54.1** Renderizar la pantalla de cupones específicos de la sucursal (Módulo de Cupones de Sucursal).
 2. **RF54.2** Permitir al Encargado de Sucursal gestionar y activar promociones locales exclusivas para la flota asignada a su sede.
 3. **RF54.3** Monitorear el nivel de redención de cupones locales y su impacto en las reservas de la sucursal.
 
@@ -1472,12 +1474,12 @@
 
 | ID | Nombre del Requerimiento | Módulo | Ámbito / Rol | Componente / Ruta Principal |
 | :--- | :--- | :--- | :--- | :--- |
-| **RF1** | Página de inicio (visitante sin sesión) | Landing Page | Visitante | `/` -> LandingPage |
+| **RF1** | Página de inicio (visitante sin sesión) | Landing Page | Visitante | Página de Inicio -> LandingPage |
 | **RF2** | Redirección tras inicio de sesión | Landing Page | Cliente/Admin/Encargado | ProtectedRoute, Almacén de Autenticación |
 | **RF3** | Registro de usuario | Autenticación | Visitante | Formulario de Registro -> RegisterPage |
-| **RF4** | Verificación de identidad 2FA (Código OTP) | Autenticación | Usuario en Registro | `/verify-2fa` -> Verify2FAPage |
+| **RF4** | Verificación de identidad 2FA (Código OTP) | Autenticación | Usuario en Registro | Pantalla de Verificación 2FA -> Verify2FAPage |
 | **RF5** | Inicio de sesión | Autenticación | Cliente | Formulario de Inicio de Sesión -> LoginPage |
-| **RF6** | Recuperar contraseña | Autenticación | Cliente | `/forgot-password`, `/reset-password` |
+| **RF6** | Recuperar contraseña | Autenticación | Cliente | Pantalla de Recuperación de Contraseña -> ForgotPasswordPage |
 | **RF7** | Inicio de sesión con rol | Autenticación | Super Admin / Encargado | Rúter Principal -> RoleBasedGuard |
 | **RF8** | Acceso modo invitado sin registro | Autenticación | Visitante | Catálogo de Vehículos, Modal Emergente de Detalle de Vehículo |
 | **RF9** | Encabezado y buscador del catálogo | Catálogo | Cliente / Visitante | Catálogo de Vehículos -> CatalogHeader |
@@ -1487,11 +1489,11 @@
 | **RF13** | Ver detalles de un vehículo | Catálogo | Cliente / Visitante | Modal Emergente de Detalle de Vehículo -> VehicleDetailsModal |
 | **RF14** | Menú de navegación principal catálogo | Catálogo | Cliente Autenticado | CustomerNavbar |
 | **RF15** | Sección menú Mis Reservas | Catálogo | Cliente Autenticado | Mis Reservas -> MyReservationsPage |
-| **RF16** | Sección menú Mis Favoritos | Catálogo | Cliente Autenticado | `/favoritos` -> FavoritesPage |
-| **RF17** | Sección menú Notificaciones | Catálogo | Cliente Autenticado | `/notificaciones` -> CustomerNotificationsPage |
-| **RF18** | Sección menú Soporte | Catálogo | Cliente / Visitante | `/soporte` -> SupportCenterPage |
+| **RF16** | Sección menú Mis Favoritos | Catálogo | Cliente Autenticado | Catálogo de Favoritos -> FavoritesPage |
+| **RF17** | Sección menú Notificaciones | Catálogo | Cliente Autenticado | Centro de Notificaciones -> CustomerNotificationsPage |
+| **RF18** | Sección menú Soporte | Catálogo | Cliente / Visitante | Centro de Soporte -> SupportCenterPage |
 | **RF19** | Ficha informativa del vehículo a reservar | Flujo Reservas | Cliente Autenticado | CheckoutVehicleHeader |
-| **RF20** | Selección de fechas y lugar (Paso 1) | Flujo Reservas | Cliente Autenticado | `/checkout/step-1` -> CheckoutStep1DatesPage |
+| **RF20** | Selección de fechas y lugar (Paso 1) | Flujo Reservas | Cliente Autenticado | Paso 1 del Wizard de Reserva -> CheckoutStep1DatesPage |
 | **RF21** | Resumen de la reserva (Panel Lateral) | Flujo Reservas | Cliente Autenticado | ReservationSummaryPanel |
 | **RF22** | Selección de protección (Paso 2 Coberturas) | Flujo Reservas | Cliente Autenticado | CoverageSelectionGroup |
 | **RF23** | Tipo de kilometraje y extras (Paso 2 Extras) | Flujo Reservas | Cliente Autenticado | ExtrasSelectionGroup |
@@ -1505,27 +1507,27 @@
 | **RF31** | Cerrar sesión | Perfil Cliente | Cliente / Admin | Menú de Usuario -> Almacén de Autenticación |
 | **RF32** | Onboarding para nuevos usuarios | Transversal | Cliente Nuevo | WelcomeOnboardingModal |
 | **RF33** | Chat flotante de soporte (Tawk.to) | Transversal | Cliente / Visitante | LiveChatWidget |
-| **RF34** | Dashboard del administrador y sucursal | Admin Web | Super Admin / Encargado | `/admin`, `/encargado` |
-| **RF35** | Gestión de ciudades | Admin Web | Super Admin | `/admin/ciudades` -> ManageCitiesPage |
-| **RF36** | Gestión de Sucursales | Admin Web | Super Admin | `/admin/sucursales` -> ManageBranchesPage |
-| **RF37** | Gestión de vehículos (Flota) | Admin Web | Super Admin / Encargado | `/admin/vehiculos` -> ManageFleetPage |
-| **RF38** | Gestión de reservas | Admin Web | Super Admin / Encargado | `/admin/reservas` -> ManageReservationsPage |
-| **RF39** | Gestión de usuarios y clientes | Admin Web | Super Admin | `/admin/usuarios` -> ManageUsersPage |
-| **RF40** | Gestión de administradores y permisos | Admin Web | Super Admin | `/admin/roles` -> ManageRolesPage |
-| **RF41** | Gestión de reportes de incidencias | Admin Web | Super Admin / Encargado | `/admin/incidencias` -> ManageIncidentsPage |
-| **RF42** | Gestión de contratos | Admin Web | Super Admin | `/admin/contratos` -> ManageContractsPage |
-| **RF43** | Gestión de promociones y cupones | Admin Web | Super Admin | `/admin/promociones` -> ManagePromotionsPage |
-| **RF44** | Reportes administrativos | Admin Web | Super Admin | `/admin/reportes` -> ReportsPage |
-| **RF45** | Configuración de marca e identidad visual | Admin Web | Super Admin | `/admin/configuracion` -> BrandSettingsPage |
-| **RF46** | Auditoría y registro de actividad | Admin Web | Super Admin / Auditor | `/admin/auditoria` -> AuditLogsPage |
-| **RF47** | Confirmación de pago en efectivo (sucursal)| Sucursal Web | Encargado de Sucursal | `/encargado/caja` -> BranchCashierPage |
-| **RF48** | Centro de notificaciones operativas | Sucursal Web | Encargado de Sucursal | `/encargado/notificaciones` |
-| **RF49** | Moderación y respuesta a reseñas | Sucursal Web | Encargado de Sucursal | `/encargado/resenas` -> BranchReviewsPage |
-| **RF50** | Inspección y entrega del vehículo | Sucursal Web | Encargado de Sucursal | `/encargado/entregas` -> `DeliveryManagementPage` |
-| **RF51** | Perfil Público y Operativo de Sucursal | Sucursal Web | Encargado de Sucursal | `/encargado/perfil-sucursal` |
+| **RF34** | Dashboard del administrador y sucursal | Admin Web | Super Admin / Encargado | Consola Principal -> AdminDashboard |
+| **RF35** | Gestión de ciudades | Admin Web | Super Admin | Módulo de Gestión de Ciudades -> ManageCitiesPage |
+| **RF36** | Gestión de Sucursales | Admin Web | Super Admin | Módulo de Gestión de Sucursales -> ManageBranchesPage |
+| **RF37** | Gestión de vehículos (Flota) | Admin Web | Super Admin / Encargado | Módulo de Gestión de Flota -> ManageFleetPage |
+| **RF38** | Gestión de reservas | Admin Web | Super Admin / Encargado | Módulo de Gestión de Reservas -> ManageReservationsPage |
+| **RF39** | Gestión de usuarios y clientes | Admin Web | Super Admin | Módulo de Lista de Clientes -> ManageUsersPage |
+| **RF40** | Gestión de administradores y permisos | Admin Web | Super Admin | Módulo de Roles y Seguridad -> ManageRolesPage |
+| **RF41** | Gestión de reportes de incidencias | Admin Web | Super Admin / Encargado | Módulo de Gestión de Incidencias -> ManageIncidentsPage |
+| **RF42** | Gestión de contratos | Admin Web | Super Admin | Módulo de Contratos -> ManageContractsPage |
+| **RF43** | Gestión de promociones y cupones | Admin Web | Super Admin | Módulo de Ofertas y Promociones -> ManagePromotionsPage |
+| **RF44** | Reportes administrativos | Admin Web | Super Admin | Módulo de Reportes y Estadísticas -> ReportsPage |
+| **RF45** | Configuración de marca e identidad visual | Admin Web | Super Admin | Módulo de Configuración de Marca -> BrandSettingsPage |
+| **RF46** | Auditoría y registro de actividad | Admin Web | Super Admin / Auditor | Consola de Auditoría -> AuditLogsPage |
+| **RF47** | Confirmación de pago en efectivo (sucursal)| Sucursal Web | Encargado de Sucursal | Módulo de Caja de Sucursal -> BranchCashierPage |
+| **RF48** | Centro de notificaciones operativas | Sucursal Web | Encargado de Sucursal | Centro de Notificaciones de Sucursal -> BranchNotificationCenterPage |
+| **RF49** | Moderación y respuesta a reseñas | Sucursal Web | Encargado de Sucursal | Moderación de Reseñas de Sucursal -> BranchReviewsPage |
+| **RF50** | Inspección y entrega del vehículo | Sucursal Web | Encargado de Sucursal | Protocolo de Inspección y Entrega -> DeliveryManagementPage |
+| **RF51** | Perfil Público y Operativo de Sucursal | Sucursal Web | Encargado de Sucursal | Perfil Operativo de Sucursal -> BranchProfilePage |
 | **RF52** | Validación de Entrega con PIN Nequi | Sucursal Web | Encargado de Sucursal | Modal BranchPinValidationModal |
-| **RF53** | Formulario Inspección de Devolución | Sucursal Web | Encargado de Sucursal | `/encargado/devoluciones` -> `ReturnInspectionPage`|
-| **RF54** | Gestión de Cupones Promocionales Sucursal| Sucursal Web | Encargado de Sucursal | `/encargado/cupones` -> BranchCouponsPage |
+| **RF53** | Formulario Inspección de Devolución | Sucursal Web | Encargado de Sucursal | Formulario Inspección de Devolución -> ReturnInspectionPage |
+| **RF54** | Gestión de Cupones Promocionales Sucursal| Sucursal Web | Encargado de Sucursal | Módulo de Cupones de Sucursal -> BranchCouponsPage |
 
 ---
 *Especificación Completa de Requerimientos Funcionales (`functional-requirements.md`) elaborada bajo el Estándar IEEE 830-1998 para el proyecto Drivique.*
