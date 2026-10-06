@@ -61,7 +61,7 @@
 | **Tipo / Actor** | Visitante (Usuario no autenticado sin sesión iniciada en la plataforma) |
 | **Componente / Interfaz (UI)** | Interfaz LandingPage, HeroSection, FeaturedVehicles, HowItWorks, Footer |
 | **Descripción** | Presenta la propuesta de valor comercial y la identidad de marca de Drivique a los visitantes públicos. Permite consultar la flota destacada en tiempo real, comprender los 4 pasos del flujo de alquiler, revisar beneficios corporativos y conducir la navegación hacia los formularios de registro de cuenta e inicio de sesión cuando se intentan realizar acciones restringidas. |
-| **Entrada** | 1. Carga de la ruta raíz del dominio (`/`) sin un token JWT activo en la sesión.<br>2. Clics del usuario en los botones principales de conversión ("Explorar vehículos", "Registrarse").<br>3. Clics en los ítems de la barra de navegación superior y pie de página (Footer).<br>4. Interacción con las tarjetas de la sección "Disponibles ahora". |
+| **Entrada** | 1. Carga de la ruta raíz del dominio (Página de Inicio Principal) sin un token JWT activo en la sesión.<br>2. Clics del usuario en los botones principales de conversión ("Explorar vehículos", "Registrarse").<br>3. Clics en los ítems de la barra de navegación superior y pie de página (Footer).<br>4. Interacción con las tarjetas de la sección "Disponibles ahora". |
 | **Salida** | 1. Renderizado de la estructura visual completa de la Landing Page con sus 5 secciones principales.<br>2. Despliegue de los botones "Iniciar sesión" y "Registrarse" en el encabezado fijo.<br>3. Redirección inmediata a las rutas protegidas de autenticación (Formulario de Inicio de Sesión o Formulario de Registro) ante cualquier interacción de conversión. |
 | **Acción** | 1. Verificar la ausencia de token JWT en el estado global (`useAuthStore`).<br>2. Consultar y cargar en memoria el listado de vehículos destacados de la flota activa via `GET /api/v1/vehicles/featured`.<br>3. Interceptación de intentos de acceso a funcionalidades de usuario registrado y redirección al enrutador de autenticación. |
 | **Manejo de Situaciones Anormales** | 1. Si la API de vehículos destacados falla (HTTP 500/503), la página renderiza un estado degradado mostrando una vista previa estática sin romper la maquetación.<br>2. Si la conexión a internet cae, se despliega una barra superior indicando estado offline. |
@@ -73,7 +73,7 @@
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF2.1** Redirigir automáticamente al catálogo de vehículos (Inicio del Cliente) tras la autenticación exitosa de un usuario con rol Cliente.
-2. **RF2.2** Bloquear la visualización de la Landing Page pública (`/`) cuando exista una sesión activa, redirigiendo al panel asignado al rol.
+2. **RF2.2** Bloquear la visualización de la Landing Page pública (Página de Inicio Principal) cuando exista una sesión activa, redirigiendo al panel asignado al rol.
 3. **RF2.3** Ocultar los botones de "Iniciar sesión" y "Registrarse" en el menú superior para usuarios autenticados, desplegando en su lugar el nombre de usuario, avatar e ícono de notificaciones.
 4. **RF2.4** Permitir la libre navegación por el catálogo e iniciar procesos de reserva sin modales de bloqueo para el usuario autenticado.
 
@@ -84,9 +84,9 @@
 | **Título del RF** | RF2 Redirección tras inicio de sesión |
 | **Tipo / Actor** | Cliente / Super Administrador (`ROLE_SUPER_ADMIN`) / Encargado de Sucursal (`ROLE_BRANCH_MANAGER`) |
 | **Componente / Interfaz (UI)** | Guardias de Navegación ProtectedRoute, GuestRoute, Almacén de Autenticación |
-| **Descripción** | Administra el flujo de control de acceso y enrutamiento defensivo del sistema. Garantiza que cualquier usuario que posea un token de sesión activo (JWT) y pretenda ingresar a la ruta pública (`/`) sea evaluado y redirigido automáticamente a la vista principal correspondiente a su rol de usuario sin exponer la Landing Page de visitante. |
-| **Entrada** | 1. Evento de autenticación exitosa en el formulario de inicio de sesión.<br>2. Intento de navegación manual a la URL raíz (`/`) teniendo una sesión activa persistida en el navegador. |
-| **Salida** | 1. Redirección automática a la ruta `/home` para usuarios con rol de Cliente.<br>2. Redirección a `/admin` para usuarios con rol de Super Administrador.<br>3. Redirección a `/encargado` para el rol Encargado de Sucursal.<br>4. Menú de navegación actualizado con el perfil, avatar e insignias del usuario autenticado. |
+| **Descripción** | Administra el flujo de control de acceso y enrutamiento defensivo del sistema. Garantiza que cualquier usuario que posea un token de sesión activo (JWT) y pretenda ingresar a la ruta pública (Página de Inicio Principal) sea evaluado y redirigido automáticamente a la vista principal correspondiente a su rol de usuario sin exponer la Landing Page de visitante. |
+| **Entrada** | 1. Evento de autenticación exitosa en el formulario de inicio de sesión.<br>2. Intento de navegación manual a la URL raíz (Página de Inicio Principal) teniendo una sesión activa persistida en el navegador. |
+| **Salida** | 1. Redirección automática a la ruta Pantalla de Inicio del Cliente para usuarios con rol de Cliente.<br>2. Redirección a Panel del Administrador para usuarios con rol de Super Administrador.<br>3. Redirección a Panel del Encargado de Sucursal para el rol Encargado de Sucursal.<br>4. Menú de navegación actualizado con el perfil, avatar e insignias del usuario autenticado. |
 | **Acción** | 1. Leer el estado del token JWT e hidratar el usuario desde `authStore`.<br>2. Ejecutar la función helper de control de acceso `getRoleHome(usuario.rol)`.<br>3. Reemplazar la entrada en el historial de navegación para evitar bucles de retorno al presionar el botón "Atrás" del navegador. |
 | **Manejo de Situaciones Anormales** | 1. Si el token JWT ha expirado durante la verificación, el sistema destruye las credenciales guardadas y redirige a Formulario de Inicio de Sesión con un mensaje de expiración de sesión. |
 | **Criterios de Aceptación** | 1. Un usuario autenticado no debe poder visualizar la Landing Page de visitantes bajo ninguna circunstancia.<br>2. El sistema debe redirigir exactamente al panel correspondiente al rol del token.<br>3. Los botones de inicio de sesión y registro no deben ser visibles para usuarios autenticados. |
@@ -121,7 +121,7 @@
 | **Componente / Interfaz (UI)** | Interfaz RegisterPage, RegisterForm, PasswordStrengthBar |
 | **Descripción** | Permite el alta de nuevos usuarios en la plataforma Drivique mediante la captura de credenciales básicas de acceso. Garantiza la calidad de la información ingresada mediante validaciones reactivas, fortalece la seguridad exigiendo contraseñas complejas y asegura el consentimiento legal del usuario previo al envío de datos. |
 | **Entrada** | 1. Correo electrónico válido (formato RFC 5322).<br>2. Contraseña y Confirmación de contraseña.<br>3. Marcado del checkbox de Aceptación de Términos y Condiciones. |
-| **Salida** | 1. Feedback visual instantáneo sobre la validez de los campos.<br>2. Creación del registro temporal de usuario en estado "Pendiente de Verificación".<br>3. Envío de código OTP de 6 dígitos al correo electrónico registrado.<br>4. Redirección automática a la vista `/verify-2fa`. |
+| **Salida** | 1. Feedback visual instantáneo sobre la validez de los campos.<br>2. Creación del registro temporal de usuario en estado "Pendiente de Verificación".<br>3. Envío de código OTP de 6 dígitos al correo electrónico registrado.<br>4. Redirección automática a la vista Verificación 2FA. |
 | **Acción** | 1. Ejecutar validación de esquema con Zod / React Hook Form.<br>2. Transmitir payload JSON cifrado por HTTPS al backend.<br>3. Guardar temporalmente el correo electrónico en el estado de registro para la fase de 2FA. |
 | **Manejo de Situaciones Anormales** | 1. Si el correo ya se encuentra registrado en el sistema, la API retorna error `409 Conflict` y el formulario resalta el campo de correo con el mensaje "Este correo electrónico ya está registrado".<br>2. Si falla el servidor, se notifica mediante un Toast rojo de error. |
 | **Criterios de Aceptación** | 1. No se permite el registro si las contraseñas no coinciden o no cumplen la regla de fortaleza.<br>2. El botón de envío no se activa hasta haber aceptado los Términos y Condiciones.<br>3. Al completar el formulario, se redirige inmediatamente a la verificación de código OTP. |
@@ -149,7 +149,7 @@
 | **Componente / Interfaz (UI)** | Interfaz Verify2FAPage, OTPInputGroup, CountdownTimer |
 | **Descripción** | Mecanismo de seguridad de doble factor que exige la confirmación del correo electrónico registrado mediante la introducción de una clave de un solo uso (OTP) de 6 dígitos. Previene la creación de cuentas falsas o no autorizadas. |
 | **Entrada** | 1. Código numérico OTP de 6 dígitos ingresado por el usuario.<br>2. Evento de clic en "Reenviar código". |
-| **Salida** | 1. Activación de la cuenta de usuario en la base de datos (`is_active = true`).<br>2. Generación e inyección del token JWT de sesión en la plataforma.<br>3. Redirección automática a la vista `/home`. |
+| **Salida** | 1. Activación de la cuenta de usuario en la base de datos (`is_active = true`).<br>2. Generación e inyección del token JWT de sesión en la plataforma.<br>3. Redirección automática a la vista Pantalla de Inicio del Cliente. |
 | **Acción** | 1. Transmitir el código numérico a `POST /api/v1/auth/verify-otp`.<br>2. Comparar la clave ingresada contra el hash del código temporal en servidor.<br>3. Autenticar de forma transparente al usuario una vez validado. |
 | **Manejo de Situaciones Anormales** | 1. Si el código ingresado es incorrecto, se limpia el input y se despliega la alerta "Código de verificación inválido".<br>2. Si el código ha expirado, se exige presionar "Reenviar código" para recibir uno nuevo. |
 | **Criterios de Aceptación** | 1. El avance entre las 6 casillas numéricas debe ser automático e intuitivo.<br>2. La cuenta no puede iniciar sesión sin haber completado la verificación OTP.<br>3. El reenvió de código debe estar bloqueado mientras el contador regresivo se encuentre activo. |
@@ -179,7 +179,7 @@
 | **Entrada** | 1. Correo electrónico del usuario.<br>2. Contraseña del usuario.<br>3. Selección del checkbox "Recordarme". |
 | **Salida** | 1. Token JWT de autenticación retornado por el servidor.<br>2. Perfil del usuario cargado en memoria.<br>3. Redirección exitosa a la vista correspondiente. |
 | **Acción** | 1. Validar el formato de los datos ingresados.<br>2. Invocar la API de autenticación backend.<br>3. Guardar el token y configurar los encabezados HTTP `Authorization: Bearer <token>` para peticiones futuras. |
-| **Manejo de Situaciones Anormales** | 1. Si las credenciales son erróneas, se despliega la alerta "Correo o contraseña incorrectos".<br>2. Si la cuenta no está verificada (falta 2FA), redirige automáticamente a `/verify-2fa`. |
+| **Manejo de Situaciones Anormales** | 1. Si las credenciales son erróneas, se despliega la alerta "Correo o contraseña incorrectos".<br>2. Si la cuenta no está verificada (falta 2FA), redirige automáticamente a Verificación 2FA. |
 | **Criterios de Aceptación** | 1. Las credenciales deben enviarse cifradas obligatoriamente.<br>2. Al autenticarse correctamente, el sistema redirige al catálogo sin demoras.<br>3. La opción "Recordarme" extiende la persistencia del token de sesión. |
 
 ---
@@ -201,7 +201,7 @@
 | :--- | :--- |
 | **Título del RF** | RF6 Recuperar contraseña |
 | **Tipo / Actor** | Usuario Registrado |
-| **Componente / Interfaz (UI)** | Rutas `/forgot-password` y `/reset-password` -> ForgotPasswordPage, ResetPasswordPage |
+| **Componente / Interfaz (UI)** | Rutas Recuperación de Contraseña y Restablecimiento de Contraseña -> ForgotPasswordPage, ResetPasswordPage |
 | **Descripción** | Flujo de autoservicio que permite a los usuarios que han olvidado su contraseña restablecerla de forma segura mediante la verificación de propiedad de su correo electrónico. |
 | **Entrada** | 1. Correo electrónico registrado.<br>2. Token de recuperación recibido en el enlace.<br>3. Nueva contraseña y confirmación. |
 | **Salida** | 1. Correo con enlace de restablecimiento seguro (válido por 15 minutos).<br>2. Actualización del hash de contraseña en la base de datos.<br>3. Notificación de éxito y redirección a login. |
@@ -215,8 +215,8 @@
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF7.1** Evaluar los claims del token JWT tras la autenticación de cualquier usuario.
-2. **RF7.2** Redirigir al panel `/admin` si el usuario posee el rol Super Administrador (`ROLE_SUPER_ADMIN`).
-3. **RF7.3** Redirigir al panel `/encargado` si el usuario posee el rol Encargado de Sucursal (`ROLE_BRANCH_MANAGER`).
+2. **RF7.2** Redirigir al panel Panel del Administrador si el usuario posee el rol Super Administrador (`ROLE_SUPER_ADMIN`).
+3. **RF7.3** Redirigir al panel Panel del Encargado de Sucursal si el usuario posee el rol Encargado de Sucursal (`ROLE_BRANCH_MANAGER`).
 4. **RF7.4** Restringir el acceso a rutas administrativas a usuarios con rol Cliente (`ROLE_CUSTOMER`), retornando error 403 Forbidden.
 5. **RF7.5** Cargar las variables de contexto específicas del rol en el almacenamiento de la aplicación.
 
@@ -229,7 +229,7 @@
 | **Componente / Interfaz (UI)** | Rúter Principal -> AppRoutes, RoleBasedGuard |
 | **Descripción** | Control de acceso basado en roles (RBAC) que canaliza a los usuarios administrativos hacia sus respectivos paneles de control de acuerdo con sus permisos asignados en el sistema. |
 | **Entrada** | 1. Token JWT validado con claims de rol (`ROLE_SUPER_ADMIN`, `ROLE_BRANCH_MANAGER`). |
-| **Salida** | 1. Redirección al dashboard administrativo correspondiente (`/admin` o `/encargado`).<br>2. Habilitación de menús y opciones de gestión administrativa. |
+| **Salida** | 1. Redirección al dashboard administrativo correspondiente (Panel del Administrador o Panel del Encargado de Sucursal).<br>2. Habilitación de menús y opciones de gestión administrativa. |
 | **Acción** | 1. Decodificar payload JWT y extraer el arreglo de roles/permisos.<br>2. Comparar roles contra la matriz de permisos de la ruta solicitada.<br>3. Renderizar el layout administrativo o denegar el acceso. |
 | **Manejo de Situaciones Anormales** | 1. Si un usuario intenta forzar la URL de un panel sin tener el rol adecuado, es redirigido inmediatamente a su panel correspondiente o a la página 403. |
 | **Criterios de Aceptación** | 1. Los administradores ingresan directamente a su panel operativo.<br>2. Los clientes no pueden acceder visual ni lógicamente a ninguna vista de administración. |
@@ -256,7 +256,7 @@
 | **Entrada** | 1. Navegación libre por las rutas de catálogo y detalle.<br>2. Intento de interacción con acciones privilegiadas ("Reservar", "Guardar en favoritos"). |
 | **Salida** | 1. Visualización completa de información de flota en modo lectura.<br>2. Despliegue de modal instructivo invitando a iniciar sesión o registrarse. |
 | **Acción** | 1. Permitir peticiones GET públicas a la API de catálogo.<br>2. Capturar intención de reserva y almacenar la URL de retorno en la sesión temporal. |
-| **Manejo de Situaciones Anormales** | 1. Si el visitante intenta saltar directamente a la URL de checkout (`/checkout`), la guardia de ruta lo redirige inmediatamente a Formulario de Inicio de Sesión. |
+| **Manejo de Situaciones Anormales** | 1. Si el visitante intenta saltar directamente a la URL de checkout (Wizard de Reserva), la guardia de ruta lo redirige inmediatamente a Formulario de Inicio de Sesión. |
 | **Criterios de Aceptación** | 1. Los visitantes pueden consultar vehículos y precios sin restricción.<br>2. La acción de reservar requiere autenticación previa en el 100% de los casos. |
 
 ---
@@ -446,7 +446,7 @@
 ### RF16: Sección menú Mis Favoritos
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF16.1** Renderizar la pantalla "Mis Favoritos" (`/favoritos`) exhibiendo los vehículos guardados por el cliente.
+1. **RF16.1** Renderizar la pantalla "Mis Favoritos" (Catálogo de Favoritos) exhibiendo los vehículos guardados por el cliente.
 2. **RF16.2** Permite remover vehículos del listado de favoritos haciendo clic en el ícono de corazón.
 3. **RF16.3** Incluir botón directo de reserva en cada tarjeta del listado.
 
@@ -469,7 +469,7 @@
 ### RF17: Sección menú Notificaciones (Cliente)
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF17.1** Renderizar el centro de notificaciones personal (`/notificaciones`).
+1. **RF17.1** Renderizar el centro de notificaciones personal (Centro de Notificaciones).
 2. **RF17.2** Mostrar alertas en tiempo real sobre confirmaciones de reserva, vencimiento de plazo de pago en efectivo, asignación de PIN de entrega y promociones.
 3. **RF17.3** Permitir marcar notificaciones como leídas de forma individual o masiva ("Marcar todas como leídas").
 
@@ -492,7 +492,7 @@
 ### RF18: Sección menú Soporte
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF18.1** Renderizar la página del Centro de Soporte (`/soporte`).
+1. **RF18.1** Renderizar la página del Centro de Soporte (Centro de Soporte).
 2. **RF18.2** Desplegar sección de Preguntas Frecuentes (FAQ) organizadas por categorías acordionadas (Reservas, Pagos, Seguros, Entregas).
 3. **RF18.3** Incluir formulario de contacto para enviar solicitudes de ayuda o PQR al equipo de atención.
 4. **RF18.4** Mostrar información de contacto directo: líneas de atención 24/7, correo electrónico e integración con WhatsApp Web.
@@ -749,7 +749,7 @@
 ### RF28: Historial, consulta y seguimiento de reservas del cliente
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF28.1** Renderizar la pantalla "Mis Reservas" (`/reservas` -> ReservationsPage) con el listado consolidado de alquileres.
+1. **RF28.1** Renderizar la pantalla "Mis Reservas" (Gestión de Reservas -> ReservationsPage) con el listado consolidado de alquileres.
 2. **RF28.2** Filtrar reservas por mes de operación y por estado (*Pendiente*, *Confirmada*, *En curso*, *Finalizada*, *Cancelada*).
 3. **RF28.3** Permitir ver el detalle completo de la reserva, descargar el contrato firmado PDF (validando cédula) y visualizar el PIN de entrega.
 4. **RF28.4** Ofrecer botón de cancelación de reserva con registro del motivo de anulación.
@@ -899,7 +899,7 @@
 1. **RF31.1** Incluir la opción "Cerrar sesión" en el menú desplegable del usuario.
 2. **RF31.2** Eliminar el token JWT y los datos de perfil almacenados en el cliente (`localStorage`, `sessionStorage`, cookies).
 3. **RF31.3** Invalidador del token en el backend si se utiliza lista negra de tokens (`token blacklist`).
-4. **RF31.4** Redirigir al usuario a la Landing Page pública (`/`).
+4. **RF31.4** Redirigir al usuario a la Landing Page pública (Página de Inicio Principal).
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
@@ -910,7 +910,7 @@
 | **Componente / Interfaz (UI)** | Menú de Usuario -> Almacén de Autenticación |
 | **Descripción** | Finalización segura de la sesión de usuario activa destruyendo las credenciales locales de la aplicación. |
 | **Entrada** | 1. Clic en "Cerrar sesión". |
-| **Salida** | 1. Eliminación del token JWT.<br>2. Redirección inmediata a la ruta raíz pública (`/`). |
+| **Salida** | 1. Eliminación del token JWT.<br>2. Redirección inmediata a la ruta raíz pública (Página de Inicio Principal). |
 | **Acción** | 1. Ejecutar la función `logout()` del estado global. |
 | **Manejo de Situaciones Anormales** | 1. Incluso si la red falla, la eliminación de credenciales locales se completa de forma incondicional. |
 | **Criterios de Aceptación** | 1. Tras cerrar sesión, accionar el botón "Atrás" del navegador no debe mostrar contenido privado. |
@@ -974,7 +974,7 @@
 ### RF34: Dashboard del administrador y sucursal
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF34.1** Renderizar el panel de control principal (`/admin` para Super Admin, `/encargado` para Sucursal).
+1. **RF34.1** Renderizar el panel de control principal (Panel del Administrador para Super Admin, Panel del Encargado de Sucursal para Sucursal).
 2. **RF34.2** Desplegar métricas clave (KPIs) en tiempo real: número total de reservas activas, ingresos acumulados del mes, porcentaje de ocupación de la flota, vehículos en mantenimiento y alertas pendientes.
 3. **RF34.3** Mostrar gráficos interactivos de tendencias de ingresos por mes y alquileres por categoría de vehículo.
 4. **RF34.4** Incluir tabla con los accesos directos a las últimas reservas realizadas.
@@ -985,7 +985,7 @@
 | :--- | :--- |
 | **Título del RF** | RF34 Dashboard del administrador y sucursal |
 | **Tipo / Actor** | Super Administrador / Encargado de Sucursal |
-| **Componente / Interfaz (UI)** | Rutas `/admin` y `/encargado` -> AdminDashboardPage, KPICardGroup, RevenueChart |
+| **Componente / Interfaz (UI)** | Rutas Panel del Administrador y Panel del Encargado de Sucursal -> AdminDashboardPage, KPICardGroup, RevenueChart |
 | **Descripción** | Centro de mando gerencial y operativo que presenta resúmenes estadísticos e indicadores de rendimiento de Drivique. |
 | **Entrada** | 1. Carga de la ruta del dashboard. |
 | **Salida** | 1. Renderizado de tarjetas KPI, gráficos estadísticos y tablas de actividad reciente. |
