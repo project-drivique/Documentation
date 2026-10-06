@@ -63,7 +63,7 @@
 | **Descripción** | Presenta la propuesta de valor comercial y la identidad de marca de Drivique a los visitantes públicos. Permite consultar la flota destacada en tiempo real, comprender los 4 pasos del flujo de alquiler, revisar beneficios corporativos y conducir la navegación hacia los formularios de registro de cuenta e inicio de sesión cuando se intentan realizar acciones restringidas. |
 | **Entrada** | 1. Carga de la ruta raíz del dominio (Página de Inicio Principal) sin un token JWT activo en la sesión.<br>2. Clics del usuario en los botones principales de conversión ("Explorar vehículos", "Registrarse").<br>3. Clics en los ítems de la barra de navegación superior y pie de página (Footer).<br>4. Interacción con las tarjetas de la sección "Disponibles ahora". |
 | **Salida** | 1. Renderizado de la estructura visual completa de la Landing Page con sus 5 secciones principales.<br>2. Despliegue de los botones "Iniciar sesión" y "Registrarse" en el encabezado fijo.<br>3. Redirección inmediata a las rutas protegidas de autenticación (Formulario de Inicio de Sesión o Formulario de Registro) ante cualquier interacción de conversión. |
-| **Acción** | 1. Verificar la ausencia de token JWT en el estado global (`useAuthStore`).<br>2. Consultar y cargar en memoria el listado de vehículos destacados de la flota activa via `GET /api/v1/vehicles/featured`.<br>3. Interceptación de intentos de acceso a funcionalidades de usuario registrado y redirección al enrutador de autenticación. |
+| **Acción** | 1. Verificar la ausencia de token JWT en el estado global.<br>2. Consultar y cargar en memoria el listado de vehículos destacados de la flota activa via `GET /api/v1/vehicles/featured`.<br>3. Interceptación de intentos de acceso a funcionalidades de usuario registrado y redirección al enrutador de autenticación. |
 | **Manejo de Situaciones Anormales** | 1. Si la API de vehículos destacados falla (HTTP 500/503), la página renderiza un estado degradado mostrando una vista previa estática sin romper la maquetación.<br>2. Si la conexión a internet cae, se despliega una barra superior indicando estado offline. |
 | **Criterios de Aceptación** | 1. La página pública debe renderizarse correctamente sin solicitar credenciales ni bloquear el acceso.<br>2. El botón "Explorar vehículos" debe llevar al catálogo en modo lectura.<br>3. El botón "Registrarse" debe redirigir al formulario de registro en dos pasos.<br>4. El menú superior debe exhibir de forma permanente los accesos a inicio de sesión y registro. |
 
@@ -484,7 +484,7 @@
 | **Entrada** | 1. Eventos del sistema (cambios de estado de reserva).<br>2. Acciones del usuario para marcar como leídas. |
 | **Salida** | 1. Lista cronológica de notificaciones con marca de tiempo y enlace a la acción relevante. |
 | **Acción** | 1. Recepción de eventos vía WebSockets o Server-Sent Events (SSE). |
-| **Manejo de Situaciones Anormales** | 1. Si la conexión de tiempo real falla, se aplica un mecanismo de sondeo (`polling`) cada 30 segundos. |
+| **Manejo de Situaciones Anormales** | 1. Si la conexión de tiempo real falla, se aplica un mecanismo de sondeo cada 30 segundos. |
 | **Criterios de Aceptación** | 1. Las notificaciones críticas (como código PIN o vencimiento de pago) se destacan con color distintivo. |
 
 ---
@@ -753,7 +753,7 @@
 2. **RF28.2** Filtrar reservas por mes de operación y por estado (*Pendiente*, *Confirmada*, *En curso*, *Finalizada*, *Cancelada*).
 3. **RF28.3** Permitir ver el detalle completo de la reserva, descargar el contrato firmado PDF (validando cédula) y visualizar el PIN de entrega.
 4. **RF28.4** Ofrecer botón de cancelación de reserva con registro del motivo de anulación.
-5. **RF28.5** Permitir calificar el vehículo al finalizar el alquiler (`rateVehicle`) y reportar incidencias técnicas en cualquier momento (`makeReport`).
+5. **RF28.5** Permitir calificar el vehículo al finalizar el alquiler y reportar incidencias técnicas en cualquier momento.
 
 #### PARTE 2: FICHA TÉCNICA DETALLADA (TABLA IEEE 830)
 
@@ -839,7 +839,7 @@
 | **Descripción** | Finalización segura de la sesión de usuario activa destruyendo las credenciales locales de la aplicación. |
 | **Entrada** | 1. Clic en "Cerrar sesión". |
 | **Salida** | 1. Eliminación del token JWT.<br>2. Redirección inmediata a la ruta raíz pública (Página de Inicio Principal). |
-| **Acción** | 1. Ejecutar la función `logout()` del estado global. |
+| **Acción** | 1. Ejecutar la función `logout` del estado global. |
 | **Manejo de Situaciones Anormales** | 1. Incluso si la red falla, la eliminación de credenciales locales se completa de forma incondicional. |
 | **Criterios de Aceptación** | 1. Tras cerrar sesión, accionar el botón "Atrás" del navegador no debe mostrar contenido privado. |
 
@@ -1231,7 +1231,7 @@
 
 ---
 
-### RF48: Centro de notificaciones operativas de sucursal (`BranchNotificationCenterPage`)
+### RF48: Centro de notificaciones operativas de sucursal
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF48.1** Renderizar la pantalla de notificaciones de la sucursal (Centro de Notificaciones de Sucursal).
@@ -1242,7 +1242,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF48 Centro de notificaciones operativas de sucursal (`BranchNotificationCenterPage`) |
+| **Título del RF** | RF48 Centro de notificaciones operativas de sucursal |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz BranchNotificationCenterPage |
 | **Descripción** | Tablero de alertas operativas para el personal de sucursal enfocado en las tareas diarias de entregas y recepciones. |
@@ -1254,7 +1254,7 @@
 
 ---
 
-### RF49: Moderación y respuesta a reseñas de sucursal (`BranchReviewsPage`)
+### RF49: Moderación y respuesta a reseñas de sucursal
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF49.1** Renderizar el panel de calificaciones y comentarios de la sucursal (Moderación de Reseñas de Sucursal).
@@ -1266,7 +1266,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF49 Moderación y respuesta a reseñas de sucursal (`BranchReviewsPage`) |
+| **Título del RF** | RF49 Moderación y respuesta a reseñas de sucursal |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz BranchReviewsPage, OfficialResponseModal |
 | **Descripción** | Gestión de reputación donde la sucursal interactúa respondiendo a los comentarios y opiniones de los clientes. |
@@ -1278,7 +1278,7 @@
 
 ---
 
-### RF50: Inspección y entrega del vehículo (`DeliveryManagementPage`)
+### RF50: Inspección y entrega del vehículo
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF50.1** Renderizar el módulo de entrega de vehículos (Protocolo de Inspección y Entrega).
@@ -1291,7 +1291,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF50 Inspección y entrega del vehículo (`DeliveryManagementPage`) |
+| **Título del RF** | RF50 Inspección y entrega del vehículo |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz DeliveryManagementPage, InspectionChecklist |
 | **Descripción** | Protocolo de entrega del vehículo que documenta rigurosamente su estado físico y mecánico antes de salir de la sede. |
@@ -1303,7 +1303,7 @@
 
 ---
 
-### RF51: Perfil Público y Operativo de Sucursal (`BranchProfilePage`)
+### RF51: Perfil Público y Operativo de Sucursal
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF51.1** Renderizar la pantalla de perfil operativo de la sucursal (Perfil Operativo de Sucursal).
@@ -1314,7 +1314,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF51 Perfil Público y Operativo de Sucursal (`BranchProfilePage`) |
+| **Título del RF** | RF51 Perfil Público y Operativo de Sucursal |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz BranchProfilePage |
 | **Descripción** | Configuración de la ficha informativa de la sucursal que se muestra a los clientes durante el proceso de reserva. |
@@ -1326,7 +1326,7 @@
 
 ---
 
-### RF52: Validación de Entrega con PIN Nequi (`BranchPinValidationModal`)
+### RF52: Validación de Entrega con PIN Nequi
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF52.1** Renderizar modal de verificación de PIN en la consola de la sucursal (BranchPinValidationModal).
@@ -1338,7 +1338,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF52 Validación de Entrega con PIN Nequi (`BranchPinValidationModal`) |
+| **Título del RF** | RF52 Validación de Entrega con PIN Nequi |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Modal BranchPinValidationModal en la vista de entregas |
 | **Descripción** | Componente de seguridad que actúa como cerradura digital para autorizar la liberación física de las llaves del vehículo. |
@@ -1350,7 +1350,7 @@
 
 ---
 
-### RF53: Formulario de Inspección de Devolución (`ReturnInspectionPage`)
+### RF53: Formulario de Inspección de Devolución
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF53.1** Renderizar el módulo de recepción de vehículos (Formulario de Inspección de Devolución).
@@ -1363,19 +1363,19 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF53 Formulario de Inspección de Devolución (`ReturnInspectionPage`) |
+| **Título del RF** | RF53 Formulario de Inspección de Devolución |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz ReturnInspectionPage, ReturnChecklist |
 | **Descripción** | Recepción oficial del vehículo alquilado, evaluación de estado de retorno y liquidación de posibles penalizaciones o cargos extra. |
 | **Entrada** | 1. Datos de recepción: kilometraje, combustible, fotos de retorno y registro de novedades. |
-| **Salida** | 1. Cierre definitivo de la reserva (`COMPLETED`), paz y salvo al cliente y retorno del auto a disponibilidad. |
+| **Salida** | 1. Cierre definitivo de la reserva, paz y salvo al cliente y retorno del auto a disponibilidad. |
 | **Acción** | 1. Transmitir formulario a `POST /api/v1/branch/returns/complete`. |
 | **Manejo de Situaciones Anormales** | 1. Si se detectan daños no reportados en la entrega inicial, se abre automáticamente un reporte de incidencia (RF41) vinculado a la reserva. |
 | **Criterios de Aceptación** | 1. La liquidación de sobrantes o cobros por faltantes de combustible se calcula automáticamente según las tarifas estándar de Drivique. |
 
 ---
 
-### RF54: Gestión de Cupones Promocionales por Sucursal (`BranchCouponsPage`)
+### RF54: Gestión de Cupones Promocionales por Sucursal
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF54.1** Renderizar la pantalla de cupones específicos de la sucursal (Módulo de Cupones de Sucursal).
@@ -1386,7 +1386,7 @@
 
 | Campo | Detalle Técnico |
 | :--- | :--- |
-| **Título del RF** | RF54 Gestión de Cupones Promocionales por Sucursal (`BranchCouponsPage`) |
+| **Título del RF** | RF54 Gestión de Cupones Promocionales por Sucursal |
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Interfaz BranchCouponsPage |
 | **Descripción** | Herramienta de gestión comercial descentralizada para impulsar la demanda local en sucursales específicas. |
