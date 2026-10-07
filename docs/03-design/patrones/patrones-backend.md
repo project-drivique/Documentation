@@ -57,3 +57,17 @@ El contrato de errores previsto debe incluir estado HTTP, código interno, mensa
 ## Verificación al implementar
 
 Cada HU deberá probar las reglas que incorpore: autorización por rol, validaciones, errores, transacciones y conflictos de reserva, según corresponda. La prueba inicial de contexto con H2 no sustituye pruebas de integración con PostgreSQL ni demuestra el cumplimiento de estos lineamientos.
+
+---
+
+## 📊 Matriz Comparativa de Patrones: Web, Móvil y Backend
+
+| Capa / Componente | Panel Web (`web-drivique`) | App Móvil (`app-drivique`) | Backend (`drivique-api`) |
+| :--- | :--- | :--- | :--- |
+| **Arquitectura Base** | Feature-First Layered Architecture | Feature-First MVVM & Clean Architecture | Layered Architecture (Controller-Service-Repository) |
+| **Gestión de Estado y UI** | Custom Hooks (`useManagementTable`, `useBranchScope`) | Custom Hooks (`useAuth`, `useCatalog`, `useCurrency`) | Spring Managed Beans (Singletons sin estado de sesión) |
+| **Procesamiento de Pagos** | Factory Method + Strategy Pattern | Strategy Pattern (Checkout / PIN Efectivo) | Strategy Pattern (`WompiPaymentStrategy`, `CashPaymentStrategy`) |
+| **Flujos Guiados / Máquinas de Estado** | Wizard en modales de sucursal | Wizard / Step Pattern (Reserva en 3 pasos) | State Machine (Estados de Reserva y Contratos) |
+| **Integraciones y Exportación** | `listExportUtils` (Excel, PDF, Impresión) | Adapter Pattern (`pdfService.ts` / Print) | Adapter Pattern (Integración Wompi / SendGrid / Storage) |
+| **Notificaciones / Reactividad** | Context API & Custom Hooks | Observer / Pub-Sub (Context API global) | Application Event Publisher / Spring Events |
+
