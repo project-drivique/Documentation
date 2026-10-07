@@ -23,7 +23,7 @@ Definir el comportamiento, alcance, interfaces y restricciones de Drivique para 
 
 Drivique digitaliza el alquiler de vehículos en Colombia: consulta de flota, reserva, pagos, documentación, contrato, entrega, devolución y seguimiento. Centraliza la operación de ciudades y sucursales, administración de usuarios y permisos, promociones, incidencias, indicadores y auditoría.
 
-Se distinguen la **app móvil para el cliente final** y el **panel web para Administrador general y Encargado de sucursal**. Los RF vigentes también describen un portal web cliente. No se excluye silenciosamente ese canal: su relación con el plan de dos plataformas requiere validación de alcance.
+El alcance confirmado comprende una **app móvil exclusiva para el cliente final, sin panel administrativo**, y una **web con portal para clientes y panel administrativo** para Administrador general y Encargado de sucursal. Ambas plataformas consumen la misma API y base de datos.
 
 La [visión y alcance](../02-product/vision-y-alcance.md) detalla actores, inclusiones, exclusiones y objetivos. No se incluyen contabilidad avanzada, facturación fiscal electrónica, operación transaccional sin servidor ni entrega nativa iOS comprometida.
 
@@ -38,7 +38,7 @@ La [visión y alcance](../02-product/vision-y-alcance.md) detalla actores, inclu
 | API REST | Interfaz de comunicación entre clientes y backend. |
 | JWT | Token utilizado en el control de sesión y autorización. |
 | OTP | Código temporal para verificación de cuenta. |
-| PIN de entrega | Código de autorización para la entrega; no equivale a una credencial bancaria. |
+| PIN de entrega | Código numérico de exactamente 4 dígitos, conservando ceros iniciales; asociado a la reserva para autorizar entrega y distinto del OTP de correo y del código de efectivo. |
 | COP | Peso colombiano, moneda de procesamiento de pagos del proyecto. |
 | Wompi | Servicio externo de pagos digitales especificado en RF23. |
 | Liquibase | Herramienta de versionamiento de cambios de base de datos. |
@@ -52,7 +52,7 @@ Complemento: [glosario del producto](../02-product/glossary.md).
 | [functional-requirements.md](functional-requirements.md) | Identificadores y fichas detalladas RF1 a RF54. |
 | [non-functional-requirements.md](non-functional-requirements.md) | Fichas RNF1 a RNF12 y sus objetivos de calidad. |
 | [acceptance-criteria.md](acceptance-criteria.md) | Criterios globales; sus marcas de completitud requieren evidencia. |
-| [matriz-trazabilidad.md](matriz-trazabilidad.md) | Referencia de relaciones; contiene diferencias pendientes de reconciliación. |
+| [matriz-trazabilidad.md](matriz-trazabilidad.md) | Numeración sincronizada con las fichas; relaciones observadas y cobertura pendiente identificadas. |
 | [Backlog](../02-product/backlog.md) y [plantilla de HU](../02-product/user-stories/HU-001-plantilla.md) | Priorización propuesta y formato de historias verificables. |
 | SRS_Drivique_Consolidado_2026.pdf, aportado por Danna | Documento de 84 páginas: contexto, alcance, fichas RF/RNF y casos de uso. |
 | Plan-Actualizacion-Documentacion-y-Drive-Drivique.md, aportado por Danna | Responsabilidades y cuatro entregables de HU-DOC-002. |
@@ -184,7 +184,7 @@ Las 54 fichas de [functional-requirements.md](functional-requirements.md) se inc
 | RF53 | Formulario de Inspección de Devolución | BL-08 |
 | RF54 | Gestión de Cupones Promocionales por Sucursal | BL-13 |
 
-RF25, RF26 y RF27 incluyen colaboración del cliente y la sucursal. La asignación de plataforma se determina por actor y acción, no mediante un corte automático de numeración. El rango administrativo detallado comienza en RF34.
+RF25, RF26 y RF27 incluyen colaboración del cliente y la sucursal. La asignación de plataforma se determina por actor y acción, no mediante un corte automático de numeración. El rango administrativo detallado comienza en RF34. El PIN de entrega de RF27/RF52 tiene exactamente 4 dígitos numéricos y no altera el OTP de correo de 6 dígitos.
 
 ### 3.3 Requisitos no funcionales y rendimiento
 
@@ -237,23 +237,23 @@ El plazo de efectivo se describe como máximo 72 horas o hasta 2 horas antes de 
 
 Cada HU utiliza la [plantilla Gherkin](../02-product/user-stories/HU-001-plantilla.md) y referencia RF/subrequisitos y RNF. Debe incluir flujo principal y, cuando corresponda, entradas inválidas, falta de autorización, vencimiento, fallos externos y prevención de duplicados. La trazabilidad conecta requisitos, historias, diagramas, API/modelo de datos y pruebas reales.
 
-Los criterios globales de [acceptance-criteria.md](acceptance-criteria.md) no se consideran prueba ejecutada por sus casillas marcadas. La [matriz](matriz-trazabilidad.md) debe reconciliarse antes de certificar cobertura completa. El cierre requiere evidencia y revisión según la [Definition of Done](../08-development/definition-of-done.md).
+Los criterios globales de [acceptance-criteria.md](acceptance-criteria.md) no se consideran prueba ejecutada por sus casillas marcadas. La [matriz](matriz-trazabilidad.md) ya tiene numeración alineada; debe completar las relaciones UML y capacidades pendientes antes de certificar cobertura completa. El cierre requiere evidencia y revisión según la [Definition of Done](../08-development/definition-of-done.md).
 
 ## 4. Diferencias de fuentes y aprobación
 
-### 4.1 Registro de decisiones pendientes
+### 4.1 Decisiones resueltas y asuntos pendientes
 
 | ID | Diferencia comprobada | Tratamiento en esta consolidación | Validación requerida |
 | --- | --- | --- | --- |
-| D-01 | El plan usa RF21–RF30 para módulos nuevos; las fichas actuales contienen RF1–RF54. La matriz asocia, por ejemplo, RF23 a adicionales y RF26 a Wompi, mientras las fichas dicen RF23 Wompi y RF26 contrato. | Inventario/backlog basados en fichas detalladas, preservando los IDs. | Laura y equipo deben sincronizar matriz, índices y criterios globales. |
-| D-02 | Plan: app cliente y panel web. PDF/RF: también portal cliente web. La nota inicial de RF ubica RF34 entre funciones excluidas pero su ficha es dashboard administrativo. | Separación por actor; RF34–RF54 administrativos; portal cliente registrado como alcance vigente por validar. | Acordar canales de entrega y corregir rangos en la fuente. |
-| D-03 | RNF3/PDF: `es`, `en`, `fr`, `pt`, `pt-BR`; aceptación global menciona alemán. El código local web/móvil usa `br` para portugués brasileño. | Cinco variantes de RNF3; registrar equivalencia técnica de `br` con `pt-BR`, sin incluir alemán. | Sincronizar criterio global y validar normalización de locales. |
+| D-01 | Numeración de RF y relaciones de trazabilidad. | **Resuelto documentalmente:** fichas, resumen y matriz usan los mismos 54 IDs y nombres; tablas/rutas se contrastaron con fuentes locales. | Completar relaciones UML y capacidades señaladas como pendientes; no equivale a pruebas ejecutadas. |
+| D-02 | Alcance de web y app. | **Confirmado por Danna:** app exclusiva de cliente, sin panel administrativo; web para clientes y con panel administrativo. Nota y rangos RF actualizados. | Validar implementación por rol/plataforma; alcance ya definido. |
+| D-03 | Idiomas del producto. | **Confirmado por Danna:** español, inglés, francés, portugués y portugués de Brasil. Criterios globales sincronizados con RNF3. | Validar correspondencia técnica de la clave br con pt-BR y cobertura de traducciones. |
 | D-04 | Plan: React 18. El package.json web local declara React `^19.2.5`; el móvil `19.2.3`. | No se fija React 18 como versión instalada; decisiones de stack remitidas a ADR. | Danna/Emily deben contrastar versiones con la rama de entrega. |
 | D-05 | PDF/documentos previos: Android 13/14 y PWA; RNF5: API 26+/Android 8. Plan: React Native con Expo. | App cliente Android y web separadas; compatibilidad exacta pendiente de matriz. | Acordar versiones mínimas soportadas y canal móvil vigente. |
 | D-06 | Restricciones previas niegan offline; RNF12 exige persistencia de borrador y recuperación. | Recuperación local admitida; transacciones confirmadas requieren servidor. | Actualizar restricciones y detallar datos recuperables. |
-| D-07 | Plan: PIN Nequi de 4 dígitos; RF27: PIN de 6 dígitos; RF52: 4 a 6. | Se preservan propósitos separados, sin imponer una longitud común. | Acordar PIN de cada flujo, caducidad y comportamiento ante intentos fallidos. |
+| D-07 | Formato del PIN de entrega. | **Confirmado por Danna:** exactamente 4 dígitos numéricos, conservando ceros iniciales. RF27/RF52 sincronizados; OTP de correo conserva 6 dígitos. | Implementar/validar persistencia y contrato de PIN; no se cambia el código de efectivo ni se certifica implementación. |
 | D-08 | Plan: wizard móvil de 3 pasos; fichas RF19–RF22 describen 4 etapas funcionales. | Se documentan etapas de negocio sin fijar número de pantallas. | Acordar agrupación visual y trazabilidad en web/móvil. |
-| D-09 | Índice RF menciona reseñas de cliente, pero RF32/RF33 detallados son onboarding/chat. Domicilios y fotos tienen detalle insuficiente o disperso respecto del plan. | BL-16 conserva RF49; conceptos adicionales se identifican sin crear RF nuevos arbitrarios. | Completar publicación de reseñas/fotos y asignación de conductor en RF y matriz. |
+| D-09 | Cobertura de reseñas con fotos y asignación de conductor. | El índice ya coincide con RF32/RF33 de onboarding/chat. BL-16 conserva RF49; las brechas de reseñas/fotos y conductor se registran sin crear RF nuevos arbitrarios. | Completar requisitos, modelo y contratos de esas capacidades en sus HU correspondientes. |
 | D-10 | RNF1 tiene cifras distintas en resumen/ficha/tabla; documentos de objetivos y RNF4 difieren en nivel WCAG; RNF7 menciona PostgreSQL/MySQL y promesas automáticas de recuperación. | Se conservan objetivos como requisitos por validar; no se certifica rendimiento, accesibilidad ni rollback. | Acordar umbrales, entornos y procedimientos antes de pruebas de aceptación. |
 | D-11 | RF24 expresa vencimiento dinámico sin resolver todos los casos límite. | Se mantiene la regla declarada sin inventar fórmula operativa. | Definir cálculo exacto, reloj de referencia y reservas cercanas a recogida. |
 
@@ -268,7 +268,7 @@ Danna entrega los cuatro documentos de HU-DOC-002 en la rama de trabajo. Laura v
 | Criterio solicitado | Evidencia documental |
 | --- | --- |
 | SRS estructurado bajo Drivique | Secciones 1, 2 y 3 con propósito, alcance, definiciones, referencias, producto, usuarios, restricciones, interfaces, RF, RNF, datos y aceptación. |
-| Delimitar app cliente y panel web | Sección 1.2 de este SRS y secciones 3–5 de visión y alcance; diferencia de portal cliente registrada. |
+| Delimitar app y web | Sección 1.2 de este SRS y visión: app exclusiva de cliente; web con portal cliente y panel administrativo. |
 | Backlog de todos los módulos con MoSCoW | BL-01–BL-16 cubren RF1–RF54; BL-17–BL-24 cubren RNF1–RNF12; BL-25–BL-28 registran Won't. |
 | Plantilla oficial con Given–When–Then | Plantilla reutilizable en español Gherkin, con éxito/error/autorización y ejemplo diligenciado. |
 
