@@ -1,5 +1,7 @@
-# Project Overview
+# Visión general del proyecto - Drivique
 
-Drivique / RentaMovil es una plataforma digital integral para el alquiler de vehículos, desarrollada como aplicación web responsiva tipo PWA, compatible con Chrome y Firefox, y adaptable a dispositivos móviles Android 13 y 14.
+Drivique es una plataforma integral de alquiler de vehículos con una **app Android exclusiva para clientes, sin panel administrativo**, y una **web con portal para clientes y panel administrativo**. Ambos frontends se comunican con una API backend y una base de datos compartidas.
 
-El sistema centraliza los procesos de registro, autenticación, catálogo de vehículos, reservas, pagos, firma de contratos, gestión de usuarios y panel administrativo, con el fin de automatizar la operación y mejorar la experiencia de clientes, administradores y encargados de sucursal.
+El sistema centraliza autenticación, catálogo, reservas, pagos, contratos, entrega/devolución, usuarios y operación de sucursal. El acceso administrativo se limita por permisos y ámbito de sede. El PIN de entrega tiene exactamente 4 dígitos numéricos; el OTP de correo mantiene su formato independiente.
+
+Los idiomas definidos son español, inglés, francés, portugués y portugués de Brasil. Consultar [visión y alcance](vision-y-alcance.md), [SRS](../01-srs/srs.md) y [arquitectura](../04-architecture/overview.md) para detalle, restricciones y fuentes de implementación.

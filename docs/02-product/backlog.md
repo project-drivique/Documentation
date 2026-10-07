@@ -5,7 +5,7 @@
 
 ## 1. Base y reglas de priorización
 
-Este backlog agrupa todos los requisitos RF1 a RF54 de las [fichas funcionales](../01-srs/functional-requirements.md). Usa su numeración detallada; la matriz existente contiene diferencias registradas en el [SRS](../01-srs/srs.md). Cada RF pertenece a un grupo principal; las dependencias entre grupos no duplican su asignación.
+Este backlog agrupa todos los requisitos RF1 a RF54 de las [fichas funcionales](../01-srs/functional-requirements.md). Usa la misma numeración detallada que la matriz y el [SRS](../01-srs/srs.md); las observaciones de cobertura de implementación permanecen registradas. Cada RF pertenece a un grupo principal; las dependencias entre grupos no duplican su asignación.
 
 - **Must:** imprescindible para completar y controlar el alquiler de forma segura.
 - **Should:** importante para la operación o experiencia; admite entrega posterior al núcleo, sin suprimirlo del alcance total.
@@ -35,7 +35,7 @@ La propuesta se basa en riesgo, valor y dependencias. No convierte automáticame
 | BL-15 | Auditoría y notificaciones de sede | Must | RF46, RF48 | BL-01 y eventos de los módulos operativos. | Conserva evidencia de acciones críticas y avisa al personal sobre eventos de operación. |
 | BL-16 | Reseñas y respuesta oficial | Should | RF49 | BL-09, BL-11; requisitos de publicación del cliente. | Gestiona reputación; el detalle de reseñas con fotos necesita reconciliación en los RF. |
 
-Las funciones del cliente se presentan en la app y en el portal cliente previsto por el SRS. Las funciones de administración y operación corresponden al panel web, con separación entre administración general y sucursal. El alcance por rol prevalece sobre la simple agrupación por número de RF.
+Las funciones del cliente se presentan en la app y en el portal cliente web. La app no tiene panel administrativo; la web sí incluye dicho panel. Las funciones de administración y operación corresponden al panel web, con separación entre administración general y sucursal. El alcance por rol prevalece sobre la simple agrupación por número de RF.
 
 ## 3. Calidad y plataforma
 
@@ -77,8 +77,8 @@ Un elemento se cierra cuando cumple sus criterios, tiene evidencia de validació
 
 ## 7. Decisiones antes de aprobar la línea base
 
-- Laura y el equipo deben reconciliar las fichas RF con la matriz de trazabilidad y los rangos de módulos.
-- Acordar el alcance del portal web cliente, la longitud y propósito de cada PIN y el detalle de domicilios/reseñas con fotos.
+- Numeración de fichas, resumen, rangos de módulos y matriz sincronizada. Falta completar las relaciones UML y cobertura de capacidades señaladas en la matriz.
+- Alcance confirmado: app solo cliente y web cliente/administración. PIN de entrega definido en exactamente 4 dígitos. El detalle de domicilios/reseñas con fotos y la implementación del PIN requieren sus HU correspondientes.
 - El equipo debe validar las prioridades MoSCoW y registrar ajustes antes de comprometer una entrega.
 - Los objetivos RNF necesitan condiciones y evidencia de pruebas; no se consideran satisfechos por estar escritos.
 
