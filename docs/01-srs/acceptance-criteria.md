@@ -1,21 +1,31 @@
-# ✅ Criterios de Aceptación Globales del SRS — Drivique
+# Criterios de aceptación globales del SRS - Drivique
 
-Este documento define los criterios de aceptación globales para la especificación de requerimientos de software de la plataforma **Drivique**.
+Las casillas distinguen **consistencia documental comprobada** de **implementación y pruebas pendientes de evidencia**. Una ficha o ruta API no certifica que todo el flujo esté terminado.
 
----
+## 1. Consistencia documental
 
-## 🎯 Criterios de Aceptación por Módulo
+- [x] RF1 a RF54 están inventariados y sus nombres coinciden entre fichas, resumen y matriz.
+- [x] RNF1 a RNF12 están identificados en la especificación y la matriz.
+- [x] El alcance establece app exclusiva de cliente, sin panel administrativo, y web con portal cliente y panel administrativo.
+- [x] RF27/RF52 establecen PIN de entrega de exactamente 4 dígitos numéricos; OTP de correo de RF4 permanece en 6 dígitos.
+- [x] Los idiomas de producto son español (`es`), inglés (`en`), francés (`fr`), portugués (`pt`) y portugués de Brasil (`pt-BR`); el frontend revisado usa `br` como clave interna para la variante brasileña.
+- [x] La matriz diferencia tablas/rutas observadas y capacidades pendientes en lugar de asignar relaciones no verificadas.
 
-### 1. Requerimientos Funcionales (RF1 a RF47+)
-- [x] **Completitud:** Todos los módulos del sistema (Landing, Autenticación, Catálogo, Reservas, Pagos Wompi/Efectivo PIN, Entregas a Domicilio, Cupones, Reseñas con Fotos y Respuesta Inmutable, Contratos y Auditoría) cuentan con su especificación detallada.
-- [x] **Formato Estándar:** Cada requerimiento incluye Actor, Descripción, Entrada, Salida, Acción y Criterios de Aceptación verificables.
-- [x] **Consistencia con el Frontend:** Las funcionalidades reflejan 100% los componentes y pantallas reales del proyecto Web (`web-drivique/src/modules/admin/pages`) y App Móvil.
+## 2. Implementación y validación
 
-### 2. Requerimientos No Funcionales (RNF)
-- [x] **Internacionalización (i18n):** Soporte activo y reactivo para 5 idiomas (Español, Inglés, Francés, Portugués, Alemán).
-- [x] **Modo Oscuro Nativo:** Las vistas soportan alternancia entre Light y Dark Mode sin perder contraste.
-- [x] **Seguridad:** Tokens JWT, encriptación BCrypt, HTTPS y cumplimiento OWASP Top 10.
-- [x] **Persistencia BD:** Migraciones versionadas en PostgreSQL 17 gobernadas por Liquibase.
+- [ ] Validar el recorrido de cliente en web y app, y la operación administrativa exclusivamente en web.
+- [ ] Verificar cinco variantes de idioma, fallback a español y conservación de estado al cambiar idioma; normalizar `br` / `pt-BR` entre capas.
+- [ ] Verificar temas claro/oscuro y contraste en todas las vistas incluidas.
+- [ ] Verificar generación y validación de PIN de entrega de 4 dígitos, incluidos ceros iniciales, formato inválido y autorización; mantener separado el OTP de correo.
+- [ ] Validar pagos Wompi, vencimiento de efectivo, contrato, entregas/devoluciones y sus escenarios de error.
+- [ ] Completar y validar los requisitos de domicilios, reseñas con fotos y respuesta oficial inmutable donde la cobertura actual es insuficiente.
+- [ ] Verificar autorización por usuario/rol/sucursal, protección de datos y controles de seguridad.
+- [ ] Verificar migraciones de PostgreSQL/Liquibase y sus procedimientos de recuperación.
 
-### 3. Trazabilidad
-- [x] **Trazabilidad Total:** Cada RF está mapeado hacia su tabla de Base de Datos (`hu-base-de-datos`), su Endpoint REST de Backend y su Vista Frontend correspondiente en la matriz de trazabilidad.
+## 3. Trazabilidad y cierre
+
+- [ ] Vincular cada RF con el caso de uso y secuencia reales, justificando interacciones que no requieran secuencia backend.
+- [ ] Revisar las observaciones de cobertura de la matriz y completar contratos API/modelo físico donde falten.
+- [ ] Adjuntar evidencia de pruebas y revisión del equipo antes de marcar una capacidad como cumplida.
+
+Fuentes: [RF](functional-requirements.md), [RNF](non-functional-requirements.md), [SRS](srs.md), [matriz](matriz-trazabilidad.md) y [diccionario de datos](../04-architecture/database/data-dictionary.md). Decisiones de plataforma, PIN e idiomas confirmadas por Danna el 2026-10-06.
