@@ -1,18 +1,21 @@
 # ESPECIFICACIÓN DE REQUERIMIENTOS FUNCIONALES (SRS DRIVIQUE)
 
-**Proyecto:** Drivique - Sistema Integral de Alquiler de Vehículos (Web & App Móvil)  
-**Documento:** `functional-requirements.md`  
-**Estándar de Documentación:** IEEE 830-1998  
-**Ámbito de Aplicación:** Web (Plataforma Cliente y Panel Administrativo) y App Móvil (Plataforma Cliente Android)  
-**Fecha de Emisión:** 2026  
+**Proyecto:** Drivique - Sistema Integral de Alquiler de Vehículos (Web & App Móvil)
+**Documento:** `functional-requirements.md`
+**Estándar de Documentación:** IEEE 830-1998
+**Ámbito de Aplicación:** Web (Plataforma Cliente y Panel Administrativo) y App Móvil (Plataforma Cliente Android)
+**Fecha de Emisión:** 2026
 
 ---
 
 ## 📌 NOTA ARQUITECTÓNICA Y ALCANCE DE PLATAFORMAS (WEB Y APP MÓVIL)
 
-1. **Aclaración de Alcance para la App Móvil:**
-   - La **Aplicación Móvil (Android)** implementa exactamente la misma lógica de negocio, reglas de validación y requerimientos del cliente descritos desde el **RF1 hasta el RF33** (Autenticación, Catálogo, Búsqueda, Cupones, Reservas, Pagos con Wompi, Cobro en Efectivo con Vencimiento Dinámico, Contrato Digital, Validación de PIN Nequi de Entrega, Reseñas con Fotos, Soporte y Perfil).
-   - La App Móvil **excluye** los módulos de administración y gestión operativa (**RF34 al RF54**), los cuales corresponden exclusivamente al Panel Web para Super Administradores y Encargados de Sucursal.
+1. **Alcance confirmado de plataformas:**
+   - La **App Móvil (Android)** está destinada exclusivamente al cliente final: autenticación, catálogo, reservas, pagos, documentación, contrato, presentación del PIN de entrega, historial, perfil y soporte. **No tiene panel administrativo.**
+   - La **Web** incluye **portal para clientes** y **panel administrativo** para Administrador general / Super Administrador y Encargado de sucursal, sujeto a sus permisos.
+   - RF1 a RF33 contienen funciones públicas, del cliente y compartidas. Las acciones del encargado descritas en RF24, RF25 y RF27 se realizan desde el panel web; no se agregan a la app.
+   - RF34 a RF54 describen administración y operación de sucursal, exclusivas del panel web. El alcance se aplica por actor y acción, no por atribuir todas las fichas a ambas plataformas.
+   - El **PIN de entrega tiene exactamente 4 dígitos numéricos**; el OTP de verificación de correo mantiene los 6 dígitos definidos en RF4.
 
 2. **Atributos No Funcionales Excluidos como RF Standalone:**
    - **Diseño Responsivo (RWD):** Adaptación visual a distintos tamaños de pantalla (clasificado en `non-functional-requirements.md` como RNF5).
@@ -25,14 +28,13 @@
 
 - **Módulo 1: Landing Page (Página de Inicio Pública)** (RF1 - RF2)
 - **Módulo 2: Autenticación y Gestión de Cuenta** (RF3 - RF8)
-- **Módulo 3: Catálogo de Vehículos y Experiencia del Cliente** (RF9 - RF18)
-- **Módulo 4: Flujo Multipasos de Reservas (Wizard de Reserva)** (RF19 - RF25)
-- **Módulo 5: Pasarela de Pagos (Wompi Virtual y Efectivo en Sucursal)** (RF26 - RF27)
-- **Módulo 6: Contratos Digitales, Firma Electrónica y Entrega con PIN** (RF28)
-- **Módulo 7: Gestión de Mis Reservas y Perfil del Cliente** (RF29 - RF31)
-- **Módulo 8: Calificaciones y Reseñas de Vehículos con Fotografía** (RF32 - RF33)
-- **Módulo 9: Canales de Soporte al Cliente, Notificaciones y Asistente Virtual** (RF34 - RF35)
-- **Módulo 10: Panel Administrativo y Gestión Operativa de Sucursal** (RF36 - RF54)
+- **Módulo 3: Catálogo y Navegación del Cliente** (RF9 - RF18)
+- **Módulo 4: Configuración y Resumen de Reserva** (RF19 - RF22)
+- **Módulo 5: Pagos Wompi y Efectivo** (RF23 - RF24)
+- **Módulo 6: Documentación, Contratos y PIN de Entrega** (RF25 - RF27)
+- **Módulo 7: Historial de Reservas y Perfil** (RF28 - RF31)
+- **Módulo 8: Onboarding y Chat de Soporte** (RF32 - RF33)
+- **Módulo 9: Panel Administrativo y Operación de Sucursal** (RF34 - RF54)
 
 ---
 
@@ -721,7 +723,7 @@
 ### RF27: Generación y verificación del código PIN de seguridad para entrega y recogida
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
-1. **RF27.1** Generar automáticamente un **Código PIN numérico único de 6 dígitos** (o código PIN para Nequi/Domicilio) al confirmarse la reserva.
+1. **RF27.1** Generar automáticamente un **Código PIN de entrega de exactamente 4 dígitos numéricos**, asociado a la reserva (también aplicable a entrega a domicilio) al confirmarse la reserva.
 2. **RF27.2** Desplegar el PIN en el historial de reservas del cliente (ReservationsPage) con opción de ocultar/mostrar y reenvío a su correo.
 3. **RF27.3** Requerir la validación del PIN por parte del personal de la sucursal o conductor de entrega (DeliveryManagementPage) para autorizar la entrega de las llaves.
 4. **RF27.4** Cambiar el estado de la reserva a **`EN_CURSO / ACTIVA`** al validar el PIN de entrega.
@@ -738,7 +740,7 @@
 | **Salida** | 1. Entrega autorizada y cambio de estado a `EN_CURSO`. |
 | **Acción** | 1. Comparar PIN digitado contra el hash en backend vía `POST /api/v1/deliveries/verify-pin`. |
 | **Manejo de Situaciones Anormales** | 1. Si se ingresa un PIN incorrecto 3 veces, el sistema alerta de posible suplantación de identidad. |
-| **Criterios de Aceptación** | 1. Las llaves del vehículo no se entregan sin la previa validación correcta del PIN. |
+| **Criterios de Aceptación** | 1. Las llaves no se entregan sin validar correctamente el PIN asociado a la reserva.<br>2. El PIN debe contener exactamente 4 dígitos numéricos; se rechazan longitudes distintas y caracteres no numéricos.<br>3. Un PIN con cero inicial conserva sus 4 dígitos; esta regla no cambia el OTP de correo. |
 
 ---
 
@@ -1330,7 +1332,7 @@
 
 #### PARTE 1: DESGLOSE EXHAUSTIVO DE SUB-REQUERIMIENTOS
 1. **RF52.1** Renderizar modal de verificación de PIN en la consola de la sucursal (BranchPinValidationModal).
-2. **RF52.2** Solicitar la digitación del PIN seguro de entrega presentado por el cliente en su teléfono móvil.
+2. **RF52.2** Solicitar el PIN de entrega de exactamente 4 dígitos numéricos presentado por el cliente; validar el formato `^[0-9]{4}$` y conservar ceros iniciales.
 3. **RF52.3** Validar el PIN contra la base de datos central encriptada.
 4. **RF52.4** Desbloquear la autorización de entrega del vehículo tras coincidencia exitosa del PIN.
 
@@ -1342,11 +1344,11 @@
 | **Tipo / Actor** | Encargado de Sucursal |
 | **Componente / Interfaz (UI)** | Modal BranchPinValidationModal en la vista de entregas |
 | **Descripción** | Componente de seguridad que actúa como cerradura digital para autorizar la liberación física de las llaves del vehículo. |
-| **Entrada** | 1. PIN de 4 a 6 dígitos ingresado en el teclado numérico del modal. |
+| **Entrada** | 1. PIN de entrega de exactamente 4 dígitos numéricos ingresado en el teclado del modal; conservar ceros iniciales. |
 | **Salida** | 1. Autorización concedida o rechazada de entrega. |
 | **Acción** | 1. Validar el PIN seguro en `POST /api/v1/branch/validate-pin`. |
 | **Manejo de Situaciones Anormales** | 1. Ante 3 intentos fallidos de PIN, la reserva se bloquea preventivamente notificando al cliente por seguridad. |
-| **Criterios de Aceptación** | 1. La respuesta de validación del PIN debe ejecutarse en menos de 300 milisegundos. |
+| **Criterios de Aceptación** | 1. El formulario acepta exactamente 4 dígitos numéricos y conserva ceros iniciales.<br>2. Una entrada de longitud distinta o con caracteres no numéricos se rechaza sin autorizar la entrega.<br>3. La respuesta de validación debe ejecutarse en menos de 300 milisegundos, según el objetivo de este RF. |
 
 ---
 
@@ -1400,62 +1402,65 @@
 
 ## 📊 TABLA RESUMEN CONSOLIDADORA DE REQUERIMIENTOS FUNCIONALES (RF1 AL RF54)
 
-| ID | Nombre del Requerimiento | Módulo | Ámbito / Rol | Componente / Ruta Principal |
-| :--- | :--- | :--- | :--- | :--- |
-| **RF1** | Página de inicio (visitante sin sesión) | Landing Page | Visitante | Página de Inicio -> LandingPage |
-| **RF2** | Redirección tras inicio de sesión | Landing Page | Cliente/Admin/Encargado | ProtectedRoute, Almacén de Autenticación |
-| **RF3** | Registro de usuario | Autenticación | Visitante | Formulario de Registro -> RegisterPage |
-| **RF4** | Verificación de identidad 2FA (Código OTP) | Autenticación | Usuario en Registro | Pantalla de Verificación 2FA -> Verify2FAPage |
-| **RF5** | Inicio de sesión | Autenticación | Cliente | Formulario de Inicio de Sesión -> LoginPage |
-| **RF6** | Recuperar contraseña | Autenticación | Cliente | Pantalla de Recuperación de Contraseña -> ForgotPasswordPage |
-| **RF7** | Inicio de sesión con rol | Autenticación | Super Admin / Encargado | Rúter Principal -> RoleBasedGuard |
-| **RF8** | Acceso modo invitado sin registro | Autenticación | Visitante | Catálogo de Vehículos, Modal Emergente de Detalle de Vehículo |
-| **RF9** | Encabezado y buscador del catálogo | Catálogo | Cliente / Visitante | Catálogo de Vehículos -> CatalogHeader |
-| **RF10** | Filtros del catálogo | Catálogo | Cliente / Visitante | CatalogSidebarFilters |
-| **RF11** | Ordenar resultados del catálogo | Catálogo | Cliente / Visitante | CatalogSortDropdown |
-| **RF12** | Tarjetas de vehículos | Catálogo | Cliente / Visitante | VehicleCard |
-| **RF13** | Ver detalles de un vehículo | Catálogo | Cliente / Visitante | Modal Emergente de Detalle de Vehículo -> VehicleDetailsModal |
-| **RF14** | Menú de navegación principal catálogo | Catálogo | Cliente Autenticado | CustomerNavbar |
-| **RF15** | Sección menú Mis Reservas | Catálogo | Cliente Autenticado | Mis Reservas -> MyReservationsPage |
-| **RF16** | Sección menú Mis Favoritos | Catálogo | Cliente Autenticado | Catálogo de Favoritos -> FavoritesPage |
-| **RF17** | Sección menú Notificaciones | Catálogo | Cliente Autenticado | Centro de Notificaciones -> CustomerNotificationsPage |
-| **RF18** | Sección menú Soporte | Catálogo | Cliente / Visitante | Centro de Soporte -> SupportCenterPage |
-| **RF19** | Ficha informativa del vehículo a reservar | Flujo Reservas | Cliente Autenticado | CheckoutVehicleHeader |
-| **RF20** | Selección de fechas y lugar (Paso 1) | Flujo Reservas | Cliente Autenticado | Paso 1 del Wizard de Reserva -> CheckoutStep1DatesPage |
-| **RF21** | Resumen de la reserva (Panel Lateral) | Flujo Reservas | Cliente Autenticado | ReservationSummaryPanel |
-| **RF22** | Selección de protección (Paso 2 Coberturas) | Flujo Reservas | Cliente Autenticado | CoverageSelectionGroup |
-| **RF23** | Tipo de kilometraje y extras (Paso 2 Extras) | Flujo Reservas | Cliente Autenticado | ExtrasSelectionGroup |
-| **RF24** | Datos personales (Paso 3 Formulario) | Flujo Reservas | Cliente Autenticado | DriverDetailsForm |
-| **RF25** | Verificación documental (Paso 3 Documentos)| Flujo Reservas | Cliente Autenticado | DocumentUploadStep |
-| **RF26** | Pago Virtual con Wompi | Pagos | Cliente Autenticado | WompiPaymentWidget |
-| **RF27** | Pago en Efectivo con Vencimiento Dinámico | Pagos | Cliente / Sistema | CashPaymentOption, TimerBadge |
-| **RF28** | Firma de contrato y PIN de entrega | Contratos & PIN | Cliente / Encargado | DigitalSignatureCanvas, Modal PIN |
-| **RF29** | Ver y editar información personal | Perfil Cliente | Cliente Autenticado | Perfil de Usuario -> UserProfilePage |
-| **RF30** | Cambiar contraseña | Perfil Cliente | Cliente Autenticado | ChangePasswordTab |
-| **RF31** | Cerrar sesión | Perfil Cliente | Cliente / Admin | Menú de Usuario -> Almacén de Autenticación |
-| **RF32** | Onboarding para nuevos usuarios | Transversal | Cliente Nuevo | WelcomeOnboardingModal |
-| **RF33** | Chat flotante de soporte (Tawk.to) | Transversal | Cliente / Visitante | LiveChatWidget |
-| **RF34** | Dashboard del administrador y sucursal | Admin Web | Super Admin / Encargado | Consola Principal -> AdminDashboard |
-| **RF35** | Gestión de ciudades | Admin Web | Super Admin | Módulo de Gestión de Ciudades -> ManageCitiesPage |
-| **RF36** | Gestión de Sucursales | Admin Web | Super Admin | Módulo de Gestión de Sucursales -> ManageBranchesPage |
-| **RF37** | Gestión de vehículos (Flota) | Admin Web | Super Admin / Encargado | Módulo de Gestión de Flota -> ManageFleetPage |
-| **RF38** | Gestión de reservas | Admin Web | Super Admin / Encargado | Módulo de Gestión de Reservas -> ManageReservationsPage |
-| **RF39** | Gestión de usuarios y clientes | Admin Web | Super Admin | Módulo de Lista de Clientes -> ManageUsersPage |
-| **RF40** | Gestión de administradores y permisos | Admin Web | Super Admin | Módulo de Roles y Seguridad -> ManageRolesPage |
-| **RF41** | Gestión de reportes de incidencias | Admin Web | Super Admin / Encargado | Módulo de Gestión de Incidencias -> ManageIncidentsPage |
-| **RF42** | Gestión de contratos | Admin Web | Super Admin | Módulo de Contratos -> ManageContractsPage |
-| **RF43** | Gestión de promociones y cupones | Admin Web | Super Admin | Módulo de Ofertas y Promociones -> ManagePromotionsPage |
-| **RF44** | Reportes administrativos | Admin Web | Super Admin | Módulo de Reportes y Estadísticas -> ReportsPage |
-| **RF45** | Configuración de marca e identidad visual | Admin Web | Super Admin | Módulo de Configuración de Marca -> BrandSettingsPage |
-| **RF46** | Auditoría y registro de actividad | Admin Web | Super Admin / Auditor | Consola de Auditoría -> AuditLogsPage |
-| **RF47** | Confirmación de pago en efectivo (sucursal)| Sucursal Web | Encargado de Sucursal | Módulo de Caja de Sucursal -> BranchCashierPage |
-| **RF48** | Centro de notificaciones operativas | Sucursal Web | Encargado de Sucursal | Centro de Notificaciones de Sucursal -> BranchNotificationCenterPage |
-| **RF49** | Moderación y respuesta a reseñas | Sucursal Web | Encargado de Sucursal | Moderación de Reseñas de Sucursal -> BranchReviewsPage |
-| **RF50** | Inspección y entrega del vehículo | Sucursal Web | Encargado de Sucursal | Protocolo de Inspección y Entrega -> DeliveryManagementPage |
-| **RF51** | Perfil Público y Operativo de Sucursal | Sucursal Web | Encargado de Sucursal | Perfil Operativo de Sucursal -> BranchProfilePage |
-| **RF52** | Validación de Entrega con PIN Nequi | Sucursal Web | Encargado de Sucursal | Modal BranchPinValidationModal |
-| **RF53** | Formulario Inspección de Devolución | Sucursal Web | Encargado de Sucursal | Formulario Inspección de Devolución -> ReturnInspectionPage |
-| **RF54** | Gestión de Cupones Promocionales Sucursal| Sucursal Web | Encargado de Sucursal | Módulo de Cupones de Sucursal -> BranchCouponsPage |
+Los nombres, actores y componentes de este resumen se derivan de las fichas detalladas del mismo archivo. Los componentes describen la interfaz requerida; su presencia aquí no certifica implementación.
+
+| ID | Nombre del Requerimiento | Módulo | Ámbito / Rol | Componente / Interfaz del RF |
+| --- | --- | --- | --- | --- |
+| **RF1** | Página de inicio (visitante sin sesión) | Landing Page (Página de Inicio Pública) | Visitante (Usuario no autenticado sin sesión iniciada en la plataforma) | Interfaz LandingPage, HeroSection, FeaturedVehicles, HowItWorks, Footer |
+| **RF2** | Redirección tras inicio de sesión | Landing Page (Página de Inicio Pública) | Cliente / Super Administrador (`ROLE_SUPER_ADMIN`) / Encargado de Sucursal (`ROLE_BRANCH_MANAGER`) | Guardias de Navegación ProtectedRoute, GuestRoute, Almacén de Autenticación |
+| **RF3** | Registro de usuario | Autenticación y Gestión de Cuenta | Visitante / Nuevo Usuario | Interfaz RegisterPage, RegisterForm, PasswordStrengthBar |
+| **RF4** | Verificación de identidad con doble factor (2FA / Código de Correo) | Autenticación y Gestión de Cuenta | Usuario en Proceso de Registro | Interfaz Verify2FAPage, OTPInputGroup, CountdownTimer |
+| **RF5** | Inicio de sesión | Autenticación y Gestión de Cuenta | Usuario Registrado (Cliente) | Interfaz LoginPage, LoginForm |
+| **RF6** | Recuperar contraseña | Autenticación y Gestión de Cuenta | Usuario Registrado | Rutas Recuperación de Contraseña y Restablecimiento de Contraseña -> ForgotPasswordPage, ResetPasswordPage |
+| **RF7** | Inicio de sesión con rol (Administrador y Encargado de sucursal) | Autenticación y Gestión de Cuenta | Super Administrador / Encargado de Sucursal | Rúter Principal -> AppRoutes, RoleBasedGuard |
+| **RF8** | Acceso modo invitado sin registro | Autenticación y Gestión de Cuenta | Visitante / Usuario no autenticado | Catálogo de Vehículos, Modal Emergente de Detalle de Vehículo |
+| **RF9** | Encabezado y buscador del catálogo | Catálogo y Navegación del Cliente | Cliente / Visitante | Interfaz CatalogHeader, SearchBar |
+| **RF10** | Filtros del catálogo | Catálogo y Navegación del Cliente | Cliente / Visitante | Componente CatalogSidebarFilters en Catálogo de Vehículos |
+| **RF11** | Ordenar resultados del catálogo | Catálogo y Navegación del Cliente | Cliente / Visitante | Componente CatalogSortDropdown |
+| **RF12** | Tarjetas de vehículos | Catálogo y Navegación del Cliente | Cliente / Visitante | Componente VehicleCard en catálogo y vistas principales |
+| **RF13** | Ver detalles de un vehículo | Catálogo y Navegación del Cliente | Cliente / Visitante | Ruta Modal Emergente de Detalle de Vehículo -> VehicleDetailsModal, ImageGallery, ReviewsSection |
+| **RF14** | Menú de navegación principal catálogo | Catálogo y Navegación del Cliente | Cliente Autenticado | Componente CustomerNavbar |
+| **RF15** | Sección menú Mis Reservas | Catálogo y Navegación del Cliente | Cliente Autenticado | Interfaz MyReservationsPage, ReservationCard, LeaveReviewModal |
+| **RF16** | Sección menú Mis Favoritos | Catálogo y Navegación del Cliente | Cliente Autenticado | Interfaz FavoritesPage |
+| **RF17** | Sección menú Notificaciones (Cliente) | Catálogo y Navegación del Cliente | Cliente Autenticado | Interfaz CustomerNotificationsPage |
+| **RF18** | Sección menú Soporte | Catálogo y Navegación del Cliente | Cliente / Visitante | Interfaz SupportCenterPage, FAQAccordion, ContactForm |
+| **RF19** | Configuración de reserva, fechas, horarios y sucursales (Paso 1 del Wizard) | Configuración y Resumen de Reserva | Cliente Autenticado (`ROLE_CUSTOMER`) | Interfaz ReservationFlowPage, UnifiedReservationConfigCard, DateStep, DomicilioModal, PicoYPlacaChecker |
+| **RF20** | Selección de coberturas de protección y servicios adicionales (Paso 2 del Wizard) | Configuración y Resumen de Reserva | Cliente Autenticado | Componentes ProtectionPlans, AdditionalServices, SideSummary en ReservationFlowPage |
+| **RF21** | Datos del conductor, comprobación de licencia y cupones de descuento (Paso 3 del Wizard) | Configuración y Resumen de Reserva | Cliente Autenticado | Componentes PersonalData, SideSummary en ReservationFlowPage |
+| **RF22** | Resumen financiero final y selección de método de pago (Paso 4 del Wizard) | Configuración y Resumen de Reserva | Cliente Autenticado | Componentes PaymentMethodCard, SideSummary en ReservationFlowPage |
+| **RF23** | Procesamiento de pago digital en línea (Pasarela Virtual Wompi) | Pagos Wompi y Efectivo | Cliente Autenticado | Interfaz PaymentResponsePage, Estrategia de Pago Wompi |
+| **RF24** | Cobro presencial en efectivo en sucursal con plazo de vencimiento dinámico | Pagos Wompi y Efectivo | Cliente Autenticado / Encargado de Sucursal | Cliente: ReservationsPage \| Admin/Encargado: CashCollectionPage |
+| **RF25** | Carga y verificación documental de identidad y licencia (Cédula y Licencia) | Documentación, Contratos y PIN de Entrega | Cliente Autenticado / Encargado de Sucursal | Cliente: Perfil de Usuario \| Admin: DocumentVerificationPage |
+| **RF26** | Generación y firma electrónica del contrato digital de alquiler | Documentación, Contratos y PIN de Entrega | Cliente Autenticado | Interfaz ContractSigningPage, SignatureCanvas |
+| **RF27** | Generación y verificación del código PIN de seguridad para entrega y recogida | Documentación, Contratos y PIN de Entrega | Cliente Autenticado / Encargado / Conductor de Entrega | Cliente: ReservationsPage \| Admin: DeliveryManagementPage |
+| **RF28** | Historial, consulta y seguimiento de reservas del cliente | Historial de Reservas y Perfil | Cliente Autenticado | Interfaz ReservationsPage |
+| **RF29** | Ver y editar información personal | Historial de Reservas y Perfil | Cliente Autenticado | Interfaz UserProfilePage, EditProfileForm |
+| **RF30** | Cambiar contraseña | Historial de Reservas y Perfil | Cliente Autenticado | Componente ChangePasswordTab en Perfil de Usuario |
+| **RF31** | Cerrar sesión | Historial de Reservas y Perfil | Cliente / Administrador Autenticado | Menú de Usuario -> Almacén de Autenticación |
+| **RF32** | Onboarding para nuevos usuarios | Onboarding y Chat de Soporte | Cliente Nuevo | Componente WelcomeOnboardingModal |
+| **RF33** | Chat flotante de soporte (Widget Tawk.to) | Onboarding y Chat de Soporte | Cliente / Visitante | Componente LiveChatWidget |
+| **RF34** | Dashboard del administrador y sucursal | Panel Administrativo y Operación de Sucursal | Super Administrador / Encargado de Sucursal | Rutas Panel del Administrador y Panel del Encargado de Sucursal -> AdminDashboardPage, KPICardGroup, RevenueChart |
+| **RF35** | Gestión de ciudades | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ManageCitiesPage, CityModal |
+| **RF36** | Gestión de Sucursales | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ManageBranchesPage, BranchFormModal |
+| **RF37** | Gestión de vehículos (Flota) | Panel Administrativo y Operación de Sucursal | Super Administrador / Encargado de Sucursal | Interfaz ManageFleetPage, VehicleFormModal |
+| **RF38** | Gestión de reservas | Panel Administrativo y Operación de Sucursal | Super Administrador / Encargado de Sucursal | Interfaz ManageReservationsPage, ReservationDetailModal |
+| **RF39** | Gestión de usuarios y clientes | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ManageUsersPage, UserProfileDetailModal |
+| **RF40** | Gestión de administradores, roles y permisos | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ManageRolesPage, AdminUserModal |
+| **RF41** | Gestión de reportes de incidencias de vehículos | Panel Administrativo y Operación de Sucursal | Super Administrador / Encargado de Sucursal | Interfaz ManageIncidentsPage, IncidentReportModal |
+| **RF42** | Gestión de contratos | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ManageContractsPage |
+| **RF43** | Gestión de promociones, cupones y ofertas destacadas | Panel Administrativo y Operación de Sucursal | Super Administrador / Encargado de Sucursal | Interfaz ManagePromotionsPage, CouponFormModal, FeaturedPromoCard |
+| **RF44** | Reportes administrativos | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz ReportsPage, ReportExportWidget |
+| **RF45** | Configuración de marca e identidad visual | Panel Administrativo y Operación de Sucursal | Super Administrador | Interfaz BrandSettingsPage |
+| **RF46** | Auditoría y registro de actividad | Panel Administrativo y Operación de Sucursal | Super Administrador / Auditor de Sistema | Interfaz AuditLogsPage |
+| **RF47** | Confirmación de pago en efectivo (sucursal) | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz BranchCashierPage, CashPaymentReceiptModal |
+| **RF48** | Centro de notificaciones operativas de sucursal | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz BranchNotificationCenterPage |
+| **RF49** | Moderación y respuesta a reseñas de sucursal | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz BranchReviewsPage, OfficialResponseModal |
+| **RF50** | Inspección y entrega del vehículo | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz DeliveryManagementPage, InspectionChecklist |
+| **RF51** | Perfil Público y Operativo de Sucursal | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz BranchProfilePage |
+| **RF52** | Validación de Entrega con PIN Nequi | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Modal BranchPinValidationModal en la vista de entregas |
+| **RF53** | Formulario de Inspección de Devolución | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz ReturnInspectionPage, ReturnChecklist |
+| **RF54** | Gestión de Cupones Promocionales por Sucursal | Panel Administrativo y Operación de Sucursal | Encargado de Sucursal | Interfaz BranchCouponsPage |
 
 ---
-*Especificación Completa de Requerimientos Funcionales (`functional-requirements.md`) elaborada bajo el Estándar IEEE 830-1998 para el proyecto Drivique.*
+
+Numeración sincronizada con las 54 fichas detalladas; decisiones de plataforma y PIN confirmadas por Danna el 2026-10-06.

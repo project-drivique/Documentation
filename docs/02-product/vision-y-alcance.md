@@ -14,9 +14,9 @@ Las reservas manuales, los contratos dispersos, los pagos sin integración y la 
 
 ## 2. Visión de producto
 
-Para clientes que necesitan alquilar un vehículo y empresas que administran flotas y sucursales en Colombia, **Drivique** es una plataforma de alquiler que permite consultar disponibilidad, reservar, pagar, formalizar contratos y gestionar entregas y devoluciones desde un sistema compartido. La solución ofrece una app móvil para el cliente final y un panel web para la administración general y la operación de sucursal, conectados a una API y una base de datos comunes.
+Para clientes que necesitan alquilar un vehículo y empresas que administran flotas y sucursales en Colombia, **Drivique** es una plataforma de alquiler que permite consultar disponibilidad, reservar, pagar, formalizar contratos y gestionar entregas y devoluciones desde un sistema compartido. La solución ofrece una app móvil exclusiva para el cliente final y una web con portal cliente y panel administrativo para administración general y operación de sucursal, conectados a una API y una base de datos comunes.
 
-El SRS vigente también especifica un portal web para clientes. Se conserva como canal del cliente descrito por los requisitos; no se convierte la app móvil en una herramienta administrativa. Esta diferencia respecto del enfoque de dos plataformas del plan se registra en el [SRS consolidado](../01-srs/srs.md).
+**Alcance confirmado por Danna:** la app no tiene panel administrativo. La web sí ofrece funciones de cliente y un panel administrativo separado por permisos. Esta decisión está sincronizada en el [SRS consolidado](../01-srs/srs.md).
 
 ## 3. Usuarios y responsabilidades
 
@@ -38,11 +38,13 @@ Operador y supervisor aparecen en documentos generales y en el PDF. Su equivalen
 - Catálogo, búsqueda, filtros, detalle del vehículo y navegación del cliente.
 - Configuración de fechas y sucursales, coberturas y adicionales, datos de conductor y cupones, resumen y selección de pago.
 - Pago digital mediante Wompi y selección de pago presencial con seguimiento del vencimiento.
-- Carga documental, contrato descargable y presentación del PIN de entrega.
+- Carga documental, contrato descargable y presentación del PIN de entrega de exactamente 4 dígitos numéricos, conservando ceros iniciales.
 - Historial de reservas, perfil, seguridad de cuenta, favoritos, notificaciones y soporte conforme a los RF correspondientes.
 - Preferencias de idioma y tema claro/oscuro como requisitos transversales, no como RF nuevos.
 
-### 4.2 Panel web de administración
+### 4.2 Web: portal cliente y panel administrativo
+
+El portal cliente web ofrece las capacidades del cliente descritas por los RF; el panel administrativo contiene las siguientes funciones, sujeto a permisos y ámbito de sucursal:
 
 - Indicadores y reportes para administración y sucursal (RF34 y RF44).
 - Gestión de ciudades, sedes, vehículos, reservas, usuarios, administradores y permisos (RF35 a RF40).
