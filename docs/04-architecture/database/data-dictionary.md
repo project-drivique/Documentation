@@ -1,12 +1,12 @@
 # Diccionario de datos físico - Drivique
 
-**Responsable:** Danna Valentina Barrios Penagos · **HU:** HU-DOC-003 · **Fecha:** 2026-10-06
+**Responsable:** Danna Valentina Barrios Penagos · **HU:** HU-DOC-003 / HU-DOC-008 · **Fecha:** 2026-10-07
 
 ## 1. Alcance, fuente y convenciones
 
-Este diccionario describe el esquema **versionado en SQL**, no una instancia desplegada. Fuente: repositorio `database`, rama `HU-INT-04-dev`, commit `681041da4d882aebf2b157cbc827e0b265af7147`. Se revisaron tablas, alteraciones posteriores, índices y triggers de `01_ddl/`. Todos los archivos de tablas/alteraciones aquí documentados están referenciados por el maestro Liquibase.
+Este diccionario describe el esquema **versionado en SQL**, no una instancia desplegada. Fuente: repositorio `database`, rama `dev`, commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94`. Se revisaron tablas, alteraciones posteriores, índices y triggers de `01_ddl/`. Todos los archivos de tablas/alteraciones aquí documentados están referenciados por el maestro Liquibase.
 
-**Cobertura:** 68 tablas, 558 columnas, 94 índices explícitos y 53 triggers definidos en los archivos revisados. Los índices implícitos de PK/UNIQUE no se cuentan como índices explícitos.
+**Cobertura:** 69 tablas, 565 columnas, 96 índices explícitos y 53 triggers definidos en los archivos revisados. Los índices implícitos de PK/UNIQUE no se cuentan como índices explícitos.
 
 - **PK:** clave primaria; implica NOT NULL, incluso cuando no se repite en la columna.
 - **FK:** referencia a otra tabla; se conserva nombre, columnas y acción ON DELETE si se declara.
@@ -19,14 +19,14 @@ Este diccionario describe el esquema **versionado en SQL**, no una instancia des
 
 Las descripciones identifican el propósito de tabla y atributos principales. Los nombres, tipos y restricciones exactos prevalecen sobre una interpretación del negocio. Los campos sin significado adicional confirmado conservan su nombre y dominio declarado, evitando atribuirles una regla no implementada.
 
-Fuente de migraciones: [changelog/db.changelog-master.yaml](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/changelog/db.changelog-master.yaml). Las referencias externas fijan el commit consultado y se verificaron contra el clon local.
+Fuente de migraciones: [changelog/db.changelog-master.yaml](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/changelog/db.changelog-master.yaml). Las referencias externas fijan el commit consultado y se verificaron contra el clon local.
 
 ## 2. Inventario por esquema
 
 | Esquema | Responsabilidad | Tablas | Columnas |
 | --- | --- | --- | --- |
 | `core` | Configuración común | 4 | 33 |
-| `iam` | Identidad y acceso | 16 | 131 |
+| `iam` | Identidad y acceso | 17 | 138 |
 | `location` | Cobertura y sucursales | 4 | 27 |
 | `fleet` | Flota | 13 | 98 |
 | `catalog` | Oferta y condiciones comerciales | 5 | 39 |
@@ -39,7 +39,7 @@ Fuente de migraciones: [changelog/db.changelog-master.yaml](https://github.com/p
 ### Índice de tablas
 
 - **core**: [core.brand_configurations](#core-brand_configurations), [core.currencies](#core-currencies), [core.exchange_rates](#core-exchange_rates), [core.languages](#core-languages).
-- **iam**: [iam.document_statuses](#iam-document_statuses), [iam.document_types](#iam-document_types), [iam.nationalities](#iam-nationalities), [iam.password_policies](#iam-password_policies), [iam.permissions](#iam-permissions), [iam.role_permissions](#iam-role_permissions), [iam.roles](#iam-roles), [iam.security_configurations](#iam-security_configurations), [iam.user_consents](#iam-user_consents), [iam.user_documents](#iam-user_documents), [iam.user_preferences](#iam-user_preferences), [iam.user_profiles](#iam-user_profiles), [iam.user_roles](#iam-user_roles), [iam.user_sessions](#iam-user_sessions), [iam.users](#iam-users), [iam.verification_codes](#iam-verification_codes).
+- **iam**: [iam.user_social_accounts](#iam-user_social_accounts), [iam.document_statuses](#iam-document_statuses), [iam.document_types](#iam-document_types), [iam.nationalities](#iam-nationalities), [iam.password_policies](#iam-password_policies), [iam.permissions](#iam-permissions), [iam.role_permissions](#iam-role_permissions), [iam.roles](#iam-roles), [iam.security_configurations](#iam-security_configurations), [iam.user_consents](#iam-user_consents), [iam.user_documents](#iam-user_documents), [iam.user_preferences](#iam-user_preferences), [iam.user_profiles](#iam-user_profiles), [iam.user_roles](#iam-user_roles), [iam.user_sessions](#iam-user_sessions), [iam.users](#iam-users), [iam.verification_codes](#iam-verification_codes).
 - **location**: [location.branch_users](#location-branch_users), [location.branches](#location-branches), [location.cities](#location-cities), [location.departments](#location-departments).
 - **fleet**: [fleet.features](#fleet-features), [fleet.fuel_types](#fleet-fuel_types), [fleet.maintenance_types](#fleet-maintenance_types), [fleet.transmission_types](#fleet-transmission_types), [fleet.user_favorite_vehicles](#fleet-user_favorite_vehicles), [fleet.vehicle_brands](#fleet-vehicle_brands), [fleet.vehicle_categories](#fleet-vehicle_categories), [fleet.vehicle_documents](#fleet-vehicle_documents), [fleet.vehicle_features](#fleet-vehicle_features), [fleet.vehicle_images](#fleet-vehicle_images), [fleet.vehicle_maintenances](#fleet-vehicle_maintenances), [fleet.vehicle_statuses](#fleet-vehicle_statuses), [fleet.vehicles](#fleet-vehicles).
 - **catalog**: [catalog.additional_services](#catalog-additional_services), [catalog.insurance_coverages](#catalog-insurance_coverages), [catalog.mileage_plans](#catalog-mileage_plans), [catalog.promotions](#catalog-promotions), [catalog.user_coupon_usages](#catalog-user_coupon_usages).
@@ -60,7 +60,7 @@ Fuente de migraciones: [changelog/db.changelog-master.yaml](https://github.com/p
 
 Configuración persistida de identidad visual.
 
-**Fuente DDL:** [01_ddl/03_tables/core/brand-configurations.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/core/brand-configurations.sql).
+**Fuente DDL:** [01_ddl/03_tables/core/brand-configurations.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/core/brand-configurations.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -92,7 +92,7 @@ CONSTRAINT chk_brand_configurations_default_theme CHECK (default_theme IN ('LIGH
 CREATE UNIQUE INDEX uq_brand_configurations_one_active ON core.brand_configurations (is_active) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/core/create-brand-configurations-active-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/core/create-brand-configurations-active-index.sql).
+Fuente: [01_ddl/10_indexes/core/create-brand-configurations-active-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/core/create-brand-configurations-active-index.sql).
 
 **Triggers definidos**
 
@@ -100,7 +100,7 @@ Fuente: [01_ddl/10_indexes/core/create-brand-configurations-active-index.sql](ht
 CREATE TRIGGER trg_brand_configurations_set_updated_at BEFORE UPDATE ON core.brand_configurations FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/core/add-brand-configurations-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/core/add-brand-configurations-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/core/add-brand-configurations-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/core/add-brand-configurations-updated-at-trigger.sql).
 
 <a id="core-currencies"></a>
 
@@ -108,7 +108,7 @@ Fuente: [01_ddl/09_triggers/core/add-brand-configurations-updated-at-trigger.sql
 
 Catálogo de monedas y formato monetario.
 
-**Fuente DDL:** [01_ddl/03_tables/core/004-create-currencies-table.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/core/004-create-currencies-table.sql).
+**Fuente DDL:** [01_ddl/03_tables/core/004-create-currencies-table.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/core/004-create-currencies-table.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -135,7 +135,7 @@ CONSTRAINT chk_currencies_code_format CHECK (code ~ '^[A-Z]{3}$');
 CREATE UNIQUE INDEX uq_currencies_one_default ON core.currencies (is_default) WHERE is_default;
 ```
 
-Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql).
+Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql).
 
 **Triggers definidos**
 
@@ -143,7 +143,7 @@ Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://
 CREATE TRIGGER trg_currencies_set_updated_at BEFORE UPDATE ON core.currencies FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/core/007-add-currencies-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/core/007-add-currencies-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/core/007-add-currencies-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/core/007-add-currencies-updated-at-trigger.sql).
 
 <a id="core-exchange_rates"></a>
 
@@ -151,7 +151,7 @@ Fuente: [01_ddl/09_triggers/core/007-add-currencies-updated-at-trigger.sql](http
 
 Tasas de cambio entre monedas con fecha de vigencia.
 
-**Fuente DDL:** [01_ddl/03_tables/core/011-create-exchange-rates-table.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/core/011-create-exchange-rates-table.sql).
+**Fuente DDL:** [01_ddl/03_tables/core/011-create-exchange-rates-table.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/core/011-create-exchange-rates-table.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -179,7 +179,7 @@ CONSTRAINT chk_exchange_rates_currency_pair CHECK (from_currency_id <> to_curren
 CREATE INDEX idx_exchange_rates_currency_pair_fetched_at ON core.exchange_rates (from_currency_id, to_currency_id, fetched_at DESC);
 ```
 
-Fuente: [01_ddl/10_indexes/core/012-create-exchange-rates-lookup-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/core/012-create-exchange-rates-lookup-index.sql).
+Fuente: [01_ddl/10_indexes/core/012-create-exchange-rates-lookup-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/core/012-create-exchange-rates-lookup-index.sql).
 
 **Triggers definidos**
 
@@ -191,7 +191,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Catálogo de idiomas y variantes regionales.
 
-**Fuente DDL:** [01_ddl/03_tables/core/003-create-languages-table.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/core/003-create-languages-table.sql).
+**Fuente DDL:** [01_ddl/03_tables/core/003-create-languages-table.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/core/003-create-languages-table.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -217,7 +217,7 @@ CONSTRAINT chk_languages_code_format CHECK (code ~ '^[a-z]{2}(-[A-Z]{2})?$');
 CREATE UNIQUE INDEX uq_languages_one_default ON core.languages (is_default) WHERE is_default;
 ```
 
-Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql).
+Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql).
 
 **Triggers definidos**
 
@@ -225,7 +225,7 @@ Fuente: [01_ddl/10_indexes/core/008-create-default-catalog-indexes.sql](https://
 CREATE TRIGGER trg_languages_set_updated_at BEFORE UPDATE ON core.languages FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/core/006-add-languages-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/core/006-add-languages-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/core/006-add-languages-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/core/006-add-languages-updated-at-trigger.sql).
 
 ### Esquema `iam` - Identidad y acceso
 
@@ -235,7 +235,7 @@ Fuente: [01_ddl/09_triggers/core/006-add-languages-updated-at-trigger.sql](https
 
 Estados de revisión documental.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/document-statuses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/document-statuses.sql), [01_ddl/03_tables/iam/add-document-statuses-description.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/add-document-statuses-description.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/document-statuses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/document-statuses.sql), [01_ddl/03_tables/iam/add-document-statuses-description.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/add-document-statuses-description.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ CONSTRAINT chk_document_statuses_code_format CHECK (code ~ '^[A-Z][A-Z0-9_]*$');
 CREATE INDEX idx_document_statuses_active ON iam.document_statuses (code) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
 
 **Triggers definidos**
 
@@ -269,7 +269,7 @@ Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](http
 CREATE TRIGGER trg_document_statuses_set_updated_at BEFORE UPDATE ON iam.document_statuses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-document-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-document-statuses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-document-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-document-statuses-updated-at-trigger.sql).
 
 <a id="iam-document_types"></a>
 
@@ -277,7 +277,7 @@ Fuente: [01_ddl/09_triggers/iam/add-document-statuses-updated-at-trigger.sql](ht
 
 Tipos de documento de identidad/verificación.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/document-types.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/document-types.sql), [01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/document-types.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/document-types.sql), [01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -305,7 +305,7 @@ CONSTRAINT chk_document_types_code_format CHECK (code ~ '^[A-Z][A-Z0-9_]*$');
 CREATE INDEX idx_document_types_active ON iam.document_types (code) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
 
 **Triggers definidos**
 
@@ -313,7 +313,7 @@ Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](http
 CREATE TRIGGER trg_document_types_set_updated_at BEFORE UPDATE ON iam.document_types FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-document-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-document-types-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-document-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-document-types-updated-at-trigger.sql).
 
 <a id="iam-nationalities"></a>
 
@@ -321,7 +321,7 @@ Fuente: [01_ddl/09_triggers/iam/add-document-types-updated-at-trigger.sql](https
 
 Catálogo de nacionalidades.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/nationalities.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/nationalities.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/nationalities.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/nationalities.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -346,7 +346,7 @@ CONSTRAINT chk_nationalities_iso_code_format CHECK (iso_code ~ '^[A-Z]{2}$');
 CREATE INDEX idx_nationalities_active ON iam.nationalities (name) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql).
 
 **Triggers definidos**
 
@@ -354,7 +354,7 @@ Fuente: [01_ddl/10_indexes/iam/create-identity-catalogs-active-indexes.sql](http
 CREATE TRIGGER trg_nationalities_set_updated_at BEFORE UPDATE ON iam.nationalities FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-nationalities-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-nationalities-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-nationalities-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-nationalities-updated-at-trigger.sql).
 
 <a id="iam-password_policies"></a>
 
@@ -362,7 +362,7 @@ Fuente: [01_ddl/09_triggers/iam/add-nationalities-updated-at-trigger.sql](https:
 
 Reglas configurables de contraseña.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/password-policies.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/password-policies.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/password-policies.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/password-policies.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -393,7 +393,7 @@ CONSTRAINT chk_password_policies_expiration_days CHECK (expiration_days > 0);
 CREATE UNIQUE INDEX uq_password_policies_one_active ON iam.password_policies (is_active) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-password-policies-active-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-password-policies-active-index.sql).
+Fuente: [01_ddl/10_indexes/iam/create-password-policies-active-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-password-policies-active-index.sql).
 
 **Triggers definidos**
 
@@ -401,7 +401,7 @@ Fuente: [01_ddl/10_indexes/iam/create-password-policies-active-index.sql](https:
 CREATE TRIGGER trg_password_policies_set_updated_at BEFORE UPDATE ON iam.password_policies FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-password-policies-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-password-policies-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-password-policies-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-password-policies-updated-at-trigger.sql).
 
 <a id="iam-permissions"></a>
 
@@ -409,7 +409,7 @@ Fuente: [01_ddl/09_triggers/iam/add-password-policies-updated-at-trigger.sql](ht
 
 Catálogo de permisos.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/permissions.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/permissions.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/permissions.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/permissions.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -441,7 +441,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Asignación de permisos a roles.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/role_permissions.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/role_permissions.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/role_permissions.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/role_permissions.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -463,7 +463,7 @@ CONSTRAINT fk_role_permissions_permission FOREIGN KEY (permission_id) REFERENCES
 CREATE INDEX idx_role_permissions_permission_id ON iam.role_permissions (permission_id);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-role-permissions-lookup-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-role-permissions-lookup-index.sql).
+Fuente: [01_ddl/10_indexes/iam/create-role-permissions-lookup-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-role-permissions-lookup-index.sql).
 
 **Triggers definidos**
 
@@ -475,7 +475,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Catálogo de roles.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/roles.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/roles.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/roles.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/roles.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -502,7 +502,7 @@ CONSTRAINT chk_roles_name_not_blank CHECK (btrim(name) <> '');
 CREATE INDEX idx_roles_is_active ON iam.roles (is_active);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-roles-active-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-roles-active-index.sql).
+Fuente: [01_ddl/10_indexes/iam/create-roles-active-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-roles-active-index.sql).
 
 **Triggers definidos**
 
@@ -510,7 +510,7 @@ Fuente: [01_ddl/10_indexes/iam/create-roles-active-index.sql](https://github.com
 CREATE TRIGGER trg_roles_set_updated_at BEFORE UPDATE ON iam.roles FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-roles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-roles-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-roles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-roles-updated-at-trigger.sql).
 
 <a id="iam-security_configurations"></a>
 
@@ -518,7 +518,7 @@ Fuente: [01_ddl/09_triggers/iam/add-roles-updated-at-trigger.sql](https://github
 
 Configuración de seguridad por clave.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/security-configurations.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/security-configurations.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/security-configurations.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/security-configurations.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -548,7 +548,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_security_configurations_set_updated_at BEFORE UPDATE ON iam.security_configurations FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-security-configurations-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-security-configurations-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-security-configurations-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-security-configurations-updated-at-trigger.sql).
 
 <a id="iam-user_consents"></a>
 
@@ -556,7 +556,7 @@ Fuente: [01_ddl/09_triggers/iam/add-security-configurations-updated-at-trigger.s
 
 Evidencia de consentimiento con protección por trigger.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user-consents.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user-consents.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user-consents.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user-consents.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -582,7 +582,7 @@ CONSTRAINT chk_user_consents_version_not_blank CHECK (btrim(document_version) <>
 CREATE INDEX idx_user_consents_user_accepted_at ON iam.user_consents (user_id, accepted_at DESC);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-user-consents-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-user-consents-index.sql).
+Fuente: [01_ddl/10_indexes/iam/create-user-consents-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-consents-index.sql).
 
 **Triggers definidos**
 
@@ -590,7 +590,7 @@ Fuente: [01_ddl/10_indexes/iam/create-user-consents-index.sql](https://github.co
 CREATE TRIGGER trg_user_consents_immutable BEFORE UPDATE OR DELETE ON iam.user_consents FOR EACH ROW EXECUTE FUNCTION iam.prevent_user_consent_mutation();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-user-consents-immutable-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-consents-immutable-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-user-consents-immutable-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-consents-immutable-trigger.sql).
 
 <a id="iam-user_documents"></a>
 
@@ -598,7 +598,7 @@ Fuente: [01_ddl/09_triggers/iam/add-user-consents-immutable-trigger.sql](https:/
 
 Expedientes documentales del usuario y revisión.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user-documents.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user-documents.sql), [01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user-documents.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user-documents.sql), [01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/add-document-catalog-and-user-document-fields.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -634,7 +634,7 @@ CREATE INDEX idx_user_documents_user ON iam.user_documents (user_id);
 CREATE INDEX idx_user_documents_status ON iam.user_documents (status_id);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-user-documents-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-user-documents-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-user-documents-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-documents-indexes.sql).
 
 **Triggers definidos**
 
@@ -643,7 +643,7 @@ CREATE TRIGGER trg_user_documents_set_updated_at BEFORE UPDATE ON iam.user_docum
 CREATE TRIGGER trg_user_documents_validate BEFORE INSERT OR UPDATE ON iam.user_documents FOR EACH ROW EXECUTE FUNCTION iam.validate_user_document();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-user-documents-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-documents-updated-at-trigger.sql), [01_ddl/09_triggers/iam/add-user-documents-validation-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-documents-validation-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-user-documents-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-documents-updated-at-trigger.sql), [01_ddl/09_triggers/iam/add-user-documents-validation-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-documents-validation-trigger.sql).
 
 <a id="iam-user_preferences"></a>
 
@@ -651,7 +651,7 @@ Fuente: [01_ddl/09_triggers/iam/add-user-documents-updated-at-trigger.sql](https
 
 Preferencias de idioma, moneda, tema y notificaciones.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user_preferences.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user_preferences.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user_preferences.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user_preferences.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -675,7 +675,7 @@ CREATE INDEX IF NOT EXISTS idx_user_preferences_lang ON iam.user_preferences (la
 CREATE INDEX IF NOT EXISTS idx_user_preferences_curr ON iam.user_preferences (currency_id);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-user-preferences-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-user-preferences-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-user-preferences-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-preferences-indexes.sql).
 
 **Triggers definidos**
 
@@ -683,7 +683,7 @@ Fuente: [01_ddl/10_indexes/iam/create-user-preferences-indexes.sql](https://gith
 CREATE OR REPLACE TRIGGER trg_user_preferences_updated_at BEFORE UPDATE ON iam.user_preferences FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-user-preferences-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-preferences-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-user-preferences-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-preferences-updated-at-trigger.sql).
 
 <a id="iam-user_profiles"></a>
 
@@ -691,7 +691,7 @@ Fuente: [01_ddl/09_triggers/iam/add-user-preferences-updated-at-trigger.sql](htt
 
 Datos complementarios del perfil de usuario.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user_profiles.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user_profiles.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user_profiles.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user_profiles.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -723,7 +723,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_user_profiles_set_updated_at BEFORE UPDATE ON iam.user_profiles FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-user-profiles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-profiles-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-user-profiles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-profiles-updated-at-trigger.sql).
 
 <a id="iam-user_roles"></a>
 
@@ -731,7 +731,7 @@ Fuente: [01_ddl/09_triggers/iam/add-user-profiles-updated-at-trigger.sql](https:
 
 Asignación de roles a usuarios.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user_roles.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user_roles.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user_roles.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user_roles.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -755,7 +755,7 @@ CONSTRAINT fk_user_roles_assigned_by FOREIGN KEY (assigned_by) REFERENCES iam.us
 CREATE INDEX idx_user_roles_role_id ON iam.user_roles (role_id);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-user-roles-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-user-roles-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-user-roles-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-roles-indexes.sql).
 
 **Triggers definidos**
 
@@ -767,7 +767,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Sesiones y datos de renovación/revocación.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/user_sessions.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/user_sessions.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/user_sessions.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user_sessions.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -797,7 +797,7 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_exp ON iam.user_sessions (expires_a
 CREATE INDEX IF NOT EXISTS idx_user_sessions_revoked ON iam.user_sessions (revoked_at);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-user-sessions-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-user-sessions-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-user-sessions-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-sessions-indexes.sql).
 
 **Triggers definidos**
 
@@ -805,7 +805,7 @@ Fuente: [01_ddl/10_indexes/iam/create-user-sessions-indexes.sql](https://github.
 CREATE OR REPLACE TRIGGER trg_user_sessions_updated_at BEFORE UPDATE ON iam.user_sessions FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-user-sessions-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-user-sessions-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-user-sessions-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-user-sessions-updated-at-trigger.sql).
 
 <a id="iam-users"></a>
 
@@ -813,7 +813,7 @@ Fuente: [01_ddl/09_triggers/iam/add-user-sessions-updated-at-trigger.sql](https:
 
 Cuentas de usuario y datos de identidad/autenticación.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/users.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/users.sql), [01_ddl/03_tables/iam/add-users-identity-catalog-foreign-keys.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/add-users-identity-catalog-foreign-keys.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/users.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/users.sql), [01_ddl/03_tables/iam/add-users-identity-catalog-foreign-keys.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/add-users-identity-catalog-foreign-keys.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -857,7 +857,7 @@ CREATE INDEX idx_users_doc_num ON iam.users (document_number);
 CREATE INDEX idx_users_account_status ON iam.users (account_status);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-users-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-users-indexes.sql).
+Fuente: [01_ddl/10_indexes/iam/create-users-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-users-indexes.sql).
 
 **Triggers definidos**
 
@@ -865,7 +865,7 @@ Fuente: [01_ddl/10_indexes/iam/create-users-indexes.sql](https://github.com/proj
 CREATE TRIGGER trg_users_set_updated_at BEFORE UPDATE ON iam.users FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/iam/add-users-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/iam/add-users-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/iam/add-users-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/iam/add-users-updated-at-trigger.sql).
 
 <a id="iam-verification_codes"></a>
 
@@ -873,7 +873,7 @@ Fuente: [01_ddl/09_triggers/iam/add-users-updated-at-trigger.sql](https://github
 
 Códigos de verificación con propósito y vencimiento.
 
-**Fuente DDL:** [01_ddl/03_tables/iam/verification_codes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/iam/verification_codes.sql).
+**Fuente DDL:** [01_ddl/03_tables/iam/verification_codes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/verification_codes.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -900,11 +900,48 @@ CREATE INDEX IF NOT EXISTS idx_verification_codes_user ON iam.verification_codes
 CREATE INDEX IF NOT EXISTS idx_verification_codes_exp ON iam.verification_codes (expires_at);
 ```
 
-Fuente: [01_ddl/10_indexes/iam/create-verification-codes-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-verification-codes-indexes.sql), [01_ddl/10_indexes/iam/create-verification-codes-user-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/iam/create-verification-codes-user-index.sql).
+Fuente: [01_ddl/10_indexes/iam/create-verification-codes-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-verification-codes-indexes.sql), [01_ddl/10_indexes/iam/create-verification-codes-user-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-verification-codes-user-index.sql).
 
 **Triggers definidos**
 
 No se identifica un trigger para esta tabla en los archivos revisados.
+
+<a id="iam-user_social_accounts"></a>
+
+#### iam.user_social_accounts
+
+Vinculación de una cuenta local con un proveedor de inicio de sesión social.
+
+**Fuente DDL:** [user_social_accounts.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/iam/user_social_accounts.sql).
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `PRIMARY KEY DEFAULT gen_random_uuid()` |
+| `user_id` | `UUID` | No | — | user_id | `NOT NULL` |
+| `provider` | `VARCHAR(30)` | No | — | provider | `NOT NULL` |
+| `provider_user_id` | `VARCHAR(255)` | No | — | provider_user_id | `NOT NULL` |
+| `email` | `VARCHAR(254)` | Sí | — | email | `` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | updated_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Restricciones de tabla**
+
+```sql
+CONSTRAINT fk_user_social_accounts_user FOREIGN KEY (user_id) REFERENCES iam.users(id) ON DELETE CASCADE
+CONSTRAINT uq_user_social_accounts_provider_user_id UNIQUE (provider, provider_user_id)
+CONSTRAINT uq_user_social_accounts_user_provider UNIQUE (user_id, provider)
+CONSTRAINT chk_user_social_accounts_provider CHECK (provider IN ('GOOGLE', 'FACEBOOK'))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_user_social_accounts_user_id ON iam.user_social_accounts(user_id)
+CREATE INDEX idx_user_social_accounts_provider_lookup ON iam.user_social_accounts(provider, provider_user_id)
+```
+
+**Triggers definidos:** ninguno en el DDL revisado.
+
 
 ### Esquema `location` - Cobertura y sucursales
 
@@ -914,7 +951,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Asignación de usuarios a sucursales.
 
-**Fuente DDL:** [01_ddl/03_tables/location/branch-users.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/location/branch-users.sql).
+**Fuente DDL:** [01_ddl/03_tables/location/branch-users.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/location/branch-users.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -936,7 +973,7 @@ CONSTRAINT fk_branch_users_branch FOREIGN KEY (branch_id) REFERENCES location.br
 CREATE INDEX idx_branch_users_branch ON location.branch_users (branch_id);
 ```
 
-Fuente: [01_ddl/10_indexes/location/create-branch-users-branch-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/location/create-branch-users-branch-index.sql).
+Fuente: [01_ddl/10_indexes/location/create-branch-users-branch-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/location/create-branch-users-branch-index.sql).
 
 **Triggers definidos**
 
@@ -948,7 +985,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Sucursales físicas y datos operativos.
 
-**Fuente DDL:** [01_ddl/03_tables/location/branches.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/location/branches.sql).
+**Fuente DDL:** [01_ddl/03_tables/location/branches.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/location/branches.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -981,7 +1018,7 @@ CONSTRAINT chk_branches_business_hours CHECK (closing_time > opening_time);
 CREATE INDEX idx_branches_city ON location.branches (city_id);
 ```
 
-Fuente: [01_ddl/10_indexes/location/create-branches-city-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/location/create-branches-city-index.sql).
+Fuente: [01_ddl/10_indexes/location/create-branches-city-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/location/create-branches-city-index.sql).
 
 **Triggers definidos**
 
@@ -989,7 +1026,7 @@ Fuente: [01_ddl/10_indexes/location/create-branches-city-index.sql](https://gith
 CREATE TRIGGER trg_branches_set_updated_at BEFORE UPDATE ON location.branches FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/location/add-branches-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/location/add-branches-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/location/add-branches-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/location/add-branches-updated-at-trigger.sql).
 
 <a id="location-cities"></a>
 
@@ -997,7 +1034,7 @@ Fuente: [01_ddl/09_triggers/location/add-branches-updated-at-trigger.sql](https:
 
 Ciudades asociadas a departamentos.
 
-**Fuente DDL:** [01_ddl/03_tables/location/cities.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/location/cities.sql).
+**Fuente DDL:** [01_ddl/03_tables/location/cities.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/location/cities.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1024,7 +1061,7 @@ CONSTRAINT chk_cities_name_not_blank CHECK (btrim(name) <> '');
 CREATE INDEX idx_cities_dept ON location.cities (department_id);
 ```
 
-Fuente: [01_ddl/10_indexes/location/create-cities-department-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/location/create-cities-department-index.sql).
+Fuente: [01_ddl/10_indexes/location/create-cities-department-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/location/create-cities-department-index.sql).
 
 **Triggers definidos**
 
@@ -1032,7 +1069,7 @@ Fuente: [01_ddl/10_indexes/location/create-cities-department-index.sql](https://
 CREATE TRIGGER trg_cities_set_updated_at BEFORE UPDATE ON location.cities FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/location/add-cities-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/location/add-cities-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/location/add-cities-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/location/add-cities-updated-at-trigger.sql).
 
 <a id="location-departments"></a>
 
@@ -1040,7 +1077,7 @@ Fuente: [01_ddl/09_triggers/location/add-cities-updated-at-trigger.sql](https://
 
 Departamentos de la cobertura geográfica.
 
-**Fuente DDL:** [01_ddl/03_tables/location/departments.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/location/departments.sql).
+**Fuente DDL:** [01_ddl/03_tables/location/departments.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/location/departments.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1067,7 +1104,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_departments_set_updated_at BEFORE UPDATE ON location.departments FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql).
 
 ### Esquema `fleet` - Flota
 
@@ -1077,7 +1114,7 @@ Fuente: [01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql](htt
 
 Catálogo de características de vehículo.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/features.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/features.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/features.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/features.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1110,7 +1147,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Tipos de combustible.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/fuel-types.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/fuel-types.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/fuel-types.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/fuel-types.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1139,7 +1176,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_fuel_types_set_updated_at BEFORE UPDATE ON fleet.fuel_types FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-fuel-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-fuel-types-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-fuel-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-fuel-types-updated-at-trigger.sql).
 
 <a id="fleet-maintenance_types"></a>
 
@@ -1147,7 +1184,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-fuel-types-updated-at-trigger.sql](https:/
 
 Tipos de mantenimiento.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/maintenance-types.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/maintenance-types.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/maintenance-types.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/maintenance-types.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1179,7 +1216,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Tipos de transmisión.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/transmission-types.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/transmission-types.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/transmission-types.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/transmission-types.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1208,7 +1245,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_transmission_types_set_updated_at BEFORE UPDATE ON fleet.transmission_types FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-transmission-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-transmission-types-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-transmission-types-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-transmission-types-updated-at-trigger.sql).
 
 <a id="fleet-user_favorite_vehicles"></a>
 
@@ -1216,7 +1253,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-transmission-types-updated-at-trigger.sql]
 
 Vehículos favoritos de usuarios.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/user-favorite-vehicles.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/user-favorite-vehicles.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/user-favorite-vehicles.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/user-favorite-vehicles.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1239,7 +1276,7 @@ CREATE INDEX idx_user_favorite_vehicles_veh ON fleet.user_favorite_vehicles (veh
 CREATE INDEX idx_user_favorite_vehicles_user ON fleet.user_favorite_vehicles (user_id);
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-features-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-features-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-features-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-features-indexes.sql).
 
 **Triggers definidos**
 
@@ -1251,7 +1288,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Catálogo de marcas de vehículo.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-brands.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-brands.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-brands.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-brands.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1278,7 +1315,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_vehicle_brands_set_updated_at BEFORE UPDATE ON fleet.vehicle_brands FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicle-brands-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicle-brands-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicle-brands-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicle-brands-updated-at-trigger.sql).
 
 <a id="fleet-vehicle_categories"></a>
 
@@ -1286,7 +1323,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicle-brands-updated-at-trigger.sql](htt
 
 Categorías comerciales de vehículos.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-categories.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-categories.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-categories.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-categories.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1317,7 +1354,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_vehicle_categories_set_updated_at BEFORE UPDATE ON fleet.vehicle_categories FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicle-categories-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicle-categories-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicle-categories-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicle-categories-updated-at-trigger.sql).
 
 <a id="fleet-vehicle_documents"></a>
 
@@ -1325,7 +1362,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicle-categories-updated-at-trigger.sql]
 
 Documentos de operación del vehículo y su vigencia.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-documents.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-documents.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-documents.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-documents.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1360,7 +1397,7 @@ CREATE UNIQUE INDEX uq_vehicle_documents_active_type ON fleet.vehicle_documents 
 CREATE INDEX idx_vehicle_documents_expiration ON fleet.vehicle_documents (expires_at) WHERE is_active AND expires_at IS NOT NULL;
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql).
 
 **Triggers definidos**
 
@@ -1368,7 +1405,7 @@ Fuente: [01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql](https://gith
 CREATE TRIGGER trg_vehicle_documents_updated_at BEFORE UPDATE ON fleet.vehicle_documents FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicle-documents-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicle-documents-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicle-documents-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicle-documents-updated-at-trigger.sql).
 
 <a id="fleet-vehicle_features"></a>
 
@@ -1376,7 +1413,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicle-documents-updated-at-trigger.sql](
 
 Relación entre vehículos y características.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-features.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-features.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-features.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-features.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1398,7 +1435,7 @@ CONSTRAINT fk_vehicle_features_feature FOREIGN KEY (feature_id) REFERENCES fleet
 CREATE INDEX idx_vehicle_features_feat ON fleet.vehicle_features (feature_id);
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-features-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-features-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-features-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-features-indexes.sql).
 
 **Triggers definidos**
 
@@ -1410,7 +1447,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Imágenes asociadas a vehículos.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-images.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-images.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-images.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-images.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1437,7 +1474,7 @@ CREATE INDEX idx_vehicle_images_veh ON fleet.vehicle_images (vehicle_id);
 CREATE UNIQUE INDEX uq_vehicle_images_primary ON fleet.vehicle_images (vehicle_id) WHERE is_primary;
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-vehicle-assets-indexes.sql).
 
 **Triggers definidos**
 
@@ -1449,7 +1486,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Registro de mantenimientos de flota.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-maintenances.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-maintenances.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-maintenances.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-maintenances.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1482,7 +1519,7 @@ CREATE INDEX idx_vehicle_maintenances_type ON fleet.vehicle_maintenances (mainte
 CREATE INDEX idx_vehicle_maintenances_scheduled ON fleet.vehicle_maintenances (scheduled_date);
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-vehicle-maintenances-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-vehicle-maintenances-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-vehicle-maintenances-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-vehicle-maintenances-indexes.sql).
 
 **Triggers definidos**
 
@@ -1490,7 +1527,7 @@ Fuente: [01_ddl/10_indexes/fleet/create-vehicle-maintenances-indexes.sql](https:
 CREATE TRIGGER trg_vehicle_maintenances_updated_at BEFORE UPDATE ON fleet.vehicle_maintenances FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicle-maintenances-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicle-maintenances-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicle-maintenances-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicle-maintenances-updated-at-trigger.sql).
 
 <a id="fleet-vehicle_statuses"></a>
 
@@ -1498,7 +1535,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicle-maintenances-updated-at-trigger.sq
 
 Estados de disponibilidad/operación de flota.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-statuses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicle-statuses.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicle-statuses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicle-statuses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1528,7 +1565,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_vehicle_statuses_set_updated_at BEFORE UPDATE ON fleet.vehicle_statuses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicle-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicle-statuses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicle-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicle-statuses-updated-at-trigger.sql).
 
 <a id="fleet-vehicles"></a>
 
@@ -1536,7 +1573,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicle-statuses-updated-at-trigger.sql](h
 
 Vehículos de flota, datos técnicos, sede y estado.
 
-**Fuente DDL:** [01_ddl/03_tables/fleet/vehicles.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/fleet/vehicles.sql).
+**Fuente DDL:** [01_ddl/03_tables/fleet/vehicles.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/fleet/vehicles.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1591,7 +1628,7 @@ CREATE INDEX idx_vehicles_branch_status ON fleet.vehicles (current_branch_id, st
 CREATE INDEX idx_vehicles_cat_rate ON fleet.vehicles (category_id, daily_rate);
 ```
 
-Fuente: [01_ddl/10_indexes/fleet/create-vehicles-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/fleet/create-vehicles-indexes.sql).
+Fuente: [01_ddl/10_indexes/fleet/create-vehicles-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/fleet/create-vehicles-indexes.sql).
 
 **Triggers definidos**
 
@@ -1599,7 +1636,7 @@ Fuente: [01_ddl/10_indexes/fleet/create-vehicles-indexes.sql](https://github.com
 CREATE TRIGGER trg_vehicles_set_updated_at BEFORE UPDATE ON fleet.vehicles FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/fleet/add-vehicles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/fleet/add-vehicles-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/fleet/add-vehicles-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/fleet/add-vehicles-updated-at-trigger.sql).
 
 ### Esquema `catalog` - Oferta y condiciones comerciales
 
@@ -1609,7 +1646,7 @@ Fuente: [01_ddl/09_triggers/fleet/add-vehicles-updated-at-trigger.sql](https://g
 
 Servicios adicionales del alquiler y precio.
 
-**Fuente DDL:** [01_ddl/03_tables/catalog/additional-services.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/catalog/additional-services.sql).
+**Fuente DDL:** [01_ddl/03_tables/catalog/additional-services.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/catalog/additional-services.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1638,7 +1675,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_additional_services_set_updated_at BEFORE UPDATE ON catalog.additional_services FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/catalog/add-additional-services-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/catalog/add-additional-services-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/catalog/add-additional-services-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/catalog/add-additional-services-updated-at-trigger.sql).
 
 <a id="catalog-insurance_coverages"></a>
 
@@ -1646,7 +1683,7 @@ Fuente: [01_ddl/09_triggers/catalog/add-additional-services-updated-at-trigger.s
 
 Coberturas de protección del alquiler.
 
-**Fuente DDL:** [01_ddl/03_tables/catalog/insurance-coverages.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/catalog/insurance-coverages.sql).
+**Fuente DDL:** [01_ddl/03_tables/catalog/insurance-coverages.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/catalog/insurance-coverages.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1677,7 +1714,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_insurance_coverages_set_updated_at BEFORE UPDATE ON catalog.insurance_coverages FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/catalog/add-insurance-coverages-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/catalog/add-insurance-coverages-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/catalog/add-insurance-coverages-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/catalog/add-insurance-coverages-updated-at-trigger.sql).
 
 <a id="catalog-mileage_plans"></a>
 
@@ -1685,7 +1722,7 @@ Fuente: [01_ddl/09_triggers/catalog/add-insurance-coverages-updated-at-trigger.s
 
 Planes y condiciones de kilometraje.
 
-**Fuente DDL:** [01_ddl/03_tables/catalog/mileage-plans.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/catalog/mileage-plans.sql).
+**Fuente DDL:** [01_ddl/03_tables/catalog/mileage-plans.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/catalog/mileage-plans.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1718,7 +1755,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_mileage_plans_set_updated_at BEFORE UPDATE ON catalog.mileage_plans FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/catalog/add-mileage-plans-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/catalog/add-mileage-plans-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/catalog/add-mileage-plans-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/catalog/add-mileage-plans-updated-at-trigger.sql).
 
 <a id="catalog-promotions"></a>
 
@@ -1726,7 +1763,7 @@ Fuente: [01_ddl/09_triggers/catalog/add-mileage-plans-updated-at-trigger.sql](ht
 
 Promociones y parámetros de descuento.
 
-**Fuente DDL:** [01_ddl/03_tables/catalog/promotions.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/catalog/promotions.sql).
+**Fuente DDL:** [01_ddl/03_tables/catalog/promotions.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/catalog/promotions.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1764,7 +1801,7 @@ CREATE UNIQUE INDEX idx_promotions_code ON catalog.promotions (code);
 CREATE INDEX idx_promotions_dates ON catalog.promotions (starts_at, ends_at);
 ```
 
-Fuente: [01_ddl/10_indexes/catalog/create-promotions-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/catalog/create-promotions-indexes.sql).
+Fuente: [01_ddl/10_indexes/catalog/create-promotions-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/catalog/create-promotions-indexes.sql).
 
 **Triggers definidos**
 
@@ -1772,7 +1809,7 @@ Fuente: [01_ddl/10_indexes/catalog/create-promotions-indexes.sql](https://github
 CREATE TRIGGER trg_promotions_set_updated_at BEFORE UPDATE ON catalog.promotions FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/catalog/add-promotions-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/catalog/add-promotions-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/catalog/add-promotions-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/catalog/add-promotions-updated-at-trigger.sql).
 
 <a id="catalog-user_coupon_usages"></a>
 
@@ -1780,7 +1817,7 @@ Fuente: [01_ddl/09_triggers/catalog/add-promotions-updated-at-trigger.sql](https
 
 Registro de uso de cupones por usuario.
 
-**Fuente DDL:** [01_ddl/03_tables/catalog/user-coupon-usages.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/catalog/user-coupon-usages.sql).
+**Fuente DDL:** [01_ddl/03_tables/catalog/user-coupon-usages.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/catalog/user-coupon-usages.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1804,7 +1841,7 @@ CONSTRAINT chk_user_coupon_usages_discount_amount_nonnegative CHECK (discount_am
 CREATE INDEX idx_user_coupon_usages_user ON catalog.user_coupon_usages (user_id, used_at DESC);
 ```
 
-Fuente: [01_ddl/10_indexes/catalog/create-promotions-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/catalog/create-promotions-indexes.sql).
+Fuente: [01_ddl/10_indexes/catalog/create-promotions-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/catalog/create-promotions-indexes.sql).
 
 **Triggers definidos**
 
@@ -1818,7 +1855,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Reseñas de sucursal vinculadas a usuario/reserva.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/branch-reviews.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/branch-reviews.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/branch-reviews.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/branch-reviews.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1848,7 +1885,7 @@ CONSTRAINT chk_branch_reviews_comment_not_blank CHECK (comment IS NULL OR btrim(
 CREATE INDEX idx_branch_reviews_branch ON rental.branch_reviews (branch_id);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql).
 
 **Triggers definidos**
 
@@ -1856,7 +1893,7 @@ Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https:
 CREATE TRIGGER trg_branch_reviews_set_updated_at BEFORE UPDATE ON rental.branch_reviews FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql).
 
 <a id="rental-rental_extension_requests"></a>
 
@@ -1864,7 +1901,7 @@ Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.s
 
 Solicitudes de extensión del período de alquiler.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/rental-extension-requests.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/rental-extension-requests.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/rental-extension-requests.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/rental-extension-requests.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1895,7 +1932,7 @@ CREATE INDEX idx_rental_extension_requests_status ON rental.rental_extension_req
 CREATE INDEX idx_rental_extension_requests_reviewer ON rental.rental_extension_requests (reviewed_by);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-rental-extension-requests-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-rental-extension-requests-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-rental-extension-requests-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-rental-extension-requests-indexes.sql).
 
 **Triggers definidos**
 
@@ -1903,7 +1940,7 @@ Fuente: [01_ddl/10_indexes/rental/create-rental-extension-requests-indexes.sql](
 CREATE TRIGGER trg_rental_extension_requests_set_updated_at BEFORE UPDATE ON rental.rental_extension_requests FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-rental-extension-requests-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-rental-extension-requests-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/rental/add-rental-extension-requests-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-rental-extension-requests-updated-at-trigger.sql).
 
 <a id="rental-reservation_additional_services"></a>
 
@@ -1911,7 +1948,7 @@ Fuente: [01_ddl/09_triggers/rental/add-rental-extension-requests-updated-at-trig
 
 Servicios adicionales contratados por reserva.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/reservation-additional-services.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/reservation-additional-services.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/reservation-additional-services.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/reservation-additional-services.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1937,7 +1974,7 @@ CONSTRAINT chk_reservation_additional_services_daily_rate_nonnegative CHECK (dai
 CREATE INDEX idx_reservation_additional_services_service ON rental.reservation_additional_services (additional_service_id);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql).
 
 **Triggers definidos**
 
@@ -1949,7 +1986,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Puntos y modalidades de recogida/devolución.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/reservation-delivery-points.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/reservation-delivery-points.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/reservation-delivery-points.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/reservation-delivery-points.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -1990,7 +2027,7 @@ CREATE INDEX idx_reservation_delivery_points_branch ON rental.reservation_delive
 CREATE INDEX idx_reservation_delivery_points_city ON rental.reservation_delivery_points (city_id);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-reservation-delivery-points-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-reservation-delivery-points-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-reservation-delivery-points-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-reservation-delivery-points-indexes.sql).
 
 **Triggers definidos**
 
@@ -1998,7 +2035,7 @@ Fuente: [01_ddl/10_indexes/rental/create-reservation-delivery-points-indexes.sql
 CREATE TRIGGER trg_reservation_delivery_points_set_updated_at BEFORE UPDATE ON rental.reservation_delivery_points FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-reservation-delivery-points-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-reservation-delivery-points-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/rental/add-reservation-delivery-points-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-reservation-delivery-points-updated-at-trigger.sql).
 
 <a id="rental-reservation_promotions"></a>
 
@@ -2006,7 +2043,7 @@ Fuente: [01_ddl/09_triggers/rental/add-reservation-delivery-points-updated-at-tr
 
 Promociones aplicadas a una reserva.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/reservation-promotions.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/reservation-promotions.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/reservation-promotions.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/reservation-promotions.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2030,7 +2067,7 @@ CONSTRAINT chk_reservation_promotions_discount_applied_nonnegative CHECK (discou
 CREATE INDEX idx_reservation_promotions_promotion ON rental.reservation_promotions (promotion_id);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-reservation-services-and-promotions-indexes.sql).
 
 **Triggers definidos**
 
@@ -2042,7 +2079,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Estados del ciclo de reserva.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/reservation-statuses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/reservation-statuses.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/reservation-statuses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/reservation-statuses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2071,7 +2108,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_reservation_statuses_set_updated_at BEFORE UPDATE ON rental.reservation_statuses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-reservation-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-reservation-statuses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/rental/add-reservation-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-reservation-statuses-updated-at-trigger.sql).
 
 <a id="rental-reservations"></a>
 
@@ -2079,7 +2116,7 @@ Fuente: [01_ddl/09_triggers/rental/add-reservation-statuses-updated-at-trigger.s
 
 Reserva de vehículo, condiciones, importes y plazo de efectivo.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/reservations.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/reservations.sql), [01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/reservations.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/reservations.sql), [01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2129,7 +2166,7 @@ CREATE INDEX idx_reservations_status ON rental.reservations (status_id);
 CREATE INDEX idx_reservations_dates ON rental.reservations (pickup_date, return_date);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql).
+Fuente: [01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql).
 
 **Triggers definidos**
 
@@ -2137,7 +2174,7 @@ Fuente: [01_ddl/10_indexes/rental/create-reservations-indexes-and-exclusion.sql]
 CREATE TRIGGER trg_reservations_apply_rules BEFORE INSERT OR UPDATE ON rental.reservations FOR EACH ROW EXECUTE FUNCTION rental.apply_reservation_rules();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-reservations-rules-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-reservations-rules-trigger.sql).
+Fuente: [01_ddl/09_triggers/rental/add-reservations-rules-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-reservations-rules-trigger.sql).
 
 <a id="rental-vehicle_ratings"></a>
 
@@ -2145,7 +2182,7 @@ Fuente: [01_ddl/09_triggers/rental/add-reservations-rules-trigger.sql](https://g
 
 Calificaciones de vehículo vinculadas a usuario/reserva.
 
-**Fuente DDL:** [01_ddl/03_tables/rental/vehicle-ratings.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/rental/vehicle-ratings.sql).
+**Fuente DDL:** [01_ddl/03_tables/rental/vehicle-ratings.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/rental/vehicle-ratings.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2175,7 +2212,7 @@ CONSTRAINT chk_vehicle_ratings_comment_not_blank CHECK (comment IS NULL OR btrim
 CREATE INDEX idx_vehicle_ratings_veh ON rental.vehicle_ratings (vehicle_id);
 ```
 
-Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql).
+Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql).
 
 **Triggers definidos**
 
@@ -2183,7 +2220,7 @@ Fuente: [01_ddl/10_indexes/rental/create-ratings-and-reviews-indexes.sql](https:
 CREATE TRIGGER trg_vehicle_ratings_set_updated_at BEFORE UPDATE ON rental.vehicle_ratings FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.sql).
 
 ### Esquema `contract` - Contratos e inspecciones
 
@@ -2193,7 +2230,7 @@ Fuente: [01_ddl/09_triggers/rental/add-ratings-and-reviews-updated-at-triggers.s
 
 Asignación de cláusulas a contratos.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/contract-clause-assignments.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/contract-clause-assignments.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/contract-clause-assignments.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/contract-clause-assignments.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2223,7 +2260,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Cláusulas disponibles para contratos.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/contract-clauses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/contract-clauses.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/contract-clauses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/contract-clauses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2256,7 +2293,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_contract_clauses_set_updated_at BEFORE UPDATE ON contract.contract_clauses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-contract-clauses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-contract-clauses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-contract-clauses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-contract-clauses-updated-at-trigger.sql).
 
 <a id="contract-contract_statuses"></a>
 
@@ -2264,7 +2301,7 @@ Fuente: [01_ddl/09_triggers/contract/add-contract-clauses-updated-at-trigger.sql
 
 Estados del contrato.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/contract-statuses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/contract-statuses.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/contract-statuses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/contract-statuses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2295,7 +2332,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_contract_statuses_set_updated_at BEFORE UPDATE ON contract.contract_statuses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-contract-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-contract-statuses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-contract-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-contract-statuses-updated-at-trigger.sql).
 
 <a id="contract-inspection_checklist_answers"></a>
 
@@ -2303,7 +2340,7 @@ Fuente: [01_ddl/09_triggers/contract/add-contract-statuses-updated-at-trigger.sq
 
 Respuestas y evidencia del checklist de inspección.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/inspection-checklist-answers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/inspection-checklist-answers.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/inspection-checklist-answers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/inspection-checklist-answers.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2332,7 +2369,7 @@ CONSTRAINT chk_inspection_checklist_answers_evidence_url_not_blank CHECK (eviden
 CREATE INDEX idx_inspection_checklist_answers_item ON contract.inspection_checklist_answers (checklist_item_id);
 ```
 
-Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql).
+Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql).
 
 **Triggers definidos**
 
@@ -2340,7 +2377,7 @@ Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](http
 CREATE TRIGGER trg_inspection_checklist_answers_set_updated_at BEFORE UPDATE ON contract.inspection_checklist_answers FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-answers-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-inspection-checklist-answers-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-answers-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-inspection-checklist-answers-updated-at-trigger.sql).
 
 <a id="contract-inspection_checklist_items"></a>
 
@@ -2348,7 +2385,7 @@ Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-answers-updated-at
 
 Ítems del checklist de inspección.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/inspection-checklist-items.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/inspection-checklist-items.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/inspection-checklist-items.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/inspection-checklist-items.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2377,7 +2414,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_inspection_checklist_items_set_updated_at BEFORE UPDATE ON contract.inspection_checklist_items FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-items-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-inspection-checklist-items-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-items-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-inspection-checklist-items-updated-at-trigger.sql).
 
 <a id="contract-rental_contracts"></a>
 
@@ -2385,7 +2422,7 @@ Fuente: [01_ddl/09_triggers/contract/add-inspection-checklist-items-updated-at-t
 
 Contrato de alquiler, datos de firma y referencias a PDF.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/rental-contracts.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/rental-contracts.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/rental-contracts.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/rental-contracts.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2437,7 +2474,7 @@ CREATE INDEX idx_contracts_customer ON contract.rental_contracts (customer_id);
 CREATE INDEX idx_contracts_status ON contract.rental_contracts (status_id);
 ```
 
-Fuente: [01_ddl/10_indexes/contract/create-rental-contracts-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/contract/create-rental-contracts-indexes.sql).
+Fuente: [01_ddl/10_indexes/contract/create-rental-contracts-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/contract/create-rental-contracts-indexes.sql).
 
 **Triggers definidos**
 
@@ -2445,7 +2482,7 @@ Fuente: [01_ddl/10_indexes/contract/create-rental-contracts-indexes.sql](https:/
 CREATE TRIGGER trg_rental_contracts_set_updated_at BEFORE UPDATE ON contract.rental_contracts FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-rental-contracts-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-rental-contracts-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-rental-contracts-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-rental-contracts-updated-at-trigger.sql).
 
 <a id="contract-vehicle_inspections"></a>
 
@@ -2453,7 +2490,7 @@ Fuente: [01_ddl/09_triggers/contract/add-rental-contracts-updated-at-trigger.sql
 
 Inspecciones de entrada/salida asociadas a contratos.
 
-**Fuente DDL:** [01_ddl/03_tables/contract/vehicle-inspections.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/contract/vehicle-inspections.sql).
+**Fuente DDL:** [01_ddl/03_tables/contract/vehicle-inspections.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/contract/vehicle-inspections.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2486,7 +2523,7 @@ CREATE INDEX idx_vehicle_inspections_contract ON contract.vehicle_inspections (c
 CREATE INDEX idx_vehicle_inspections_inspector ON contract.vehicle_inspections (inspector_user_id);
 ```
 
-Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql).
+Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql).
 
 **Triggers definidos**
 
@@ -2494,7 +2531,7 @@ Fuente: [01_ddl/10_indexes/contract/create-vehicle-inspections-indexes.sql](http
 CREATE TRIGGER trg_vehicle_inspections_set_updated_at BEFORE UPDATE ON contract.vehicle_inspections FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/contract/add-vehicle-inspections-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/contract/add-vehicle-inspections-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/contract/add-vehicle-inspections-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/contract/add-vehicle-inspections-updated-at-trigger.sql).
 
 ### Esquema `billing` - Pagos y comprobantes
 
@@ -2504,7 +2541,7 @@ Fuente: [01_ddl/09_triggers/contract/add-vehicle-inspections-updated-at-trigger.
 
 Catálogo de métodos de pago.
 
-**Fuente DDL:** [01_ddl/03_tables/billing/payment-methods.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/billing/payment-methods.sql).
+**Fuente DDL:** [01_ddl/03_tables/billing/payment-methods.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/billing/payment-methods.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2533,7 +2570,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_payment_methods_set_updated_at BEFORE UPDATE ON billing.payment_methods FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/billing/add-payment-methods-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/billing/add-payment-methods-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/billing/add-payment-methods-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/billing/add-payment-methods-updated-at-trigger.sql).
 
 <a id="billing-payment_receipts"></a>
 
@@ -2541,7 +2578,7 @@ Fuente: [01_ddl/09_triggers/billing/add-payment-methods-updated-at-trigger.sql](
 
 Comprobantes asociados a pagos.
 
-**Fuente DDL:** [01_ddl/03_tables/billing/payment-receipts.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/billing/payment-receipts.sql).
+**Fuente DDL:** [01_ddl/03_tables/billing/payment-receipts.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/billing/payment-receipts.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2572,7 +2609,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_payment_receipts_set_updated_at BEFORE UPDATE ON billing.payment_receipts FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/billing/add-payment-receipts-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/billing/add-payment-receipts-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/billing/add-payment-receipts-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/billing/add-payment-receipts-updated-at-trigger.sql).
 
 <a id="billing-payment_statuses"></a>
 
@@ -2580,7 +2617,7 @@ Fuente: [01_ddl/09_triggers/billing/add-payment-receipts-updated-at-trigger.sql]
 
 Catálogo de estados de pago.
 
-**Fuente DDL:** [01_ddl/03_tables/billing/payment-statuses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/billing/payment-statuses.sql).
+**Fuente DDL:** [01_ddl/03_tables/billing/payment-statuses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/billing/payment-statuses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2609,7 +2646,7 @@ No se identifica un CREATE INDEX explícito para esta tabla en los archivos revi
 CREATE TRIGGER trg_payment_statuses_set_updated_at BEFORE UPDATE ON billing.payment_statuses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/billing/add-payment-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/billing/add-payment-statuses-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/billing/add-payment-statuses-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/billing/add-payment-statuses-updated-at-trigger.sql).
 
 <a id="billing-payments"></a>
 
@@ -2617,7 +2654,7 @@ Fuente: [01_ddl/09_triggers/billing/add-payment-statuses-updated-at-trigger.sql]
 
 Pagos de reserva, importe y referencia de operación.
 
-**Fuente DDL:** [01_ddl/03_tables/billing/payments.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/billing/payments.sql).
+**Fuente DDL:** [01_ddl/03_tables/billing/payments.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/billing/payments.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2655,7 +2692,7 @@ CREATE INDEX idx_payments_contract ON billing.payments (contract_id);
 CREATE INDEX idx_payments_status ON billing.payments (status_id);
 ```
 
-Fuente: [01_ddl/10_indexes/billing/create-payments-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/billing/create-payments-indexes.sql).
+Fuente: [01_ddl/10_indexes/billing/create-payments-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/billing/create-payments-indexes.sql).
 
 **Triggers definidos**
 
@@ -2663,7 +2700,7 @@ Fuente: [01_ddl/10_indexes/billing/create-payments-indexes.sql](https://github.c
 CREATE TRIGGER trg_payments_set_updated_at BEFORE UPDATE ON billing.payments FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/billing/add-payments-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/billing/add-payments-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/billing/add-payments-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/billing/add-payments-updated-at-trigger.sql).
 
 <a id="billing-user_saved_payment_methods"></a>
 
@@ -2671,7 +2708,7 @@ Fuente: [01_ddl/09_triggers/billing/add-payments-updated-at-trigger.sql](https:/
 
 Referencias tokenizadas de métodos guardados por usuario.
 
-**Fuente DDL:** [01_ddl/03_tables/billing/user-saved-payment-methods.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/billing/user-saved-payment-methods.sql).
+**Fuente DDL:** [01_ddl/03_tables/billing/user-saved-payment-methods.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/billing/user-saved-payment-methods.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2707,7 +2744,7 @@ CONSTRAINT chk_user_saved_payment_methods_exp_year CHECK (exp_year >= 2024);
 CREATE INDEX idx_user_saved_payment_methods_active_user ON billing.user_saved_payment_methods (user_id) WHERE is_active;
 ```
 
-Fuente: [01_ddl/10_indexes/billing/create-user-saved-payment-methods-index.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/billing/create-user-saved-payment-methods-index.sql).
+Fuente: [01_ddl/10_indexes/billing/create-user-saved-payment-methods-index.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/billing/create-user-saved-payment-methods-index.sql).
 
 **Triggers definidos**
 
@@ -2715,7 +2752,7 @@ Fuente: [01_ddl/10_indexes/billing/create-user-saved-payment-methods-index.sql](
 CREATE TRIGGER trg_user_saved_payment_methods_set_updated_at BEFORE UPDATE ON billing.user_saved_payment_methods FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/billing/add-user-saved-payment-methods-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/billing/add-user-saved-payment-methods-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/billing/add-user-saved-payment-methods-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/billing/add-user-saved-payment-methods-updated-at-trigger.sql).
 
 ### Esquema `support` - Atención y notificaciones
 
@@ -2725,7 +2762,7 @@ Fuente: [01_ddl/09_triggers/billing/add-user-saved-payment-methods-updated-at-tr
 
 Incidencias y solicitudes de atención.
 
-**Fuente DDL:** [01_ddl/03_tables/support/incident-reports.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/support/incident-reports.sql).
+**Fuente DDL:** [01_ddl/03_tables/support/incident-reports.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/support/incident-reports.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2765,7 +2802,7 @@ CREATE INDEX idx_incident_reports_reported_by ON support.incident_reports (repor
 CREATE INDEX idx_incident_reports_status ON support.incident_reports (status);
 ```
 
-Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/support/create-incidents-indexes.sql).
+Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/support/create-incidents-indexes.sql).
 
 **Triggers definidos**
 
@@ -2773,7 +2810,7 @@ Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.
 CREATE TRIGGER trg_incident_reports_set_updated_at BEFORE UPDATE ON support.incident_reports FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql).
 
 <a id="support-incident_responses"></a>
 
@@ -2781,7 +2818,7 @@ Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https
 
 Respuestas registradas para incidencias.
 
-**Fuente DDL:** [01_ddl/03_tables/support/incident-responses.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/support/incident-responses.sql).
+**Fuente DDL:** [01_ddl/03_tables/support/incident-responses.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/support/incident-responses.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2809,7 +2846,7 @@ CREATE INDEX idx_incident_responses_report ON support.incident_responses (incide
 CREATE INDEX idx_incident_responses_author ON support.incident_responses (author_user_id);
 ```
 
-Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/support/create-incidents-indexes.sql).
+Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/support/create-incidents-indexes.sql).
 
 **Triggers definidos**
 
@@ -2817,7 +2854,7 @@ Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.
 CREATE TRIGGER trg_incident_responses_set_updated_at BEFORE UPDATE ON support.incident_responses FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql).
 
 <a id="support-notifications"></a>
 
@@ -2825,7 +2862,7 @@ Fuente: [01_ddl/09_triggers/support/add-incidents-updated-at-triggers.sql](https
 
 Notificaciones dirigidas a usuarios y estados de lectura.
 
-**Fuente DDL:** [01_ddl/03_tables/support/notifications.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/support/notifications.sql).
+**Fuente DDL:** [01_ddl/03_tables/support/notifications.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/support/notifications.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2862,7 +2899,7 @@ CREATE INDEX idx_notifications_channel ON support.notifications (channel);
 CREATE INDEX idx_notifications_created_at ON support.notifications (created_at);
 ```
 
-Fuente: [01_ddl/10_indexes/support/create-notifications-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/support/create-notifications-indexes.sql).
+Fuente: [01_ddl/10_indexes/support/create-notifications-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/support/create-notifications-indexes.sql).
 
 **Triggers definidos**
 
@@ -2870,7 +2907,7 @@ Fuente: [01_ddl/10_indexes/support/create-notifications-indexes.sql](https://git
 CREATE TRIGGER trg_notifications_set_updated_at BEFORE UPDATE ON support.notifications FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql).
+Fuente: [01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql).
 
 ### Esquema `audit` - Auditoría y reportes
 
@@ -2880,7 +2917,7 @@ Fuente: [01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql](ht
 
 Tipos de reporte administrativo.
 
-**Fuente DDL:** [01_ddl/03_tables/audit/administrative-report-types.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/audit/administrative-report-types.sql).
+**Fuente DDL:** [01_ddl/03_tables/audit/administrative-report-types.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/audit/administrative-report-types.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2906,7 +2943,7 @@ CONSTRAINT chk_administrative_report_types_name_not_blank CHECK (btrim(name) <> 
 CREATE INDEX idx_administrative_report_types_code ON audit.administrative_report_types (code);
 ```
 
-Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql).
+Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql).
 
 **Triggers definidos**
 
@@ -2914,7 +2951,7 @@ Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](http
 CREATE TRIGGER trg_administrative_report_types_set_updated_at BEFORE UPDATE ON audit.administrative_report_types FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql).
 
 <a id="audit-audit_logs"></a>
 
@@ -2922,7 +2959,7 @@ Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers
 
 Eventos de auditoría con actor, entidad y datos de cambio.
 
-**Fuente DDL:** [01_ddl/03_tables/audit/audit-logs.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/audit/audit-logs.sql).
+**Fuente DDL:** [01_ddl/03_tables/audit/audit-logs.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/audit/audit-logs.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -2964,7 +3001,7 @@ CREATE INDEX idx_audit_logs_old_data ON audit.audit_logs USING gin (old_data);
 CREATE INDEX idx_audit_logs_new_data ON audit.audit_logs USING gin (new_data);
 ```
 
-Fuente: [01_ddl/10_indexes/audit/create-audit-logs-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/audit/create-audit-logs-indexes.sql).
+Fuente: [01_ddl/10_indexes/audit/create-audit-logs-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/audit/create-audit-logs-indexes.sql).
 
 **Triggers definidos**
 
@@ -2976,7 +3013,7 @@ No se identifica un trigger para esta tabla en los archivos revisados.
 
 Ejecuciones/archivos de reportes administrativos.
 
-**Fuente DDL:** [01_ddl/03_tables/audit/generated-reports.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/03_tables/audit/generated-reports.sql).
+**Fuente DDL:** [01_ddl/03_tables/audit/generated-reports.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/03_tables/audit/generated-reports.sql).
 
 | Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
 | --- | --- | --- | --- | --- | --- |
@@ -3011,7 +3048,7 @@ CREATE INDEX idx_generated_reports_generated_at ON audit.generated_reports (gene
 CREATE INDEX idx_generated_reports_filters ON audit.generated_reports USING gin (filters);
 ```
 
-Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql).
+Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql).
 
 **Triggers definidos**
 
@@ -3019,7 +3056,7 @@ Fuente: [01_ddl/10_indexes/audit/create-administrative-reports-indexes.sql](http
 CREATE TRIGGER trg_generated_reports_set_updated_at BEFORE UPDATE ON audit.generated_reports FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
 ```
 
-Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql).
+Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers.sql).
 
 
 ## 4. Reglas transversales que requieren lectura conjunta
@@ -3031,7 +3068,7 @@ Fuente: [01_ddl/09_triggers/audit/add-administrative-reports-updated-at-triggers
 - `iam.user_consents` tiene un trigger específico de inmutabilidad. `audit.audit_logs` no tiene un trigger de inmutabilidad en estos archivos; el nombre audit_logs no demuestra protección contra cambios.
 - Los montos, límites, dominios y estados se conservan como están declarados en cada tabla. Catálogos semilla y servicios pueden aportar reglas adicionales, cuya existencia no sustituye las constraints físicas.
 
-Las funciones relacionadas se consultan en [01_ddl/07_functions/rental/apply-reservation-rules.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/07_functions/rental/apply-reservation-rules.sql), [01_ddl/07_functions/iam/validate-user-document.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/07_functions/iam/validate-user-document.sql) y [01_ddl/07_functions/iam/prevent-user-consent-mutation.sql](https://github.com/project-drivique/database/blob/681041da4d882aebf2b157cbc827e0b265af7147/01_ddl/07_functions/iam/prevent-user-consent-mutation.sql). Esta HU no ejecuta SQL ni aplica modificaciones al esquema.
+Las funciones relacionadas se consultan en [01_ddl/07_functions/rental/apply-reservation-rules.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/07_functions/rental/apply-reservation-rules.sql), [01_ddl/07_functions/iam/validate-user-document.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/07_functions/iam/validate-user-document.sql) y [01_ddl/07_functions/iam/prevent-user-consent-mutation.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/07_functions/iam/prevent-user-consent-mutation.sql). Esta HU no ejecuta SQL ni aplica modificaciones al esquema.
 
 ## 5. Correspondencia con el plan y brechas del modelo
 
@@ -3042,7 +3079,7 @@ Las funciones relacionadas se consultan en [01_ddl/07_functions/rental/apply-res
 | Auditoría | `audit.audit_logs` | Registra operación/resultado/actor; la inmutabilidad y cobertura de eventos necesitan evidencia adicional del diseño y permisos. |
 | Pago en efectivo | `rental.reservations.cash_payment_code`, `cash_payment_expires_at`, `billing.payments`, `billing.payment_receipts` | No existe una tabla `cash_collection_receipts` en el DDL revisado. El código de efectivo no se documenta como PIN de entrega. |
 | Entrega a domicilio | `rental.reservation_delivery_points` | Modela modalidad y ubicación; no existe `delivery_assignments` ni una asignación persistida de conductor en estas tablas. |
-| PIN de entrega de 4 dígitos | No se identifica una columna específica de PIN de entrega en el DDL de las 68 tablas | La decisión confirmada por Danna requiere diseño del almacenamiento seguro, validación y migración en la HU de implementación. No se transforma un código de efectivo en PIN de entrega. |
+| PIN de entrega de 4 dígitos | No se identifica una columna específica de PIN de entrega en el DDL de las 69 tablas | La decisión confirmada por Danna requiere diseño del almacenamiento seguro, validación y migración en la HU de implementación. No se transforma un código de efectivo en PIN de entrega. |
 | Incidencias | `support.incident_reports`, `support.incident_responses` | Son las tablas físicas encontradas; contrastar su cobertura con incidencias de flota y soporte en RF41 y las HU correspondientes. |
 
 El diccionario documenta **lo existente** y registra las diferencias. Agregar campos, tablas o restricciones para implementar las capacidades pendientes es trabajo de diseño/migración; HU-DOC-008 debe mantener el diagrama ER sincronizado con la versión real que se acuerde.
@@ -3054,3 +3091,5 @@ Se verificaron correspondencia con CREATE TABLE, columnas agregadas por ALTER, c
 Para actualizar este documento: identificar commit y rama de database, revisar nuevas migraciones y sus alteraciones, conservar tipos/reglas exactos, ajustar inventario y ER y validar referencias. No copiar tablas de la matriz de trazabilidad sin contrastarlas con el SQL.
 
 Relacionados: [arquitectura C4](../overview.md), [ADR de base de datos](../decisions/0004-motor-base-de-datos.md), [SRS](../../01-srs/srs.md) y [matriz de trazabilidad](../../01-srs/matriz-trazabilidad.md).
+
+Actualización HU-DOC-008: se incorpora `iam.user_social_accounts` y se sincroniza la fecha de corte con `database/dev`. Los otros 68 modelos conservan columnas, constraints, índices y triggers de la revisión anterior. [Diagrama ER y vistas por esquema](er-diagram.md).
