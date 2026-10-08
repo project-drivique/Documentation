@@ -247,9 +247,9 @@ Distribución oficial de responsabilidades en GitHub:
 > Como Diseñadora UML, quiero actualizar el diagrama de clases general y el modelo de dominio conceptual, incorporando todas las nuevas entidades generadas por los nuevos requerimientos funcionales.
 
 **Criterios de Aceptación:**
-- [ ] **Nuevas Clases incorporadas:** `BranchReview` (con `official_response` e `is_immutable`), `DeliveryAssignment` (con `nequi_pin` y estado), `Promotion` (con tipo, descuento y límite), `AuditLog` e `IncidentReport`.
-- [ ] **Modelo de Dominio actualizado:** Refleja los nuevos conceptos del negocio y la separación por ámbito de sucursal.
-- [ ] Se generan los archivos de exportación en PDF y PNG en alta resolución bajo el nombre `diagrama_clases_drivique.png`.
+- [x] **Nuevas Clases incorporadas:** `BranchReview` (con `official_response` e `is_immutable`), `DeliveryAssignment` (con `nequi_pin` y estado), `Promotion` (con tipo, descuento y límite), `AuditLog` e `IncidentReport`.
+- [x] **Modelo de Dominio actualizado:** Refleja los nuevos conceptos del negocio y la separación por ámbito de sucursal.
+- [x] Se generan los archivos de exportación en PDF y PNG en alta resolución bajo el nombre `diagrama_clases_drivique.png`.
 
 ---
 
