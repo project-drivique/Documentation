@@ -152,3 +152,7 @@ Clones locales revisados el 2026-10-06. Las versiones declaradas son evidencia d
 - [ ] Adjuntar evidencia de revisión documental y completar el cierre con el equipo.
 
 Se sincronizaron SRS, RF, resumen y matriz con las decisiones confirmadas: PIN de entrega de 4 dígitos, app exclusiva de cliente, web cliente/administración y cinco variantes de idioma. La numeración coincide entre las 54 fichas y la matriz; la cobertura UML y las brechas de implementación permanecen identificadas.
+
+## Modelo de datos y HU-DOC-008
+
+El [diagrama ER físico](database/er-diagram.md) incluye 69 tablas y 94 claves foráneas del commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94` de `database/dev`. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
