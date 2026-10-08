@@ -273,3 +273,7 @@ Danna entrega los cuatro documentos de HU-DOC-002 en la rama de trabajo. Laura v
 | Plantilla oficial con Given–When–Then | Plantilla reutilizable en español Gherkin, con éxito/error/autorización y ejemplo diligenciado. |
 
 La estructura y los entregables pueden revisarse completos. La aprobación de negocio y la reconciliación de fuentes son pasos de cierre del equipo, no resultados atribuidos a esta edición.
+
+## Modelo entidad relación de HU-DOC-008
+
+El [diagrama ER físico](../04-architecture/database/er-diagram.md) incluye 69 tablas y 94 claves foráneas del commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94` de `database/dev`. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
