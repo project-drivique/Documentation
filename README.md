@@ -6,7 +6,7 @@ Para garantizar un orden impecable y cumplir con los más altos estándares acad
 
 ---
 
-## 📂 Estructura de Directorios (`docs/`)
+##  Estructura de Directorios (`docs/`)
 
 ### `01-srs/` (Software Requirements Specification)
 Contiene la base fundamental del proyecto. Aquí detallamos **qué** va a hacer el sistema.
@@ -51,4 +51,4 @@ Estas tres carpetas detallan la implementación técnica particular de cada fren
 - **`assets/`**: Carpeta contenedora únicamente para imágenes y diagramas exportados (png, jpg, pdf) que son referenciados desde los demás `.md`.
 
 ---
-> 💡 **Nota para el equipo de desarrollo:** Por favor, asegúrate de crear ramas específicas para modificar estos documentos y seguir el flujo de *Pull Requests* para revisión de pares. Nunca hagas commits directamente en la rama principal.
+>  **Nota para el equipo de desarrollo:** Por favor, asegúrate de crear ramas específicas para modificar estos documentos y seguir el flujo de *Pull Requests* para revisión de pares. Nunca hagas commits directamente en la rama principal.
