@@ -1,85 +1,56 @@
-# Backlog priorizado de Drivique
+# Backlog Priorizado y Criterios de Aceptación por Épica — Drivique
 
-**Responsable:** Danna Valentina Barrios Penagos · **HU:** HU-DOC-002 · **Fecha:** 2026-10-06
-**Estado:** propuesta MoSCoW para revisión del equipo. Prioridad no significa funcionalidad implementada, probada o aprobada.
+**Responsable:** Danna Valentina Barrios Penagos · **HU:** HU-DOC-002 / HU-INT-22 · **Fecha de actualización:** 2026-10-31  
+**Estado:** Línea base MoSCoW sincronizada con los 54 Requisitos Funcionales (`RF1`–`RF54`), los 12 Requisitos No Funcionales (`RNF1`–`RNF12`), los [KPIs de producto](goals-and-objectives.md) y los criterios de aceptación de [user-stories.md](../01-srs/user-stories.md).
 
 ## 1. Base y reglas de priorización
 
-Este backlog agrupa todos los requisitos RF1 a RF54 de las [fichas funcionales](../01-srs/functional-requirements.md). Usa la misma numeración detallada que la matriz y el [SRS](../01-srs/srs.md); las observaciones de cobertura de implementación permanecen registradas. Cada RF pertenece a un grupo principal; las dependencias entre grupos no duplican su asignación.
+Este backlog agrupa todos los requisitos `RF1` a `RF54` de las [fichas funcionales](../01-srs/functional-requirements.md) y los [criterios de aceptación detallados](../01-srs/acceptance-criteria.md):
 
-- **Must:** imprescindible para completar y controlar el alquiler de forma segura.
-- **Should:** importante para la operación o experiencia; admite entrega posterior al núcleo, sin suprimirlo del alcance total.
-- **Could:** mejora que puede posponerse sin impedir el recorrido principal.
-- **Won't en esta entrega:** exclusión explícita de la entrega actual, revisable mediante acuerdo de alcance.
+- **Must:** Imprescindible para ejecutar de extremo a extremo el alquiler vehicular de forma segura.
+- **Should:** Importante para la operación multi-sucursal y experiencia de usuario.
+- **Could:** Mejora funcional o de personalización visual que no bloquea el flujo transaccional.
+- **Won't (en esta entrega):** Exclusión explícita de alcance acordada en el SRS.
 
-La propuesta se basa en riesgo, valor y dependencias. No convierte automáticamente las prioridades antiguas Alta/Media/Baja en MoSCoW ni asigna fechas, puntos o sprints sin estimación del equipo.
+## 2. Módulos funcionales y Criterios de Aceptación Verificables
 
-## 2. Módulos funcionales
+| ID | Módulo / Resultado | MoSCoW | RF de origen | HU Asociada | Criterios de Aceptación de Cierre (DoD Funcional) |
+| --- | --- | :---: | --- | :---: | --- |
+| **BL-01** | Identidad, autenticación y RBAC | Must | RF2–RF7, RF30–RF31 | HU-02, HU-03 | Registro con `BCrypt` (costo 12), OTP de 6 dígitos en `iam.verification_codes`, login JWT (`accessToken` + `refreshToken`), sesión en `sessionStorage`/`SecureStore`, bloqueo por intentos fallidos y redirección por rol (`CUSTOMER`, `BRANCH_ADMIN`, `SUPER_ADMIN`). |
+| **BL-02** | Presencia pública y navegación | Should | RF1, RF8, RF14 | HU-01 | `LandingPage` y navegación principal muestran vehículos destacados (`GET /api/v1/vehicles/featured`), sedes y acceso en modo invitado sin exponer rutas protegidas. |
+| **BL-03** | Catálogo y búsqueda de vehículos | Must | RF9–RF13 | HU-01 | Búsqueda (`GET /api/v1/vehicles/search`), filtrado por ciudad/categoría/transmisión/precio, ordenamiento y modal de detalle (`GET /api/v1/vehicles/{id}`, `/features`, `/reviews`) responden con datos reales de `fleet.vehicles`. |
+| **BL-04** | Reserva paso a paso y cotización | Must | RF19–RF22 | HU-04 | Validación estricta de fechas ($t_{\text{devolución}} > t_{\text{retiro}}$), cotización (`POST /api/v1/pricing/quote`), validación de cupón (`POST /api/v1/promotions/validate`) y creación de hold (`POST /api/v1/reservations/checkout/initiate`) con `Idempotency-Key`. |
+| **BL-05** | Pagos digitales Wompi y recaudo en efectivo | Must | RF23–RF24, RF47 | HU-05 | Web y móvil invocan `POST /api/v1/payments/wompi/initiate` (que crea la fila `PENDING` en `billing.payments` y firma en servidor sin `integrityKey` en cliente); webhook `POST /api/v1/payments/wompi/webhook` y confirmación en caja (`POST /api/v1/payments/cash/confirm`) actualizan estado y emiten recibo. |
+| **BL-06** | Verificación KYC y firma de contrato | Must | RF25–RF26, RF42 | HU-06 | Documentos de identidad/licencia cifrados con AES-GCM (`iam.user_documents`), revisión por encargado (`PATCH /api/v1/kyc/documents/{id}/review`), generación (`POST /api/v1/contracts/generate`) y firma electrónica (`POST /api/v1/contracts/{id}/sign`) en `contract.rental_contracts`. |
+| **BL-07** | Entrega, PIN de 4 dígitos e inspección | Must | RF27, RF50, RF52 | HU-09 | Configuración y seguimiento de puntos de entrega (`POST /api/v1/reservations/{id}/delivery-points`), portal de repartidor con PIN de 4 dígitos y registro de checklist de entrega (`POST /api/v1/contracts/{contractId}/inspections`). |
+| **BL-08** | Devolución e incidencias de flota | Must | RF41, RF53 | HU-09 | Inspección de retorno en `contract.vehicle_inspections`, apertura y seguimiento de incidencias (`POST /api/v1/incidents`, `POST /api/v1/incidents/{id}/responses`) y actualización de estado en `fleet.vehicles`. |
+| **BL-09** | Historial de reservas y perfil del cliente | Must | RF15, RF28–RF29 | HU-07 | Consulta de reservas propias (`GET /api/v1/reservations/me`), cancelación con motivo (`PATCH /api/v1/reservations/{id}/cancel`) y lectura/actualización de perfil (`GET/PUT /api/v1/users/me`). |
+| **BL-10** | Favoritos, notificaciones y soporte | Should | RF16–RF18, RF32–RF33 | HU-07 | CRUD de favoritos (`GET/POST/DELETE /api/v1/users/me/favorites`), centro de notificaciones (`GET /api/v1/notifications`, `PATCH /api/v1/notifications/{id}/read`), onboarding y centro de soporte/PQRS (`SupportPage`, `support.tsx`). |
+| **BL-11** | Administración de sedes, flota y usuarios | Must | RF35–RF40 | HU-08 | Gestión protegida por `@PreAuthorize` de ciudades (`/api/v1/cities`), sedes (`/api/v1/branches`), flota (`/api/v1/admin/vehicles`), reservas (`/api/v1/admin/reservations`), usuarios (`/api/v1/admin/users`) y roles (`/api/v1/roles`). |
+| **BL-12** | Dashboard operativo y reportes ejecutivos | Should | RF34, RF44 | HU-08 | Dashboard por sede/global (`ManagementDashboard`, `BranchDashboard`) y exportación de reportes (`POST /api/v1/admin/reports/generate`, `GET /api/v1/admin/reports/{id}/download`) en PDF/Excel/CSV. |
+| **BL-13** | Promociones y cupones por sucursal | Should | RF43, RF54 | HU-08 | Gestión administrativa de campañas y cupones (`PromotionManagementPage`, `/api/v1/promotions`) con control de redención en `catalog.user_coupon_usages`. |
+| **BL-14** | Identidad de marca y perfil de sucursal | Could | RF45, RF51 | HU-08 | Personalización activa en `core.brand_configurations` (`GET/PUT /api/v1/brand-configurations`) y gestión de perfil/coordenadas de sede (`BranchProfilePage`). |
+| **BL-15** | Auditoría inmutable y alertas de sede | Must | RF46, RF48 | HU-08 | Consulta de bitácora (`GET /api/v1/admin/audit-logs`, `AuditLogManagementPage`) y centro de notificaciones operativas de sucursal (`BranchNotificationCenterPage`). |
+| **BL-16** | Calificaciones, reseñas y moderación | Should | RF49 | HU-07, HU-08 | Elegibilidad (`GET /api/v1/reservations/{id}/review-eligibility`), publicación de reseñas de vehículo y sede (`POST /api/v1/reviews/vehicles`, `POST /api/v1/reviews/branches`) y moderación en `BranchReviewsPage`. |
 
-| ID | Módulo / resultado | MoSCoW | RF de origen | Dependencias | Justificación |
-| --- | --- | --- | --- | --- | --- |
-| BL-01 | Identidad y acceso | Must | RF2–RF7, RF30–RF31 | Acceso seguro y autorización para los demás módulos. | Sin autenticación y permisos no se pueden proteger operaciones ni datos. |
-| BL-02 | Presencia pública y navegación | Should | RF1, RF8, RF14 | BL-01 para acciones protegidas. | Facilita descubrimiento y acceso; puede entregarse después del núcleo transaccional. |
-| BL-03 | Catálogo y selección de vehículo | Must | RF9–RF13 | BL-11: ciudades, sedes y flota. | Permite elegir un vehículo disponible antes de reservar. |
-| BL-04 | Reserva y cotización | Must | RF19–RF22 | BL-01, BL-03, BL-11; reglas comerciales de BL-13. | Define fechas, coberturas, datos de conductor, cupón y total de la reserva. |
-| BL-05 | Pagos digitales y recaudo presencial | Must | RF23–RF24, RF47 | BL-04; Wompi y autorización de caja. | La reserva necesita pago confirmado o vencimiento controlado de efectivo. |
-| BL-06 | Documentación y contratos | Must | RF25–RF26, RF42 | BL-01, BL-04, BL-05. | La entrega exige documentación revisada y contrato firmado. |
-| BL-07 | Entrega, PIN e inspección | Must | RF27, RF50, RF52 | BL-05, BL-06; disponibilidad operativa de la sede. | Controla la autorización y evidencia de entrega del vehículo. |
-| BL-08 | Devolución e incidencias | Must | RF41, RF53 | BL-07 y tarifas autorizadas. | Cierra el alquiler, registra novedades y restablece disponibilidad. |
-| BL-09 | Reservas y perfil del cliente | Must | RF15, RF28–RF29 | BL-01, BL-04. | El cliente necesita seguimiento de sus reservas y datos de contacto vigentes. |
-| BL-10 | Favoritos, notificaciones y ayuda | Should | RF16–RF18, RF32–RF33 | BL-01 y canales externos de soporte. | Mejora seguimiento y asistencia; las confirmaciones transaccionales permanecen en los módulos Must. |
-| BL-11 | Administración de cobertura y operación | Must | RF35–RF40 | BL-01; configuración inicial de sedes y flota. | Provee datos y permisos necesarios para operar y reservar. |
-| BL-12 | Indicadores y reportes | Should | RF34, RF44 | BL-05, BL-08 y datos de operación consistentes. | Apoya decisiones; no sustituye registros de pago y auditoría obligatorios. |
-| BL-13 | Promociones y cupones | Should | RF43, RF54 | BL-11 y reglas de BL-04. | Permite campañas generales y locales; validación de cupones sigue siendo obligatoria cuando se habiliten. |
-| BL-14 | Marca y ficha operativa de sucursal | Could | RF45, RF51 | BL-11. | La configuración avanzada puede posponerse usando información básica validada de la sede. |
-| BL-15 | Auditoría y notificaciones de sede | Must | RF46, RF48 | BL-01 y eventos de los módulos operativos. | Conserva evidencia de acciones críticas y avisa al personal sobre eventos de operación. |
-| BL-16 | Reseñas y respuesta oficial | Should | RF49 | BL-09, BL-11; requisitos de publicación del cliente. | Gestiona reputación; el detalle de reseñas con fotos necesita reconciliación en los RF. |
+## 3. Calidad y plataforma (Requisitos No Funcionales)
 
-Las funciones del cliente se presentan en la app y en el portal cliente web. La app no tiene panel administrativo; la web sí incluye dicho panel. Las funciones de administración y operación corresponden al panel web, con separación entre administración general y sucursal. El alcance por rol prevalece sobre la simple agrupación por número de RF.
-
-## 3. Calidad y plataforma
-
-| ID | Requisito transversal | MoSCoW propuesto | Referencia | Evidencia requerida |
-| --- | --- | --- | --- | --- |
-| BL-17 | Rendimiento y capacidad | Must | RNF1, RNF10 | Pruebas de tiempos y carga con entorno y umbrales acordados. |
-| BL-18 | Usabilidad, accesibilidad y compatibilidad | Must | RNF2, RNF5 | Revisión de recorridos, navegadores y dispositivos definidos. |
-| BL-19 | Internacionalización en cinco variantes | Must | RNF3 | Español, inglés, francés, portugués y portugués de Brasil; validar correspondencia `br` / `pt-BR`. |
-| BL-20 | Temas claro y oscuro | Should | RNF4 | Contraste, legibilidad y persistencia de preferencia. |
-| BL-21 | Seguridad y autorización | Must | RNF6 | Control de usuario/sucursal, protección de datos y validación de pagos. |
-| BL-22 | Persistencia y migraciones | Must | RNF7 | Migraciones versionadas y procedimiento de recuperación validado. |
-| BL-23 | Disponibilidad y resiliencia | Must | RNF8, RNF12 | Recuperación de fallos sin duplicar cobros; objetivos sujetos a pruebas. |
-| BL-24 | Mantenibilidad y documentación | Must | RNF9, RNF11 | Revisión de calidad, SRS, API, diagramas y manuales correspondientes. |
+| ID | Requisito transversal | MoSCoW | Referencia | Criterio de Aceptación y Evidencia Verificable |
+| --- | --- | :---: | --- | --- |
+| **BL-17** | Rendimiento y capacidad | Must | RNF1, RNF10 | Latencia $\text{p95} \le 400\text{ ms}$ en lecturas de catálogo y salud (`/api/actuator/health` HTTP 200 en `https://drivique.tech`). |
+| **BL-18** | Usabilidad, accesibilidad y diseño adaptable | Must | RNF2, RNF5 | Componentes web y pantallas móviles con `accessibilityLabel`, `accessibilityRole`, navegación clara y soporte responsive. |
+| **BL-19** | Internacionalización en 5 variantes | Must | RNF3 | Diccionarios completos y selector activo para `es`, `en`, `fr`, `pt` y `br` (`pt-BR`) tanto en web como en móvil y cabeceras `X-App-Language`. |
+| **BL-20** | Temas claro y oscuro | Should | RNF4 | Persistencia de tema y contraste adecuado en componentes web y móviles. |
+| **BL-21** | Seguridad OWASP y cero secretos | Must | RNF6 | CORS restringido a orígenes explícitos (`https://drivique.tech`), `require-secrets: true`, Gitleaks en CI, 0 usos de `dangerouslySetInnerHTML`, token fuera de `localStorage` y pago Wompi firmado en servidor. |
+| **BL-22** | Persistencia versionada con Liquibase | Must | RNF7 | 78 tablas migradas con Liquibase (`changelog/db.changelog-master.yaml`), 50 pruebas SQL automatizadas en CI y rollbacks pareados en `05_rollbacks/`. |
+| **BL-23** | Disponibilidad y resiliencia (Idempotencia) | Must | RNF8, RNF12 | Claves `Idempotency-Key` en reserva y confirmación de pago, verificación idempotente de webhook Wompi y manejo explícito de errores RFC 7807. |
+| **BL-24** | Mantenibilidad, modularidad y documentación | Must | RNF9, RNF11 | Ninguna clase o componente supera las 500 líneas (`R-4.7`), contrato OpenAPI 3.0 exportado y matriz de trazabilidad cerrada al 100% contra código y UML. |
 
 ## 4. Exclusiones de esta entrega (Won't)
 
 | ID | Función excluida | Motivo |
 | --- | --- | --- |
-| BL-25 | App administrativa móvil y entrega nativa iOS | La entrega definida es cliente Android y administración web; un script iOS no compromete una entrega. |
-| BL-26 | Contabilidad avanzada y facturación electrónica fiscal | Excluidas por las restricciones del producto; reportes operativos sí están incluidos. |
-| BL-27 | Confirmación de reservas, pagos y entregas sin servidor | Requieren disponibilidad y validación central; recuperación de borradores de RNF12 sí se incluye. |
-| BL-28 | GPS, telemática y aplicación independiente de conductores | No cuentan con especificación de alcance comprometida en las fuentes revisadas. |
-
-## 5. Orden sugerido y condiciones de entrada
-
-1. Acordar las diferencias de requisitos y aprovisionar identidad, autorización, ciudades, sucursales y flota (BL-01, BL-11).
-2. Integrar catálogo, reserva y seguimiento del cliente (BL-03, BL-04, BL-09).
-3. Integrar pagos, vencimiento de efectivo y documentación/contratos (BL-05, BL-06).
-4. Integrar entrega, PIN, devolución e incidencias (BL-07, BL-08).
-5. Completar funcionalidades Should/Could según capacidad y validación de negocio.
-
-Seguridad, auditoría, calidad, idiomas, migraciones y pruebas se trabajan durante las fases correspondientes. No se dejan para después de la operación del flujo principal.
-
-## 6. Desglose en historias y criterio de cierre
-
-Cada grupo se divide en HU pequeñas con la [plantilla oficial](user-stories/HU-001-plantilla.md). Se registra actor, valor, RF/RNF, prioridad, dependencias y escenarios Gherkin de éxito, error y autorización cuando corresponda. No hay historias individuales creadas o estimadas automáticamente por esta tabla.
-
-Un elemento se cierra cuando cumple sus criterios, tiene evidencia de validación y revisión del equipo según la [Definition of Done](../08-development/definition-of-done.md). El cierre de una HU documental no implica cierre de funcionalidades del software.
-
-## 7. Decisiones antes de aprobar la línea base
-
-- Numeración de fichas, resumen, rangos de módulos y matriz sincronizada. Falta completar las relaciones UML y cobertura de capacidades señaladas en la matriz.
-- Alcance confirmado: app solo cliente y web cliente/administración. PIN de entrega definido en exactamente 4 dígitos. El detalle de domicilios/reseñas con fotos y la implementación del PIN requieren sus HU correspondientes.
-- El equipo debe validar las prioridades MoSCoW y registrar ajustes antes de comprometer una entrega.
-- Los objetivos RNF necesitan condiciones y evidencia de pruebas; no se consideran satisfechos por estar escritos.
-
-Fuentes: [visión y alcance](vision-y-alcance.md), [RF](../01-srs/functional-requirements.md), [RNF](../01-srs/non-functional-requirements.md) y SRS_Drivique_Consolidado_2026.pdf aportado por Danna.
+| **BL-25** | Panel administrativo en la app móvil | La arquitectura define la app móvil exclusivamente para el rol cliente (`CUSTOMER`); toda la administración reside en la aplicación web. |
+| **BL-26** | Facturación electrónica DIAN / ERP contable externo | El alcance cubre recibos de pago, contratos y reportes operativos/financieros internos. |
+| **BL-27** | Confirmación offline de reservas y pagos | El bloqueo de disponibilidad vehicular y la firma de pagos exigen validación transaccional en el servidor central. |
+| **BL-28** | Telemetría GPS de hardware embarcado | El seguimiento de entrega opera mediante estados del portal de repartidor y validación de PIN de 4 dígitos. |
