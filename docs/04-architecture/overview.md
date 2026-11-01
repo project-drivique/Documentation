@@ -94,7 +94,7 @@ El código revisado contiene controllers, services, repositories, configuración
 
 ## 7. Modelo de datos y migraciones
 
-El [diccionario de datos](database/data-dictionary.md) cubre las **68 tablas y 558 columnas** identificadas en los scripts DDL del repositorio database, incluyendo alteraciones, FK, constraints, índices y triggers. Es una descripción del esquema versionado; no un volcado de una instancia desplegada.
+El [diccionario de datos](database/data-dictionary.md) cubre las **78 tablas** del esquema relacional (con 73 entidades JPA en el backend) distribuidas en 8 esquemas de dominio en el repositorio database, incluyendo 138 llaves foráneas, 94 índices optimizados y triggers. Es una descripción del esquema versionado; no un volcado de una instancia desplegada.
 
 El maestro `changelog/db.changelog-master.yaml` referencia migraciones modulares y releases. La revisión comprueba que todos los archivos de tablas/alteraciones documentados están alcanzados por el maestro. No se ejecutan migraciones ni se certifica una base productiva en esta HU.
 
@@ -155,4 +155,4 @@ Se sincronizaron SRS, RF, resumen y matriz con las decisiones confirmadas: PIN d
 
 ## Modelo de datos y HU-DOC-008
 
-El [diagrama ER físico](database/er-diagram.md) incluye 69 tablas y 94 claves foráneas del commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94` de `database/dev`. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
+El [diagrama ER físico](database/er-diagram.md) documenta las 78 tablas y 138 claves foráneas de `database/dev` versionadas en Liquibase. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
