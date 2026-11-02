@@ -6,7 +6,7 @@
 
 Este diccionario describe el esquema **versionado en SQL**, no una instancia desplegada. Fuente: repositorio `database`, rama `dev`, commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94`. Se revisaron tablas, alteraciones posteriores, índices y triggers de `01_ddl/`. Todos los archivos de tablas/alteraciones aquí documentados están referenciados por el maestro Liquibase.
 
-**Cobertura:** 69 tablas, 565 columnas, 96 índices explícitos y 53 triggers definidos en los archivos revisados. Los índices implícitos de PK/UNIQUE no se cuentan como índices explícitos.
+**Cobertura:** 78 tablas, 704 columnas, 114 índices explícitos y 55 triggers definidos en los archivos revisados. Los índices implícitos de PK/UNIQUE no se cuentan como índices explícitos.
 
 - **PK:** clave primaria; implica NOT NULL, incluso cuando no se repite en la columna.
 - **FK:** referencia a otra tabla; se conserva nombre, columnas y acción ON DELETE si se declara.
@@ -39,14 +39,14 @@ Fuente de migraciones: [changelog/db.changelog-master.yaml](https://github.com/p
 ### Índice de tablas
 
 - **core**: [core.brand_configurations](#core-brand_configurations), [core.currencies](#core-currencies), [core.exchange_rates](#core-exchange_rates), [core.languages](#core-languages).
-- **iam**: [iam.user_social_accounts](#iam-user_social_accounts), [iam.document_statuses](#iam-document_statuses), [iam.document_types](#iam-document_types), [iam.nationalities](#iam-nationalities), [iam.password_policies](#iam-password_policies), [iam.permissions](#iam-permissions), [iam.role_permissions](#iam-role_permissions), [iam.roles](#iam-roles), [iam.security_configurations](#iam-security_configurations), [iam.user_consents](#iam-user_consents), [iam.user_documents](#iam-user_documents), [iam.user_preferences](#iam-user_preferences), [iam.user_profiles](#iam-user_profiles), [iam.user_roles](#iam-user_roles), [iam.user_sessions](#iam-user_sessions), [iam.users](#iam-users), [iam.verification_codes](#iam-verification_codes).
-- **location**: [location.branch_users](#location-branch_users), [location.branches](#location-branches), [location.cities](#location-cities), [location.departments](#location-departments).
+- **iam**: [iam.user_social_accounts](#iam-user_social_accounts), [iam.document_statuses](#iam-document_statuses), [iam.document_types](#iam-document_types), [iam.nationalities](#iam-nationalities), [iam.password_policies](#iam-password_policies), [iam.permissions](#iam-permissions), [iam.role_permissions](#iam-role_permissions), [iam.roles](#iam-roles), [iam.security_configurations](#iam-security_configurations), [iam.user_consents](#iam-user_consents), [iam.user_documents](#iam-user_documents), [iam.user_preferences](#iam-user_preferences), [iam.user_profiles](#iam-user_profiles), [iam.user_roles](#iam-user_roles), [iam.user_sessions](#iam-user_sessions), [iam.users](#iam-users), [iam.verification_codes](#iam-verification_codes), [iam.security_configuration_changes](#iam-security_configuration_changes).
+- **location**: [location.branch_users](#location-branch_users), [location.branches](#location-branches), [location.cities](#location-cities), [location.departments](#location-departments), [location.branch_categories](#location-branch_categories), [location.delivery_drivers](#location-delivery_drivers).
 - **fleet**: [fleet.features](#fleet-features), [fleet.fuel_types](#fleet-fuel_types), [fleet.maintenance_types](#fleet-maintenance_types), [fleet.transmission_types](#fleet-transmission_types), [fleet.user_favorite_vehicles](#fleet-user_favorite_vehicles), [fleet.vehicle_brands](#fleet-vehicle_brands), [fleet.vehicle_categories](#fleet-vehicle_categories), [fleet.vehicle_documents](#fleet-vehicle_documents), [fleet.vehicle_features](#fleet-vehicle_features), [fleet.vehicle_images](#fleet-vehicle_images), [fleet.vehicle_maintenances](#fleet-vehicle_maintenances), [fleet.vehicle_statuses](#fleet-vehicle_statuses), [fleet.vehicles](#fleet-vehicles).
 - **catalog**: [catalog.additional_services](#catalog-additional_services), [catalog.insurance_coverages](#catalog-insurance_coverages), [catalog.mileage_plans](#catalog-mileage_plans), [catalog.promotions](#catalog-promotions), [catalog.user_coupon_usages](#catalog-user_coupon_usages).
 - **rental**: [rental.branch_reviews](#rental-branch_reviews), [rental.rental_extension_requests](#rental-rental_extension_requests), [rental.reservation_additional_services](#rental-reservation_additional_services), [rental.reservation_delivery_points](#rental-reservation_delivery_points), [rental.reservation_promotions](#rental-reservation_promotions), [rental.reservation_statuses](#rental-reservation_statuses), [rental.reservations](#rental-reservations), [rental.vehicle_ratings](#rental-vehicle_ratings).
 - **contract**: [contract.contract_clause_assignments](#contract-contract_clause_assignments), [contract.contract_clauses](#contract-contract_clauses), [contract.contract_statuses](#contract-contract_statuses), [contract.inspection_checklist_answers](#contract-inspection_checklist_answers), [contract.inspection_checklist_items](#contract-inspection_checklist_items), [contract.rental_contracts](#contract-rental_contracts), [contract.vehicle_inspections](#contract-vehicle_inspections).
 - **billing**: [billing.payment_methods](#billing-payment_methods), [billing.payment_receipts](#billing-payment_receipts), [billing.payment_statuses](#billing-payment_statuses), [billing.payments](#billing-payments), [billing.user_saved_payment_methods](#billing-user_saved_payment_methods).
-- **support**: [support.incident_reports](#support-incident_reports), [support.incident_responses](#support-incident_responses), [support.notifications](#support-notifications).
+- **support**: [support.incident_reports](#support-incident_reports), [support.incident_responses](#support-incident_responses), [support.notifications](#support-notifications), [support.idempotency_keys](#support-idempotency_keys), [support.incident_attachments](#support-incident_attachments), [support.incident_status_history](#support-incident_status_history), [support.notification_delivery_attempts](#support-notification_delivery_attempts), [support.notification_outbox](#support-notification_outbox), [support.notification_templates](#support-notification_templates).
 - **audit**: [audit.administrative_report_types](#audit-administrative_report_types), [audit.audit_logs](#audit-audit_logs), [audit.generated_reports](#audit-generated_reports).
 
 
@@ -66,7 +66,7 @@ Configuración persistida de identidad visual.
 | --- | --- | --- | --- | --- | --- |
 | `id` | `UUID` | No | `gen_random_uuid()` | Identificador del registro. | `PRIMARY KEY DEFAULT gen_random_uuid()` |
 | `company_name` | `VARCHAR(100)` | No | No declarado | Atributo `company_name` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL` |
-| `logo_url` | `VARCHAR(2048)` | Sí | No declarado | Atributo `logo_url` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `logo_url` | `TEXT` | Sí | No declarado | Atributo `logo_url` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `favicon_url` | `VARCHAR(2048)` | Sí | No declarado | Atributo `favicon_url` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `primary_color` | `VARCHAR(7)` | No | No declarado | Atributo `primary_color` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL` |
 | `secondary_color` | `VARCHAR(7)` | No | No declarado | Atributo `secondary_color` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL` |
@@ -75,6 +75,7 @@ Configuración persistida de identidad visual.
 | `is_active` | `BOOLEAN` | No | `TRUE` | Indicador de estado activo. | `NOT NULL DEFAULT TRUE` |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `previous_snapshot` | `JSONB` | Sí | No declarado | Atributo `previous_snapshot` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -614,6 +615,7 @@ Expedientes documentales del usuario y revisión.
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `document_number` | `VARCHAR(50)` | Sí | No declarado | Atributo `document_number` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `branch_id` | `UUID` | Sí | No declarado | Referencia a `location.branches (id)`. | `REFERENCES location.branches(id)` |
 
 **Claves y restricciones de tabla**
 
@@ -625,6 +627,7 @@ CONSTRAINT fk_user_documents_reviewer FOREIGN KEY (reviewed_by) REFERENCES iam.u
 CONSTRAINT chk_user_documents_front_url_not_blank CHECK (btrim(front_url) <> '');
 CONSTRAINT chk_user_documents_back_url_not_blank CHECK (back_url IS NULL OR btrim(back_url) <> '');
 CONSTRAINT chk_user_documents_review_notes_not_blank CHECK (review_notes IS NULL OR btrim(review_notes) <> '');
+CONSTRAINT fk_user_documents_branch FOREIGN KEY (branch_id) REFERENCES location.branches(id)
 ```
 
 **Índices explícitos**
@@ -632,6 +635,7 @@ CONSTRAINT chk_user_documents_review_notes_not_blank CHECK (review_notes IS NULL
 ```sql
 CREATE INDEX idx_user_documents_user ON iam.user_documents (user_id);
 CREATE INDEX idx_user_documents_status ON iam.user_documents (status_id);
+CREATE INDEX idx_user_documents_branch_status ON iam.user_documents USING btree (branch_id, status_id, created_at DESC);
 ```
 
 Fuente: [01_ddl/10_indexes/iam/create-user-documents-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-documents-indexes.sql).
@@ -663,6 +667,9 @@ Preferencias de idioma, moneda, tema y notificaciones.
 | `sms_notifications` | `BOOLEAN` | No | `true` | Atributo `sms_notifications` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT true` |
 | `created_at` | `TIMESTAMPTZ` | No | `now()` | Fecha y hora de creación. | `NOT NULL DEFAULT now()` |
 | `updated_at` | `TIMESTAMPTZ` | No | `now()` | Fecha y hora de actualización. | `NOT NULL DEFAULT now()` |
+| `push_notifications` | `BOOLEAN` | No | `true` | Atributo `push_notifications` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT true` |
+| `in_app_notifications` | `BOOLEAN` | No | `true` | Atributo `in_app_notifications` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT true` |
+| `marketing_notifications` | `BOOLEAN` | No | `false` | Atributo `marketing_notifications` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT false` |
 
 **Claves y restricciones de tabla**
 
@@ -673,6 +680,9 @@ No hay constraints de tabla adicionales; consultar las PK/FK/CHECK declaradas di
 ```sql
 CREATE INDEX IF NOT EXISTS idx_user_preferences_lang ON iam.user_preferences (language_id);
 CREATE INDEX IF NOT EXISTS idx_user_preferences_curr ON iam.user_preferences (currency_id);
+CONSTRAINT user_preferences_currency_id_fkey FOREIGN KEY (currency_id) REFERENCES core.currencies(id) ON DELETE SET NULL
+CONSTRAINT user_preferences_language_id_fkey FOREIGN KEY (language_id) REFERENCES core.languages(id) ON DELETE SET NULL
+CONSTRAINT user_preferences_user_id_fkey FOREIGN KEY (user_id) REFERENCES iam.users(id) ON DELETE CASCADE
 ```
 
 Fuente: [01_ddl/10_indexes/iam/create-user-preferences-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/iam/create-user-preferences-indexes.sql).
@@ -787,6 +797,7 @@ Sesiones y datos de renovación/revocación.
 
 ```sql
 CONSTRAINT chk_user_sessions_expires_at CHECK (expires_at > started_at);
+CONSTRAINT user_sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES iam.users(id) ON DELETE CASCADE
 ```
 
 **Índices explícitos**
@@ -836,6 +847,7 @@ Cuentas de usuario y datos de identidad/autenticación.
 | `deleted_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `deleted_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `address` | `VARCHAR(255)` | Sí | No declarado | Atributo `address` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -920,11 +932,11 @@ Vinculación de una cuenta local con un proveedor de inicio de sesión social.
 | `user_id` | `UUID` | No | — | user_id | `NOT NULL` |
 | `provider` | `VARCHAR(30)` | No | — | provider | `NOT NULL` |
 | `provider_user_id` | `VARCHAR(255)` | No | — | provider_user_id | `NOT NULL` |
-| `email` | `VARCHAR(254)` | Sí | — | email | `` |
+| `email` | `VARCHAR(254)` | Sí | — | email | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | updated_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 
-**Restricciones de tabla**
+**Claves y restricciones de tabla**
 
 ```sql
 CONSTRAINT fk_user_social_accounts_user FOREIGN KEY (user_id) REFERENCES iam.users(id) ON DELETE CASCADE
@@ -944,6 +956,36 @@ CREATE INDEX idx_user_social_accounts_provider_lookup ON iam.user_social_account
 
 
 ### Esquema `location` - Cobertura y sucursales
+
+<a id="iam-security_configuration_changes"></a>
+
+#### iam.security_configuration_changes
+
+Tabla `iam.security_configuration_changes`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `config_key` | `VARCHAR(100)` | No | — | config_key | `NOT NULL` |
+| `old_value` | `TEXT` | Sí | — | old_value | Sin restricción de columna adicional |
+| `new_value` | `TEXT` | No | — | new_value | `NOT NULL` |
+| `reason` | `VARCHAR(300)` | Sí | — | reason | Sin restricción de columna adicional |
+| `reverted` | `BOOLEAN` | No | `false` | reverted | `NOT NULL DEFAULT false` |
+| `changed_by` | `UUID` | No | — | changed_by | `NOT NULL` |
+| `changed_at` | `TIMESTAMPTZ` | No | `now()` | changed_at | `NOT NULL DEFAULT now()` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT security_configuration_changes_pkey PRIMARY KEY (id)
+CONSTRAINT security_configuration_changes_changed_by_fkey FOREIGN KEY (changed_by) REFERENCES iam.users(id)
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_security_configuration_changes_key ON iam.security_configuration_changes USING btree (config_key, changed_at DESC);
+```
 
 <a id="location-branch_users"></a>
 
@@ -1000,6 +1042,10 @@ Sucursales físicas y datos operativos.
 | `is_active` | `BOOLEAN` | No | `TRUE` | Indicador de estado activo. | `NOT NULL DEFAULT TRUE` |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `vehicle_capacity` | `INT` | No | `20` | Atributo `vehicle_capacity` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 20` |
+| `pickup_instructions` | `VARCHAR(500)` | Sí | No declarado | Atributo `pickup_instructions` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `latitude` | `NUMERIC(9,6)` | Sí | No declarado | Atributo `latitude` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `longitude` | `NUMERIC(9,6)` | Sí | No declarado | Atributo `longitude` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -1107,6 +1153,72 @@ CREATE TRIGGER trg_departments_set_updated_at BEFORE UPDATE ON location.departme
 Fuente: [01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/location/add-departments-updated-at-trigger.sql).
 
 ### Esquema `fleet` - Flota
+
+<a id="location-branch_categories"></a>
+
+#### location.branch_categories
+
+Tabla `location.branch_categories`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `branch_id` | `UUID` | No | — | branch_id | `NOT NULL` |
+| `category_id` | `UUID` | No | — | category_id | `NOT NULL` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT pk_branch_categories PRIMARY KEY (branch_id, category_id)
+CONSTRAINT fk_branch_categories_branch FOREIGN KEY (branch_id) REFERENCES location.branches(id)
+CONSTRAINT fk_branch_categories_category FOREIGN KEY (category_id) REFERENCES fleet.vehicle_categories(id)
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_branch_categories_category ON location.branch_categories USING btree (category_id);
+```
+
+<a id="location-delivery_drivers"></a>
+
+#### location.delivery_drivers
+
+Tabla `location.delivery_drivers`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `branch_id` | `UUID` | No | — | branch_id | `NOT NULL` |
+| `full_name` | `VARCHAR(150)` | No | — | full_name | `NOT NULL` |
+| `email` | `VARCHAR(254)` | Sí | — | email | Sin restricción de columna adicional |
+| `phone` | `VARCHAR(30)` | Sí | — | phone | Sin restricción de columna adicional |
+| `document_type` | `VARCHAR(10)` | No | `'CC'::character varying` | document_type | `NOT NULL DEFAULT 'CC'::character varying` |
+| `document_number` | `VARCHAR(40)` | No | — | document_number | `NOT NULL` |
+| `license_number` | `VARCHAR(40)` | Sí | — | license_number | Sin restricción de columna adicional |
+| `license_category` | `VARCHAR(5)` | Sí | — | license_category | Sin restricción de columna adicional |
+| `license_expires_on` | `DATE` | Sí | — | license_expires_on | Sin restricción de columna adicional |
+| `vehicle_description` | `VARCHAR(120)` | Sí | — | vehicle_description | Sin restricción de columna adicional |
+| `status` | `VARCHAR(20)` | No | `'AVAILABLE'::character varying` | status | `NOT NULL DEFAULT 'AVAILABLE'::character varying` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | updated_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT uq_delivery_drivers_branch_document UNIQUE (branch_id, document_number)
+CONSTRAINT delivery_drivers_pkey PRIMARY KEY (id)
+CONSTRAINT fk_delivery_drivers_branch FOREIGN KEY (branch_id) REFERENCES location.branches(id)
+CONSTRAINT chk_delivery_drivers_document_not_blank CHECK ((btrim((document_number)::text) <> ''::text))
+CONSTRAINT chk_delivery_drivers_name_not_blank CHECK ((btrim((full_name)::text) <> ''::text))
+CONSTRAINT chk_delivery_drivers_status CHECK (((status)::text = ANY ((ARRAY['AVAILABLE'::character varying, 'ON_ROUTE'::character varying, 'INACTIVE'::character varying])::text[])))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_delivery_drivers_branch ON location.delivery_drivers USING btree (branch_id);
+```
 
 <a id="fleet-features"></a>
 
@@ -1780,6 +1892,15 @@ Promociones y parámetros de descuento.
 | `is_active` | `BOOLEAN` | No | `TRUE` | Indicador de estado activo. | `NOT NULL DEFAULT TRUE` |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `name` | `VARCHAR(120)` | Sí | No declarado | Atributo `name` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `conditions` | `TEXT` | Sí | No declarado | Atributo `conditions` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `minimum_amount` | `NUMERIC(12,2)` | No | `0` | Atributo `minimum_amount` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0` |
+| `vehicle_category_id` | `UUID` | Sí | No declarado | Referencia a `fleet.vehicle_categories (id)`. | `REFERENCES fleet.vehicle_categories(id)` |
+| `vehicle_id` | `UUID` | Sí | No declarado | Referencia a `fleet.vehicles (id)`. | `REFERENCES fleet.vehicles(id)` |
+| `audience` | `VARCHAR(20)` | No | `'ALL'` | Atributo `audience` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 'ALL'` |
+| `is_featured` | `BOOLEAN` | No | `false` | Atributo `is_featured` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT false` |
+| `notification_sent_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `notification_sent_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `branch_id` | `UUID` | Sí | No declarado | Referencia a `location.branches (id)`. | `REFERENCES location.branches(id)` |
 
 **Claves y restricciones de tabla**
 
@@ -1792,6 +1913,9 @@ CONSTRAINT chk_promotions_percentage_maximum CHECK (discount_type <> 'PERCENTAGE
 CONSTRAINT chk_promotions_date_range CHECK (ends_at > starts_at);
 CONSTRAINT chk_promotions_minimum_rental_days CHECK (minimum_rental_days >= 1);
 CONSTRAINT chk_promotions_use_counts CHECK ( current_uses_count >= 0 AND (max_uses_limit IS NULL OR max_uses_limit >= current_uses_count) );
+CONSTRAINT promotions_branch_id_fkey FOREIGN KEY (branch_id) REFERENCES location.branches(id)
+CONSTRAINT promotions_vehicle_category_id_fkey FOREIGN KEY (vehicle_category_id) REFERENCES fleet.vehicle_categories(id)
+CONSTRAINT promotions_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES fleet.vehicles(id)
 ```
 
 **Índices explícitos**
@@ -1867,6 +1991,9 @@ Reseñas de sucursal vinculadas a usuario/reserva.
 | `comment` | `VARCHAR(1000)` | Sí | No declarado | Comentario asociado. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `manager_reply` | `VARCHAR(1000)` | Sí | No declarado | Atributo `manager_reply` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `replied_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `replied_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `replied_by` | `UUID` | Sí | No declarado | Referencia a `iam.users (id)`. | `REFERENCES iam.users(id)` |
 
 **Claves y restricciones de tabla**
 
@@ -1877,6 +2004,7 @@ CONSTRAINT fk_branch_reviews_user FOREIGN KEY (user_id) REFERENCES iam.users (id
 CONSTRAINT fk_branch_reviews_reservation FOREIGN KEY (reservation_id) REFERENCES rental.reservations (id) ON DELETE RESTRICT;
 CONSTRAINT chk_branch_reviews_rating CHECK (rating BETWEEN 1 AND 5);
 CONSTRAINT chk_branch_reviews_comment_not_blank CHECK (comment IS NULL OR btrim(comment) <> '');
+CONSTRAINT fk_branch_reviews_replied_by FOREIGN KEY (replied_by) REFERENCES iam.users(id)
 ```
 
 **Índices explícitos**
@@ -2002,6 +2130,10 @@ Puntos y modalidades de recogida/devolución.
 | `reference_details` | `VARCHAR(500)` | Sí | No declarado | Atributo `reference_details` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `driver_id` | `UUID` | Sí | No declarado | Referencia a `location.delivery_drivers (id)`. | `REFERENCES location.delivery_drivers(id)` |
+| `delivery_pin` | `VARCHAR(10)` | Sí | No declarado | Atributo `delivery_pin` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `delivery_status` | `VARCHAR(12)` | No | `'PENDING'` | Atributo `delivery_status` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 'PENDING'` |
+| `delivered_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `delivered_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -2017,6 +2149,7 @@ CONSTRAINT chk_reservation_delivery_points_neighborhood_not_blank CHECK (neighbo
 CONSTRAINT chk_reservation_delivery_points_address_not_blank CHECK (address IS NULL OR btrim(address) <> '');
 CONSTRAINT chk_reservation_delivery_points_flight_or_bus_number_not_blank CHECK (flight_or_bus_number IS NULL OR btrim(flight_or_bus_number) <> '');
 CONSTRAINT chk_reservation_delivery_points_reference_details_not_blank CHECK (reference_details IS NULL OR btrim(reference_details) <> '');
+CONSTRAINT fk_reservation_delivery_points_driver FOREIGN KEY (driver_id) REFERENCES location.delivery_drivers(id)
 ```
 
 **Índices explícitos**
@@ -2352,6 +2485,7 @@ Respuestas y evidencia del checklist de inspección.
 | `evidence_photo_url` | `VARCHAR(1000)` | Sí | No declarado | Atributo `evidence_photo_url` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `evidence_sha256` | `VARCHAR(64)` | Sí | No declarado | Atributo `evidence_sha256` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -2445,6 +2579,12 @@ Contrato de alquiler, datos de firma y referencias a PDF.
 | `pdf_url` | `VARCHAR(1000)` | Sí | No declarado | Referencia al archivo PDF. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `document_version` | `VARCHAR(30)` | No | `'v1.0'` | Atributo `document_version` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 'v1.0'` |
+| `consent_text` | `VARCHAR(500)` | Sí | No declarado | Atributo `consent_text` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `signer_ip_hash` | `VARCHAR(64)` | Sí | No declarado | Atributo `signer_ip_hash` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `signature_sha256` | `VARCHAR(64)` | Sí | No declarado | Atributo `signature_sha256` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `pdf_sha256` | `VARCHAR(64)` | Sí | No declarado | Atributo `pdf_sha256` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `additional_charges` | `NUMERIC(12,2)` | No | `0.00` | Atributo `additional_charges` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0.00` |
 
 **Claves y restricciones de tabla**
 
@@ -2503,6 +2643,10 @@ Inspecciones de entrada/salida asociadas a contratos.
 | `observations` | `TEXT` | Sí | No declarado | Atributo `observations` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `mileage_charge` | `NUMERIC(12,2)` | No | `0.00` | Atributo `mileage_charge` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0.00` |
+| `fuel_charge` | `NUMERIC(12,2)` | No | `0.00` | Atributo `fuel_charge` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0.00` |
+| `damage_charge` | `NUMERIC(12,2)` | No | `0.00` | Atributo `damage_charge` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0.00` |
+| `total_charge` | `NUMERIC(12,2)` | No | `0.00` | Atributo `total_charge` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0.00` |
 
 **Claves y restricciones de tabla**
 
@@ -2777,6 +2921,12 @@ Incidencias y solicitudes de atención.
 | `description` | `TEXT` | No | No declarado | Descripción del registro. | `NOT NULL` |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `category` | `VARCHAR(20)` | No | `'OTHER'` | Atributo `category` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 'OTHER'` |
+| `branch_id` | `UUID` | Sí | No declarado | Referencia a `location.branches (id)`. | `REFERENCES location.branches(id) ON DELETE RESTRICT` |
+| `assigned_to_user_id` | `UUID` | Sí | No declarado | Referencia a `iam.users (id)`. | `REFERENCES iam.users(id) ON DELETE RESTRICT` |
+| `sla_due_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `sla_due_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `resolved_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `resolved_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `closed_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `closed_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -2790,6 +2940,8 @@ CONSTRAINT chk_incident_reports_priority CHECK (priority IN ('LOW', 'MEDIUM', 'H
 CONSTRAINT chk_incident_reports_incident_code_not_blank CHECK (btrim(incident_code) <> '');
 CONSTRAINT chk_incident_reports_subject_not_blank CHECK (btrim(subject) <> '');
 CONSTRAINT chk_incident_reports_description_not_blank CHECK (btrim(description) <> '');
+CONSTRAINT fk_incident_reports_assigned_to FOREIGN KEY (assigned_to_user_id) REFERENCES iam.users(id) ON DELETE RESTRICT
+CONSTRAINT fk_incident_reports_branch FOREIGN KEY (branch_id) REFERENCES location.branches(id) ON DELETE RESTRICT
 ```
 
 **Índices explícitos**
@@ -2800,6 +2952,8 @@ CREATE INDEX idx_incident_reports_vehicle ON support.incident_reports (vehicle_i
 CREATE INDEX idx_incident_reports_reservation ON support.incident_reports (reservation_id);
 CREATE INDEX idx_incident_reports_reported_by ON support.incident_reports (reported_by_user_id);
 CREATE INDEX idx_incident_reports_status ON support.incident_reports (status);
+CREATE INDEX idx_incident_reports_assigned_to ON support.incident_reports USING btree (assigned_to_user_id);
+CREATE INDEX idx_incident_reports_branch ON support.incident_reports USING btree (branch_id);
 ```
 
 Fuente: [01_ddl/10_indexes/support/create-incidents-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/support/create-incidents-indexes.sql).
@@ -2878,6 +3032,10 @@ Notificaciones dirigidas a usuarios y estados de lectura.
 | `read_at` | `TIMESTAMPTZ` | Sí | No declarado | Atributo `read_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `event_type` | `VARCHAR(50)` | Sí | No declarado | Atributo `event_type` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `criticality` | `VARCHAR(20)` | No | `'NORMAL'` | Atributo `criticality` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 'NORMAL'` |
+| `metadata` | `JSONB` | Sí | No declarado | Atributo `metadata` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `idempotency_key` | `VARCHAR(100)` | Sí | No declarado | Atributo `idempotency_key` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -2897,6 +3055,9 @@ CREATE INDEX idx_notifications_user ON support.notifications (user_id);
 CREATE INDEX idx_notifications_type ON support.notifications (type);
 CREATE INDEX idx_notifications_channel ON support.notifications (channel);
 CREATE INDEX idx_notifications_created_at ON support.notifications (created_at);
+CREATE INDEX idx_notifications_event_type ON support.notifications USING btree (event_type);
+CREATE INDEX idx_notifications_user_criticality ON support.notifications USING btree (user_id, criticality, is_read);
+CREATE UNIQUE INDEX uq_notifications_user_idempotency ON support.notifications USING btree (user_id, idempotency_key) WHERE (idempotency_key IS NOT NULL);
 ```
 
 Fuente: [01_ddl/10_indexes/support/create-notifications-indexes.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/10_indexes/support/create-notifications-indexes.sql).
@@ -2910,6 +3071,237 @@ CREATE TRIGGER trg_notifications_set_updated_at BEFORE UPDATE ON support.notific
 Fuente: [01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql](https://github.com/project-drivique/database/blob/e2cb3446cd6528dcd9951ef00d5be0d6cab61e94/01_ddl/09_triggers/support/add-notifications-updated-at-trigger.sql).
 
 ### Esquema `audit` - Auditoría y reportes
+
+<a id="support-idempotency_keys"></a>
+
+#### support.idempotency_keys
+
+Tabla `support.idempotency_keys`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `user_email` | `VARCHAR(254)` | No | — | user_email | `NOT NULL` |
+| `idempotency_key` | `VARCHAR(80)` | No | — | idempotency_key | `NOT NULL` |
+| `http_method` | `VARCHAR(10)` | No | — | http_method | `NOT NULL` |
+| `request_path` | `VARCHAR(255)` | No | — | request_path | `NOT NULL` |
+| `request_hash` | `VARCHAR(64)` | No | — | request_hash | `NOT NULL` |
+| `status` | `VARCHAR(12)` | No | — | status | `NOT NULL` |
+| `response_status` | `INTEGER` | Sí | — | response_status | Sin restricción de columna adicional |
+| `response_content_type` | `VARCHAR(100)` | Sí | — | response_content_type | Sin restricción de columna adicional |
+| `response_body` | `TEXT` | Sí | — | response_body | Sin restricción de columna adicional |
+| `created_at` | `TIMESTAMPTZ` | No | `now()` | created_at | `NOT NULL DEFAULT now()` |
+| `completed_at` | `TIMESTAMPTZ` | Sí | — | completed_at | Sin restricción de columna adicional |
+| `expires_at` | `TIMESTAMPTZ` | No | — | expires_at | `NOT NULL` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT uq_idempotency_keys_scope UNIQUE (user_email, idempotency_key)
+CONSTRAINT idempotency_keys_pkey PRIMARY KEY (id)
+CONSTRAINT chk_idempotency_keys_status CHECK (((status)::text = ANY ((ARRAY['IN_PROGRESS'::character varying, 'COMPLETED'::character varying])::text[])))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_idempotency_keys_expires ON support.idempotency_keys USING btree (expires_at);
+```
+
+<a id="support-incident_attachments"></a>
+
+#### support.incident_attachments
+
+Tabla `support.incident_attachments`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `incident_report_id` | `UUID` | No | — | incident_report_id | `NOT NULL` |
+| `response_id` | `UUID` | Sí | — | response_id | Sin restricción de columna adicional |
+| `uploaded_by_user_id` | `UUID` | No | — | uploaded_by_user_id | `NOT NULL` |
+| `original_name` | `VARCHAR(255)` | No | — | original_name | `NOT NULL` |
+| `content_type` | `VARCHAR(100)` | No | — | content_type | `NOT NULL` |
+| `size_bytes` | `BIGINT` | No | — | size_bytes | `NOT NULL` |
+| `storage_path` | `VARCHAR(500)` | No | — | storage_path | `NOT NULL` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT incident_attachments_pkey PRIMARY KEY (id)
+CONSTRAINT fk_incident_attachments_report FOREIGN KEY (incident_report_id) REFERENCES support.incident_reports(id) ON DELETE CASCADE
+CONSTRAINT fk_incident_attachments_response FOREIGN KEY (response_id) REFERENCES support.incident_responses(id) ON DELETE CASCADE
+CONSTRAINT fk_incident_attachments_user FOREIGN KEY (uploaded_by_user_id) REFERENCES iam.users(id) ON DELETE RESTRICT
+CONSTRAINT chk_incident_attachments_size CHECK ((size_bytes > 0))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_incident_attachments_report ON support.incident_attachments USING btree (incident_report_id);
+```
+
+<a id="support-incident_status_history"></a>
+
+#### support.incident_status_history
+
+Tabla `support.incident_status_history`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `incident_report_id` | `UUID` | No | — | incident_report_id | `NOT NULL` |
+| `from_status` | `VARCHAR(20)` | Sí | — | from_status | Sin restricción de columna adicional |
+| `to_status` | `VARCHAR(20)` | No | — | to_status | `NOT NULL` |
+| `changed_by_user_id` | `UUID` | No | — | changed_by_user_id | `NOT NULL` |
+| `note` | `TEXT` | Sí | — | note | Sin restricción de columna adicional |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT incident_status_history_pkey PRIMARY KEY (id)
+CONSTRAINT fk_incident_status_history_report FOREIGN KEY (incident_report_id) REFERENCES support.incident_reports(id) ON DELETE CASCADE
+CONSTRAINT fk_incident_status_history_user FOREIGN KEY (changed_by_user_id) REFERENCES iam.users(id) ON DELETE RESTRICT
+CONSTRAINT chk_incident_status_history_to CHECK (((to_status)::text = ANY ((ARRAY['OPEN'::character varying, 'IN_REVIEW'::character varying, 'RESOLVED'::character varying, 'CLOSED'::character varying])::text[])))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_incident_status_history_report ON support.incident_status_history USING btree (incident_report_id, created_at);
+```
+
+<a id="support-notification_delivery_attempts"></a>
+
+#### support.notification_delivery_attempts
+
+Tabla `support.notification_delivery_attempts`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `outbox_id` | `UUID` | No | — | outbox_id | `NOT NULL` |
+| `attempt_number` | `INTEGER` | No | — | attempt_number | `NOT NULL` |
+| `provider` | `VARCHAR(50)` | No | — | provider | `NOT NULL` |
+| `status` | `VARCHAR(30)` | No | — | status | `NOT NULL` |
+| `provider_message_id` | `VARCHAR(100)` | Sí | — | provider_message_id | Sin restricción de columna adicional |
+| `error_code` | `VARCHAR(50)` | Sí | — | error_code | Sin restricción de columna adicional |
+| `error_message` | `TEXT` | Sí | — | error_message | Sin restricción de columna adicional |
+| `attempted_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | attempted_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT uq_notification_delivery_attempts_number UNIQUE (outbox_id, attempt_number)
+CONSTRAINT notification_delivery_attempts_pkey PRIMARY KEY (id)
+CONSTRAINT fk_notification_attempts_outbox FOREIGN KEY (outbox_id) REFERENCES support.notification_outbox(id) ON DELETE CASCADE
+CONSTRAINT chk_notification_attempts_number CHECK ((attempt_number > 0))
+CONSTRAINT chk_notification_attempts_provider_not_blank CHECK ((btrim((provider)::text) <> ''::text))
+CONSTRAINT chk_notification_attempts_status CHECK (((status)::text = ANY ((ARRAY['SUCCESS'::character varying, 'FAILED'::character varying, 'REJECTED'::character varying, 'TIMEOUT'::character varying])::text[])))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_notification_attempts_outbox ON support.notification_delivery_attempts USING btree (outbox_id);
+CREATE INDEX idx_notification_attempts_provider_status ON support.notification_delivery_attempts USING btree (provider, status);
+```
+
+<a id="support-notification_outbox"></a>
+
+#### support.notification_outbox
+
+Tabla `support.notification_outbox`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `notification_id` | `UUID` | No | — | notification_id | `NOT NULL` |
+| `channel` | `VARCHAR(20)` | No | — | channel | `NOT NULL` |
+| `recipient` | `VARCHAR(255)` | No | — | recipient | `NOT NULL` |
+| `status` | `VARCHAR(30)` | No | `'PENDING'::character varying` | status | `NOT NULL DEFAULT 'PENDING'::character varying` |
+| `retry_count` | `INTEGER` | No | `0` | retry_count | `NOT NULL DEFAULT 0` |
+| `max_retries` | `INTEGER` | No | `3` | max_retries | `NOT NULL DEFAULT 3` |
+| `next_retry_at` | `TIMESTAMPTZ` | Sí | — | next_retry_at | Sin restricción de columna adicional |
+| `scheduled_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | scheduled_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `processed_at` | `TIMESTAMPTZ` | Sí | — | processed_at | Sin restricción de columna adicional |
+| `idempotency_key` | `VARCHAR(100)` | Sí | — | idempotency_key | Sin restricción de columna adicional |
+| `metadata` | `JSONB` | Sí | — | metadata | Sin restricción de columna adicional |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | updated_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT uq_notification_outbox_idempotency UNIQUE (idempotency_key)
+CONSTRAINT notification_outbox_pkey PRIMARY KEY (id)
+CONSTRAINT fk_notification_outbox_notification FOREIGN KEY (notification_id) REFERENCES support.notifications(id) ON DELETE CASCADE
+CONSTRAINT chk_notification_outbox_channel CHECK (((channel)::text = ANY ((ARRAY['EMAIL'::character varying, 'SMS'::character varying, 'PUSH'::character varying, 'IN_APP'::character varying])::text[])))
+CONSTRAINT chk_notification_outbox_max_retries CHECK ((max_retries >= 0))
+CONSTRAINT chk_notification_outbox_recipient_not_blank CHECK ((btrim((recipient)::text) <> ''::text))
+CONSTRAINT chk_notification_outbox_retry_count CHECK ((retry_count >= 0))
+CONSTRAINT chk_notification_outbox_status CHECK (((status)::text = ANY ((ARRAY['PENDING'::character varying, 'PROCESSING'::character varying, 'SENT'::character varying, 'FAILED'::character varying, 'DEAD_LETTER'::character varying])::text[])))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_notification_outbox_channel ON support.notification_outbox USING btree (channel);
+CREATE INDEX idx_notification_outbox_notification ON support.notification_outbox USING btree (notification_id);
+CREATE INDEX idx_notification_outbox_pending ON support.notification_outbox USING btree (status, next_retry_at) WHERE ((status)::text = ANY ((ARRAY['PENDING'::character varying, 'FAILED'::character varying])::text[]));
+```
+
+**Triggers definidos**
+
+```sql
+CREATE TRIGGER trg_notification_outbox_set_updated_at BEFORE UPDATE ON support.notification_outbox FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
+```
+
+<a id="support-notification_templates"></a>
+
+#### support.notification_templates
+
+Tabla `support.notification_templates`.
+
+| Columna | Tipo | Nulos | Default | Descripción | Restricciones de columna |
+| --- | --- | --- | --- | --- | --- |
+| `id` | `UUID` | No | `gen_random_uuid()` | id | `NOT NULL DEFAULT gen_random_uuid()` |
+| `code` | `VARCHAR(60)` | No | — | code | `NOT NULL` |
+| `name` | `VARCHAR(100)` | No | — | name | `NOT NULL` |
+| `event_type` | `VARCHAR(50)` | No | — | event_type | `NOT NULL` |
+| `channel` | `VARCHAR(20)` | No | — | channel | `NOT NULL` |
+| `subject_template` | `VARCHAR(250)` | No | — | subject_template | `NOT NULL` |
+| `body_template` | `TEXT` | No | — | body_template | `NOT NULL` |
+| `is_active` | `BOOLEAN` | No | `true` | is_active | `NOT NULL DEFAULT true` |
+| `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | created_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | updated_at | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+
+**Claves y restricciones de tabla**
+
+```sql
+CONSTRAINT notification_templates_code_key UNIQUE (code)
+CONSTRAINT notification_templates_pkey PRIMARY KEY (id)
+CONSTRAINT chk_notification_templates_body_not_blank CHECK ((btrim(body_template) <> ''::text))
+CONSTRAINT chk_notification_templates_channel CHECK (((channel)::text = ANY ((ARRAY['EMAIL'::character varying, 'SMS'::character varying, 'PUSH'::character varying, 'IN_APP'::character varying])::text[])))
+CONSTRAINT chk_notification_templates_code_not_blank CHECK ((btrim((code)::text) <> ''::text))
+CONSTRAINT chk_notification_templates_event_type CHECK (((event_type)::text = ANY ((ARRAY['REGISTRATION'::character varying, 'PAYMENT'::character varying, 'RESERVATION'::character varying, 'CANCELLATION'::character varying, 'CONTRACT'::character varying, 'DELIVERY'::character varying, 'RETURN'::character varying, 'DOCUMENT'::character varying, 'INCIDENT'::character varying, 'SECURITY'::character varying, 'PROMOTION'::character varying, 'GENERAL'::character varying, 'PAYMENT_EXPIRATION_WARNING'::character varying])::text[])))
+CONSTRAINT chk_notification_templates_name_not_blank CHECK ((btrim((name)::text) <> ''::text))
+```
+
+**Índices explícitos**
+
+```sql
+CREATE INDEX idx_notification_templates_event_channel ON support.notification_templates USING btree (event_type, channel) WHERE (is_active = true);
+```
+
+**Triggers definidos**
+
+```sql
+CREATE TRIGGER trg_notification_templates_set_updated_at BEFORE UPDATE ON support.notification_templates FOR EACH ROW EXECUTE FUNCTION core.set_updated_at();
+```
 
 <a id="audit-administrative_report_types"></a>
 
@@ -3027,6 +3419,10 @@ Ejecuciones/archivos de reportes administrativos.
 | `generated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Atributo `generated_at` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `created_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de creación. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
 | `updated_at` | `TIMESTAMPTZ` | No | `CURRENT_TIMESTAMP` | Fecha y hora de actualización. | `NOT NULL DEFAULT CURRENT_TIMESTAMP` |
+| `report_code` | `VARCHAR(40)` | Sí | No declarado | Atributo `report_code` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `title` | `VARCHAR(200)` | Sí | No declarado | Atributo `title` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
+| `total_records` | `INT` | No | `0` | Atributo `total_records` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | `NOT NULL DEFAULT 0` |
+| `snapshot` | `JSONB` | Sí | No declarado | Atributo `snapshot` definido por el DDL; su dominio se especifica en las restricciones de esta tabla. | Sin restricción de columna adicional |
 
 **Claves y restricciones de tabla**
 
@@ -3079,7 +3475,7 @@ Las funciones relacionadas se consultan en [01_ddl/07_functions/rental/apply-res
 | Auditoría | `audit.audit_logs` | Registra operación/resultado/actor; la inmutabilidad y cobertura de eventos necesitan evidencia adicional del diseño y permisos. |
 | Pago en efectivo | `rental.reservations.cash_payment_code`, `cash_payment_expires_at`, `billing.payments`, `billing.payment_receipts` | No existe una tabla `cash_collection_receipts` en el DDL revisado. El código de efectivo no se documenta como PIN de entrega. |
 | Entrega a domicilio | `rental.reservation_delivery_points` | Modela modalidad y ubicación; no existe `delivery_assignments` ni una asignación persistida de conductor en estas tablas. |
-| PIN de entrega de 4 dígitos | No se identifica una columna específica de PIN de entrega en el DDL de las 69 tablas | La decisión confirmada por Danna requiere diseño del almacenamiento seguro, validación y migración en la HU de implementación. No se transforma un código de efectivo en PIN de entrega. |
+| PIN de entrega de 4 dígitos | No se identifica una columna específica de PIN de entrega en el DDL de las 78 tablas | La decisión confirmada por Danna requiere diseño del almacenamiento seguro, validación y migración en la HU de implementación. No se transforma un código de efectivo en PIN de entrega. |
 | Incidencias | `support.incident_reports`, `support.incident_responses` | Son las tablas físicas encontradas; contrastar su cobertura con incidencias de flota y soporte en RF41 y las HU correspondientes. |
 
 El diccionario documenta **lo existente** y registra las diferencias. Agregar campos, tablas o restricciones para implementar las capacidades pendientes es trabajo de diseño/migración; HU-DOC-008 debe mantener el diagrama ER sincronizado con la versión real que se acuerde.
