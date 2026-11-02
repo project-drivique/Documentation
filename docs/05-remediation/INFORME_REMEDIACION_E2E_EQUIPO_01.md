@@ -11,8 +11,8 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | Estado | Cantidad | Hallazgos |
 |---|---:|---|
-| Cerrado y verificado | 27 | H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
-| Parcial | 2 | H-01, H-10 |
+| Cerrado y verificado | 28 | H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
+| Parcial | 1 | H-01 |
 | Pendiente (acción del equipo, no es código) | 4 | H-02, H-15, H-31, H-33 |
 | No remediable | 1 | H-32 |
 
@@ -31,7 +31,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 | H-07 | Medio | Clases de 900-1000 líneas y lógica/HTML en un controlador | **Cerrado** | Ningún archivo `.java` supera 500 líneas, tests incluidos. |
 | H-08 | Alto | Componentes monolíticos de ~2000 líneas en el web | **Cerrado** | Ningún archivo de código de la web supera 500 líneas (eran 21). |
 | H-09 | Alto | CORS abierto a cualquier origen con credenciales | **Cerrado** | `SecurityConfig` usa solo los orígenes configurados. |
-| H-10 | Alto | Web y móvil sin pruebas automatizadas y CI que solo busca datos simulados | **Parcial** | Existen y corren en CI: web 13 pruebas (login, sesión, cierre de sesión, reserva, pago, traducciones), app 10. Falta ampliar los flujos de reserva y pago de punta a punta. |
+| H-10 | Alto | Web y móvil sin pruebas automatizadas y CI que solo busca datos simulados | **Cerrado** | El CI de cada cliente corre `npm test`. Web: 19 pruebas (login, sesión, cierre de sesión, reserva con idempotencia, conflicto 409, pago rechazado, pago fallido, renovación del token, traducciones). App: 16 pruebas, 6 de ellas ejecutan de verdad `apiClient`, `authStore` y `authService` (token, idioma, renovación en 401, cierre de sesión). |
 | H-11 | Medio | README del Back-end desactualizado | **Cerrado** | El README describe las entidades actuales. |
 | H-12 | Medio | Carpeta .idea y cachés de IDE versionados en la app móvil | **Cerrado** | Retirados y cubiertos por `.gitignore`. |
 | H-13 | Medio | Accesibilidad casi ausente en la app móvil | **Cerrado** | 313 botones con `accessibilityRole`, 223 con etiqueta y 30 campos de texto etiquetados; claves `a11y.*` en los 5 idiomas. |
@@ -65,7 +65,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 # Back-end: 749 pruebas, sin fallos (necesita Docker encendido)
 ./mvnw clean verify
 
-# Web: pruebas y compilación
+# Web: 19 pruebas y compilación
 cd front-end_web/web-drivique && npm ci && npm test && npm run build
 
 # App móvil: tipos, lint y pruebas
