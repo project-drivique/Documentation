@@ -4,7 +4,7 @@
 
 ## Alcance y fuentes
 
-El ER representa el SQL versionado de `database`, rama `dev`, commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94`. Incluye **69 tablas, 565 columnas y 94 claves foráneas**, con las alteraciones posteriores alcanzables desde el maestro Liquibase. No se certifica una instancia desplegada ni se modifican migraciones.
+El ER se generó el 2026-11-01 aplicando desde cero los 274 changesets del maestro Liquibase de `database` sobre una base PostgreSQL 17 vacía. Incluye **78 tablas, 704 columnas y 113 claves foráneas** en 10 esquemas, con todas las alteraciones posteriores a la primera versión (por ejemplo las columnas `created_at` y `updated_at` agregadas después y las 9 tablas de idempotencia, notificaciones, incidentes y conductores). No se certifica una instancia desplegada ni se modifican migraciones.
 
 La revisión incorpora `iam.user_social_accounts` respecto a HU-DOC-003. Se actualiza el [diccionario físico](data-dictionary.md) al mismo commit. El maestro alcanza 206 archivos SQL de avance; no se incluyen rollbacks como definiciones adicionales.
 
@@ -12,7 +12,7 @@ Fuente: [maestro Liquibase](https://github.com/project-drivique/database/blob/e2
 
 ## Vista general
 
-La vista general muestra las 69 entidades con PK, FK y atributos UNIQUE simples. Abra el SVG para ampliar; las vistas por esquema incluyen todos los atributos de sus tablas. El Mermaid editable contiene las 565 columnas del modelo completo.
+La vista general muestra las 78 entidades con PK, FK y atributos UNIQUE simples. Abra el SVG para ampliar; las vistas por esquema incluyen todos los atributos de sus tablas. El Mermaid editable contiene las 704 columnas del modelo completo.
 
 ![ER general de Drivique](../../assets/diagrams/er-diagram.png)
 
