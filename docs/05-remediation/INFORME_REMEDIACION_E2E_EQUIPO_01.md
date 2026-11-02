@@ -11,9 +11,10 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | Estado | Cantidad | Hallazgos |
 |---|---:|---|
-| Cerrado y verificado | 28 | H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
-| Parcial | 1 | H-01 |
-| Pendiente (acción del equipo, no es código) | 4 | H-02, H-15, H-31, H-33 |
+| Cerrado y verificado | 29 | H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
+| Parcial | 1 | H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | **Hecho (2026-11-02):** el historial de las 201 ramas del Back-end se reescribió y los valores publicados ya no aparecen en ninguna rama; se comprobó con un clon nuevo desde GitHub. `.env.example` solo trae marcadores y `application.yml` exige las variables. **No hecho, por decisión del equipo:** la contraseña de aplicación de Gmail no se rotó y sigue siendo la misma que estuvo publicada; quien la copió antes de la limpieza podría usarla. No se verificó la rotación de la clave JWT ni de la de cifrado en el servidor. |
+| Pendiente (configuración de GitHub) | 1 | H-15 |
+| Decisión del equipo (se deja abierto) | 2 | H-31, H-33 |
 | No remediable | 1 | H-32 |
 
 ---
@@ -23,7 +24,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 | ID | Sev. | Hallazgo (título del informe oficial) | Estado | Evidencia o lo que falta |
 |---|---|---|---|---|
 | H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | `.env.example` solo trae marcadores y `application.yml` exige las variables. **Pendiente:** rotar la contraseña de Gmail, la clave JWT y la de cifrado, y reescribir el historial del Back-end. |
-| H-02 | Alto | APK de 64 MB y node_modules/zip en el historial del repo web | **Pendiente** | El APK ya no está en las ramas de trabajo. Sigue en el historial: requiere reescribirlo (`git filter-repo`) y coordinar un `force push`. |
+| H-02 | Alto | APK de 64 MB y node_modules/zip en el historial del repo web | **Cerrado** | El 2026-11-02 se reescribió el historial de las 239 ramas del web sin `.apk`, `.zip` ni `node_modules`. Un clon nuevo desde GitHub pesa 7.6 MB, no tiene archivos de más de 1 MB ni esas rutas, y `main`, `develop` y `qa` conservan el mismo contenido. |
 | H-03 | Medio | Producto sin indicadores de éxito medibles y historias sin criterios de aceptación | **Cerrado** | 5 KPI con meta numérica en `docs/02-product/goals-and-objectives.md` y criterios en `docs/01-srs/acceptance-criteria.md`. |
 | H-04 | Alto | Trazabilidad a UI y UML sin cerrar: la matriz nombra componentes inexistentes | **Cerrado** | Todos los componentes y diagramas que nombra `docs/01-srs/matriz-trazabilidad.md` existen en los repos. |
 | H-05 | Alto | Pago Wompi: los clientes ignoran POST /payments/wompi/initiate y firman en el cliente | **Cerrado** | La web delega la firma en el servidor (`wompiService.js`). La app tiene prueba en `__tests__/wompiPayment.test.js`. |
@@ -52,9 +53,9 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 | H-28 | Medio | Seed de demostración huérfano con contraseña común | **Cerrado** | El seed se retiró. |
 | H-29 | Medio | El contrato OpenAPI no está publicado ni versionado | **Cerrado** | `docs/openapi.json` en el Back-end. |
 | H-30 | Bajo | swagger.md es plantilla y no hay OpenAPI exportado | **Cerrado** | `docs/07-backend/api-docs/swagger.md` y `contracts/openapi/openapi.json`. |
-| H-31 | Bajo | Trabajo sin integrar en ramas hijas | **Pendiente** | Integrar o cerrar las ramas adelantadas del Back-end. |
+| H-31 | Bajo | Trabajo sin integrar en ramas hijas | **Decisión del equipo** | Las ramas adelantadas del Back-end son cambios antiguos que ya no aportan; se dejan sin integrar y no afectan a `main`. |
 | H-32 | Bajo | Un integrante concentra 77.8 % de los commits del repo web | **No remediable** | Es historia del repositorio. |
-| H-33 | Bajo | Ramas adelantadas sin integrar en main | **Pendiente** | Integrar o cerrar las ramas de la web y la app. |
+| H-33 | Bajo | Ramas adelantadas sin integrar en main | **Decisión del equipo** | Igual que H-31: son cambios antiguos de la web y la app que se dejan sin integrar. |
 | H-34 | Bajo | Secreto de integridad y llave pública de Wompi versionados en .env.example | **Cerrado** | Solo marcadores. |
 
 ---
@@ -86,7 +87,5 @@ Solo deben aparecer los archivos de traducciones, que son datos.
 
 ## 4. Lo que el equipo debe hacer y el código no puede resolver
 
-1. **Rotar** la contraseña de aplicación de Gmail, la clave JWT y la clave de cifrado de documentos (H-01).
-2. **Reescribir el historial** del Back-end y de la web para sacar los secretos y el APK (H-01, H-02), avisando antes a todo el equipo.
-3. **Configurar GitHub:** al menos una revisión por PR en `main` y trabajo nuevo desde issues (H-15).
-4. **Integrar o cerrar** las ramas adelantadas (H-31, H-33).
+1. **Rotar** la contraseña de aplicación de Gmail (decisión actual: no hacerlo), la clave JWT y la clave de cifrado de documentos (H-01).
+2. **Configurar GitHub:** al menos una revisión por PR en `main` y trabajo nuevo desde issues (H-15).
