@@ -276,4 +276,4 @@ La estructura y los entregables pueden revisarse completos. La aprobación de ne
 
 ## Modelo entidad relación de HU-DOC-008
 
-El [diagrama ER físico](../04-architecture/database/er-diagram.md) incluye 69 tablas y 94 claves foráneas del commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94` de `database/dev`. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
+El [diagrama ER físico](../04-architecture/database/er-diagram.md) incluye 69 de las 78 tablas de la base (las 78 están en el diccionario) y 94 claves foráneas del commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94` de `database/dev`. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.

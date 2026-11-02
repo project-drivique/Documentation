@@ -155,4 +155,4 @@ Se sincronizaron SRS, RF, resumen y matriz con las decisiones confirmadas: PIN d
 
 ## Modelo de datos y HU-DOC-008
 
-El [diagrama ER físico](database/er-diagram.md) documenta las 78 tablas y 138 claves foráneas de `database/dev` versionadas en Liquibase. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.
+El [diagrama ER físico](database/er-diagram.md) documenta 69 de las 78 tablas (las 78 están en el diccionario) y 94 claves foráneas de `database/dev` versionadas en Liquibase. Se acompaña del diccionario sincronizado, vistas por esquema y fuentes editables. Las relaciones físicas no certifican por sí solas que se hayan implementado todas las reglas de negocio.

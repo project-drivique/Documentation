@@ -4,7 +4,7 @@
 
 ## Alcance y fuentes
 
-El ER representa el SQL versionado de `database`, rama `dev`, commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94`. Incluye **69 tablas, 565 columnas y 94 claves foráneas**, con las alteraciones posteriores alcanzables desde el maestro Liquibase. No se certifica una instancia desplegada ni se modifican migraciones.
+El ER representa el SQL versionado de `database`, rama `dev`, commit `e2cb3446cd6528dcd9951ef00d5be0d6cab61e94`. Incluye **69 tablas, 565 columnas y 94 claves foráneas**. La base real tiene 78 tablas: las 9 posteriores (`iam.security_configuration_changes`, `location.branch_categories`, `location.delivery_drivers`, `support.idempotency_keys`, `support.incident_attachments`, `support.incident_status_history`, `support.notification_delivery_attempts`, `support.notification_outbox`, `support.notification_templates`) ya están en el [diccionario](data-dictionary.md), pero faltan en los gráficos, que se regeneran con Graphviz, con las alteraciones posteriores alcanzables desde el maestro Liquibase. No se certifica una instancia desplegada ni se modifican migraciones.
 
 La revisión incorpora `iam.user_social_accounts` respecto a HU-DOC-003. Se actualiza el [diccionario físico](data-dictionary.md) al mismo commit. El maestro alcanza 206 archivos SQL de avance; no se incluyen rollbacks como definiciones adicionales.
 
