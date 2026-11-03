@@ -12,7 +12,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 | Estado | Cantidad | Hallazgos |
 |---|---:|---|
 | Cerrado y verificado | 29 | H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
-| Parcial | 1 | H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | **Hecho (2026-11-02):** el historial de las 201 ramas del Back-end se reescribió y los valores publicados ya no aparecen en ninguna rama; se comprobó con un clon nuevo desde GitHub. `.env.example` solo trae marcadores y `application.yml` exige las variables. **No hecho, por decisión del equipo:** la contraseña de aplicación de Gmail no se rotó y sigue siendo la misma que estuvo publicada; quien la copió antes de la limpieza podría usarla. No se verificó la rotación de la clave JWT ni de la de cifrado en el servidor. |
+| Parcial | 1 | H-01 |
 | Pendiente (configuración de GitHub) | 1 | H-15 |
 | Decisión del equipo (se deja abierto) | 2 | H-31, H-33 |
 | No remediable | 1 | H-32 |
@@ -23,7 +23,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | ID | Sev. | Hallazgo (título del informe oficial) | Estado | Evidencia o lo que falta |
 |---|---|---|---|---|
-| H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | `.env.example` solo trae marcadores y `application.yml` exige las variables. **Pendiente:** rotar la contraseña de Gmail, la clave JWT y la de cifrado, y reescribir el historial del Back-end. |
+| H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | **Hecho (2026-11-02):** el historial de las 201 ramas del Back-end se reescribió y los valores publicados ya no aparecen en ninguna rama; se comprobó con un clon nuevo desde GitHub. `.env.example` solo trae marcadores y `application.yml` exige las variables. **No hecho, por decisión del equipo:** la contraseña de aplicación de Gmail no se rotó y sigue siendo la misma que estuvo publicada; quien la copió antes de la limpieza podría usarla. No se verificó la rotación de la clave JWT ni de la de cifrado en el servidor. |
 | H-02 | Alto | APK de 64 MB y node_modules/zip en el historial del repo web | **Cerrado** | El 2026-11-02 se reescribió el historial de las 239 ramas del web sin `.apk`, `.zip` ni `node_modules`. Un clon nuevo desde GitHub pesa 7.6 MB, no tiene archivos de más de 1 MB ni esas rutas, y `main`, `develop` y `qa` conservan el mismo contenido. |
 | H-03 | Medio | Producto sin indicadores de éxito medibles y historias sin criterios de aceptación | **Cerrado** | 5 KPI con meta numérica en `docs/02-product/goals-and-objectives.md` y criterios en `docs/01-srs/acceptance-criteria.md`. |
 | H-04 | Alto | Trazabilidad a UI y UML sin cerrar: la matriz nombra componentes inexistentes | **Cerrado** | Todos los componentes y diagramas que nombra `docs/01-srs/matriz-trazabilidad.md` existen en los repos. |
