@@ -11,8 +11,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | Estado | Cantidad | Hallazgos |
 |---|---:|---|
-| Cerrado y verificado | 29 | H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
-| Parcial | 1 | H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | **Hecho (2026-11-02):** el historial de las 201 ramas del Back-end se reescribió y los valores publicados ya no aparecen en ninguna rama; se comprobó con un clon nuevo desde GitHub. `.env.example` solo trae marcadores y `application.yml` exige las variables. **No hecho, por decisión del equipo:** la contraseña de aplicación de Gmail no se rotó y sigue siendo la misma que estuvo publicada; quien la copió antes de la limpieza podría usarla. No se verificó la rotación de la clave JWT ni de la de cifrado en el servidor. |
+| Cerrado y verificado | 30 | H-01, H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
 | Pendiente (configuración de GitHub) | 1 | H-15 |
 | Decisión del equipo (se deja abierto) | 2 | H-31, H-33 |
 | No remediable | 1 | H-32 |
@@ -23,11 +22,11 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | ID | Sev. | Hallazgo (título del informe oficial) | Estado | Evidencia o lo que falta |
 |---|---|---|---|---|
-| H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Parcial** | `.env.example` solo trae marcadores y `application.yml` exige las variables. **Pendiente:** rotar la contraseña de Gmail, la clave JWT y la de cifrado, y reescribir el historial del Back-end. |
+| H-01 | Crítico | Contraseña de aplicación de Gmail, clave JWT y clave de cifrado publicadas en el historial | **Cerrado** | El historial de las 201 ramas del Back-end se reescribió el 2026-11-02 y se comprobó con un clon nuevo desde GitHub. `.env.example` solo trae marcadores y `application.yml` exige las variables. El 2026-11-03 el equipo generó una contraseña de aplicación de Gmail nueva y la cargó en el `.env` del servidor, que arranca sin errores de autenticación. El servidor usa su propio `JWT_SECRET` y su propia `APP_DOCUMENT_ENCRYPTION_KEY`, definidos solo en su `.env` y no en el repositorio. |
 | H-02 | Alto | APK de 64 MB y node_modules/zip en el historial del repo web | **Cerrado** | El 2026-11-02 se reescribió el historial de las 239 ramas del web sin `.apk`, `.zip` ni `node_modules`. Un clon nuevo desde GitHub pesa 7.6 MB, no tiene archivos de más de 1 MB ni esas rutas, y `main`, `develop` y `qa` conservan el mismo contenido. |
 | H-03 | Medio | Producto sin indicadores de éxito medibles y historias sin criterios de aceptación | **Cerrado** | 5 KPI con meta numérica en `docs/02-product/goals-and-objectives.md` y criterios en `docs/01-srs/acceptance-criteria.md`. |
 | H-04 | Alto | Trazabilidad a UI y UML sin cerrar: la matriz nombra componentes inexistentes | **Cerrado** | Todos los componentes y diagramas que nombra `docs/01-srs/matriz-trazabilidad.md` existen en los repos. |
-| H-05 | Alto | Pago Wompi: los clientes ignoran POST /payments/wompi/initiate y firman en el cliente | **Cerrado** | La web delega la firma en el servidor (`wompiService.js`). La app tiene prueba en `__tests__/wompiPayment.test.js`. |
+| H-05 | Alto | Pago Wompi: los clientes ignoran POST /payments/wompi/initiate y firman en el cliente | **Cerrado** | La web y la app delegan la firma en el servidor y ya no contienen ninguna llave ni secreto de Wompi. La llave pública y la firma de integridad salen de `POST /payments/wompi/initiate`. El servidor usa las variables `WOMPI_*` de su `.env` y se comprobó que Wompi acepta la llave y la firma. Pruebas: `__tests__/wompiPayment.test.js` en web y app. |
 | H-06 | Alto | El despliegue web apunta a un host de API que no responde | **Cerrado** | Web y app usan el mismo host y `VITE_API_URL` está documentada. |
 | H-07 | Medio | Clases de 900-1000 líneas y lógica/HTML en un controlador | **Cerrado** | Ningún archivo `.java` supera 500 líneas, tests incluidos. |
 | H-08 | Alto | Componentes monolíticos de ~2000 líneas en el web | **Cerrado** | Ningún archivo de código de la web supera 500 líneas (eran 21). |
@@ -87,5 +86,4 @@ Solo deben aparecer los archivos de traducciones, que son datos.
 
 ## 4. Lo que el equipo debe hacer y el código no puede resolver
 
-1. **Rotar** la contraseña de aplicación de Gmail (decisión actual: no hacerlo), la clave JWT y la clave de cifrado de documentos (H-01).
-2. **Configurar GitHub:** al menos una revisión por PR en `main` y trabajo nuevo desde issues (H-15).
+1. **Configurar GitHub:** al menos una revisión por PR en `main` y trabajo nuevo desde issues (H-15).
