@@ -11,8 +11,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 
 | Estado | Cantidad | Hallazgos |
 |---|---:|---|
-| Cerrado y verificado | 30 | H-01, H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
-| Pendiente (configuración de GitHub) | 1 | H-15 |
+| Cerrado y verificado | 31 | H-01, H-02, H-03, H-04, H-05, H-06, H-07, H-08, H-09, H-10, H-11, H-12, H-13, H-14, H-15, H-16, H-17, H-18, H-19, H-20, H-21, H-22, H-23, H-24, H-25, H-26, H-27, H-28, H-29, H-30, H-34 |
 | Decisión del equipo (se deja abierto) | 2 | H-31, H-33 |
 | No remediable | 1 | H-32 |
 
@@ -36,7 +35,7 @@ Este documento reemplaza la versión anterior, que declaraba los 34 hallazgos ce
 | H-12 | Medio | Carpeta .idea y cachés de IDE versionados en la app móvil | **Cerrado** | Retirados y cubiertos por `.gitignore`. |
 | H-13 | Medio | Accesibilidad casi ausente en la app móvil | **Cerrado** | 313 botones con `accessibilityRole`, 223 con etiqueta y 30 campos de texto etiquetados; claves `a11y.*` en los 5 idiomas. |
 | H-14 | Medio | IP simulada aleatoria enviada en la auditoría del login social | **Cerrado** | Se eliminó la IP fija; el servidor guarda la IP real. |
-| H-15 | Medio | PR fusionados sin ninguna revisión y cero issues | **Pendiente** | Es configuración de GitHub: exigir al menos una revisión por PR en `main` y abrir issues por trabajo. |
+| H-15 | Medio | PR fusionados sin ninguna revisión y cero issues | **Cerrado** | El 2026-11-03 se activó en `main` de los repos Back-end, front-end_web y front-end_movil un conjunto de reglas de GitHub que exige una solicitud de incorporación de cambios con 1 aprobación, impide borrar la rama y prohíbe forzar el historial. Se comprobó con la API de GitHub (`/rules/branches/main`). Los PR de esta remediación los revisa otra integrante del equipo. |
 | H-16 | Medio | Backend y BD con funcionalidades sin pantalla que las use | **Cerrado** | `docs/07-backend/api-docs/endpoints-sin-pantalla.md` lista las rutas sin pantalla y las clasifica. Decidir pantallas nuevas queda para el equipo. |
 | H-17 | Medio | El móvil inventa datos: apellido 'Drivique' y fecha de devolución +24 h | **Cerrado** | El desplazamiento de +24 h se reemplazó por un error explícito. |
 | H-18 | Medio | Versión de Java contradictoria | **Cerrado** | `pom.xml`, Dockerfile, CI y README declaran Java 21. |
@@ -86,4 +85,4 @@ Solo deben aparecer los archivos de traducciones, que son datos.
 
 ## 4. Lo que el equipo debe hacer y el código no puede resolver
 
-1. **Configurar GitHub:** al menos una revisión por PR en `main` y trabajo nuevo desde issues (H-15).
+Nada pendiente de configuración. Quedan abiertos solo H-31 y H-33 (decisión del equipo) y H-32 (no remediable).
